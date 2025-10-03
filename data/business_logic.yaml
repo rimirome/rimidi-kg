@@ -90,6 +90,55 @@ components:
     use_cases:
       - usecase-rpm-support
     description: Configurable subject lines in device connection emails to increase patient email recognition.
+  - name: Device Integration Hub
+    release_date: ongoing
+    related_capabilities:
+      - capability-device-ingestion
+    services:
+      - service-device-api
+    use_cases:
+      - usecase-device-ingestion
+    description: Unified ingestion and normalization paths for patient device data across scales, cuffs, CGMs, glucometers, and pulse oximeters.
+  - name: SMART-on-FHIR Interop
+    release_date: ongoing
+    related_capabilities:
+      - capability-ehr-interoperability
+    services:
+      - service-fhir-gateway
+    use_cases:
+      - usecase-ehr-interoperability
+    description: Launch workflows and FHIR resource synchronization enabling Rimidi to run inside customer EHRs.
+  - name: EMR Adapter Integrations
+    release_date: ongoing
+    related_capabilities:
+      - capability-ehr-interoperability
+    services:
+      - service-emr-adapters
+    use_cases:
+      - usecase-ehr-interoperability
+    description: Proprietary adapter library that connects to non-FHIR APIs for partners like Cerner, NextGen, and Athena.
+  - name: Partner Integration Channels
+    release_date: ongoing
+    related_capabilities:
+      - capability-integration-hub
+    services:
+      - service-api-platform
+      - service-export-pipelines
+    use_cases:
+      - usecase-ehr-interoperability
+      - usecase-data-exports
+    description: Managed channels for third-party partners such as Xealth and Baxter ShareSource.
+  - name: Data Export Workbench
+    release_date: ongoing
+    related_capabilities:
+      - capability-data-export
+    services:
+      - service-export-pipelines
+      - service-billing-toolkit
+    use_cases:
+      - usecase-data-exports
+      - usecase-billing-operations
+    description: Scheduled and on-demand exports that provide clinicians and partners with operational and clinical datasets.
 
 service_touchpoints:
   - service: service-ui
@@ -116,3 +165,20 @@ service_touchpoints:
     description: Shared patient header notes to coordinate care among users.
     primary_use_cases:
       - usecase-care-coordination
+  - service: service-device-api
+    description: Device ingestion endpoints accepting payloads from connected patient hardware.
+    primary_use_cases:
+      - usecase-device-ingestion
+  - service: service-fhir-gateway
+    description: SMART-on-FHIR launch surface for clinicians inside partner EHRs.
+    primary_use_cases:
+      - usecase-ehr-interoperability
+  - service: service-emr-adapters
+    description: Legacy API adapters and flat-file processors for non-FHIR EMR integrations.
+    primary_use_cases:
+      - usecase-ehr-interoperability
+  - service: service-export-pipelines
+    description: Automated generation of patient-level and aggregate exports for partners.
+    primary_use_cases:
+      - usecase-data-exports
+      - usecase-billing-operations

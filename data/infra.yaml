@@ -21,6 +21,18 @@ use_cases:
     name: Care Team Coordination
     description: Improves multi-user collaboration on patient context, documentation, and tasks.
     status: live
+  - id: usecase-device-ingestion
+    name: Patient Device Ingestion
+    description: Collects readings from connected devices such as scales, cuffs, CGMs, glucometers, and pulse oximeters.
+    status: live
+  - id: usecase-ehr-interoperability
+    name: EHR Interoperability
+    description: Exchanges data with partner EMRs via SMART-on-FHIR and proprietary APIs.
+    status: live
+  - id: usecase-data-exports
+    name: Data Exports & Reporting
+    description: Delivers operational and clinical datasets externally for analytics and patient care coordination.
+    status: live
 
 services:
   - id: service-ui
@@ -94,6 +106,35 @@ services:
     status: live
     layer: business
     service_type: billing
+
+  - id: service-device-api
+    name: Device Integration API
+    description: Ingests data from patient devices (scales, BP cuffs, CGMs, glucometers, pulse oximeters).
+    owner_team: platform-engineering
+    status: live
+    layer: business
+    service_type: ingestion
+  - id: service-fhir-gateway
+    name: FHIR Gateway
+    description: SMART-on-FHIR interface managing launch context, tokens, and resource synchronization.
+    owner_team: platform-engineering
+    status: live
+    layer: business
+    service_type: interoperability
+  - id: service-emr-adapters
+    name: EMR Adapter Suite
+    description: Handles non-FHIR proprietary APIs for partner EHR systems.
+    owner_team: platform-engineering
+    status: live
+    layer: business
+    service_type: interoperability
+  - id: service-export-pipelines
+    name: Data Export Pipelines
+    description: Generates patient care, operational, and analytics exports for downstream consumers.
+    owner_team: data-insights
+    status: live
+    layer: business
+    service_type: data-export
 
 infra_services:
   - id: infra-ecs-rimidi
@@ -417,6 +458,21 @@ relationships:
   - type: SUPPORTS
     source: service-billing-toolkit
     target: usecase-billing-operations
+  - type: SUPPORTS
+    source: service-device-api
+    target: usecase-device-ingestion
+  - type: SUPPORTS
+    source: service-fhir-gateway
+    target: usecase-ehr-interoperability
+  - type: SUPPORTS
+    source: service-emr-adapters
+    target: usecase-ehr-interoperability
+  - type: SUPPORTS
+    source: service-export-pipelines
+    target: usecase-data-exports
+  - type: SUPPORTS
+    source: service-export-pipelines
+    target: usecase-billing-operations
   - type: DEPENDS_ON
     source: service-ui
     target: service-rimidi-container
@@ -487,6 +543,26 @@ relationships:
     target: infra-ecs-rimidi
     properties:
       environment: production
+  - type: RUNS_ON
+    source: service-device-api
+    target: infra-ecs-rimidi
+    properties:
+      environment: production
+  - type: RUNS_ON
+    source: service-fhir-gateway
+    target: infra-ecs-rimidi
+    properties:
+      environment: production
+  - type: RUNS_ON
+    source: service-emr-adapters
+    target: infra-ecs-rimidi
+    properties:
+      environment: production
+  - type: RUNS_ON
+    source: service-export-pipelines
+    target: infra-ecs-rimidify
+    properties:
+      environment: production
   - type: SCHEDULED_BY
     source: service-coldbrew
     target: infra-eventbridge-coldbrew
@@ -555,6 +631,26 @@ relationships:
     properties:
       dependency_type: logging
   - type: DEPENDS_ON
+    source: service-device-api
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-fhir-gateway
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-emr-adapters
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-export-pipelines
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
     source: service-coldbrew
     target: infra-redis-coldbrew
     properties:
@@ -577,6 +673,36 @@ relationships:
   - type: DEPENDS_ON
     source: service-billing-toolkit
     target: service-reporting-analytics
+    properties:
+      dependency_type: data
+  - type: DEPENDS_ON
+    source: service-device-api
+    target: service-rimidi-container
+    properties:
+      dependency_type: data
+  - type: DEPENDS_ON
+    source: service-device-api
+    target: service-api-platform
+    properties:
+      dependency_type: api
+  - type: DEPENDS_ON
+    source: service-fhir-gateway
+    target: service-api-platform
+    properties:
+      dependency_type: api
+  - type: DEPENDS_ON
+    source: service-emr-adapters
+    target: service-api-platform
+    properties:
+      dependency_type: api
+  - type: DEPENDS_ON
+    source: service-export-pipelines
+    target: service-reporting-analytics
+    properties:
+      dependency_type: data
+  - type: DEPENDS_ON
+    source: service-export-pipelines
+    target: service-device-api
     properties:
       dependency_type: data
   - type: BACKED_BY
@@ -603,6 +729,21 @@ relationships:
   - type: BACKED_BY
     source: service-billing-toolkit
     target: domain-audit-repository
+  - type: BACKED_BY
+    source: service-device-api
+    target: domain-hearth
+  - type: BACKED_BY
+    source: service-fhir-gateway
+    target: domain-hearth
+  - type: BACKED_BY
+    source: service-emr-adapters
+    target: domain-hearth
+  - type: BACKED_BY
+    source: service-export-pipelines
+    target: domain-aquifer
+  - type: BACKED_BY
+    source: service-export-pipelines
+    target: domain-audit-repository
   - type: POWERS
     source: domain-hearth
     target: service-ui
@@ -618,6 +759,18 @@ relationships:
   - type: POWERS
     source: domain-audit-repository
     target: service-billing-toolkit
+  - type: POWERS
+    source: domain-hearth
+    target: service-device-api
+  - type: POWERS
+    source: domain-hearth
+    target: service-fhir-gateway
+  - type: POWERS
+    source: domain-hearth
+    target: service-emr-adapters
+  - type: POWERS
+    source: domain-aquifer
+    target: service-export-pipelines
   - type: CONTAINS_COLLECTION
     source: domain-hearth
     target: collection-hearth-patient-records

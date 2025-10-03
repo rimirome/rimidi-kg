@@ -33,6 +33,18 @@ MERGE (cap_engagement:ProductCapability {id: 'capability-patient-engagement'})
   SET cap_engagement.name = 'Patient Engagement Emails',
       cap_engagement.status = 'live',
       cap_engagement.owner_team = 'Product Experience';
+MERGE (cap_integration:ProductCapability {id: 'capability-integration-hub'})
+  SET cap_integration.name = 'Integration Partner Hub',
+      cap_integration.status = 'live',
+      cap_integration.owner_team = 'Platform Engineering';
+MERGE (cap_ehr:ProductCapability {id: 'capability-ehr-interoperability'})
+  SET cap_ehr.name = 'EHR Interoperability',
+      cap_ehr.status = 'live',
+      cap_ehr.owner_team = 'Platform Engineering';
+MERGE (cap_data_export:ProductCapability {id: 'capability-data-export'})
+  SET cap_data_export.name = 'Data Exports & Reporting',
+      cap_data_export.status = 'live',
+      cap_data_export.owner_team = 'Data Insights';
 
 MERGE (use1:UseCase {id: 'usecase-rpm-support'})
   SET use1.name = 'Remote Patient Monitoring',
@@ -49,6 +61,15 @@ MERGE (use4:UseCase {id: 'usecase-billing-operations'})
 MERGE (use5:UseCase {id: 'usecase-care-coordination'})
   SET use5.name = 'Care Team Coordination',
       use5.status = 'live';
+MERGE (use6:UseCase {id: 'usecase-device-ingestion'})
+  SET use6.name = 'Patient Device Ingestion',
+      use6.status = 'live';
+MERGE (use7:UseCase {id: 'usecase-ehr-interoperability'})
+  SET use7.name = 'EHR Interoperability',
+      use7.status = 'live';
+MERGE (use8:UseCase {id: 'usecase-data-exports'})
+  SET use8.name = 'Data Exports & Reporting',
+      use8.status = 'live';
 
 MERGE (cap)-[:DELIVERS]->(use1);
 MERGE (cap)-[:DELIVERS]->(use2);
@@ -61,6 +82,11 @@ MERGE (cap_api)-[:DELIVERS]->(use1);
 MERGE (cap_api)-[:DELIVERS]->(use4);
 MERGE (cap_analytics)-[:DELIVERS]->(use4);
 MERGE (cap_engagement)-[:DELIVERS]->(use1);
+MERGE (cap_device)-[:DELIVERS]->(use6);
+MERGE (cap_integration)-[:DELIVERS]->(use7);
+MERGE (cap_ehr)-[:DELIVERS]->(use7);
+MERGE (cap_data_export)-[:DELIVERS]->(use8);
+MERGE (cap_integration)-[:DELIVERS]->(use8);
 
 MERGE (wf:Workflow {id: 'workflow-hypertension-care-plan'})
   SET wf.name = 'Hypertension Care Plan',
@@ -74,6 +100,38 @@ MERGE (integ:Integration {id: 'integration-epic-bridge'})
       integ.status = 'live';
 MERGE (wf)-[:IMPLEMENTS {coverage: 'partial'}]->(integ);
 
+MERGE (integ_dexcom:Integration {id: 'integration-dexcom-g6'})
+  SET integ_dexcom.name = 'Dexcom G6 API',
+      integ_dexcom.vendor = 'Dexcom',
+      integ_dexcom.status = 'live';
+MERGE (integ_abbott:Integration {id: 'integration-abbott-libre'})
+  SET integ_abbott.name = 'Abbott LibreView',
+      integ_abbott.vendor = 'Abbott',
+      integ_abbott.status = 'live';
+MERGE (integ_smartmeter:Integration {id: 'integration-smartmeter'})
+  SET integ_smartmeter.name = 'Smart Meter',
+      integ_smartmeter.vendor = 'Smart Meter',
+      integ_smartmeter.status = 'live';
+MERGE (integ_baxter:Integration {id: 'integration-baxter-sharesource'})
+  SET integ_baxter.name = 'Baxter ShareSource',
+      integ_baxter.vendor = 'Baxter',
+      integ_baxter.status = 'live';
+MERGE (integ_xealth:Integration {id: 'integration-xealth'})
+  SET integ_xealth.name = 'Xealth',
+      integ_xealth.vendor = 'Xealth',
+      integ_xealth.status = 'live';
+MERGE (integ_cerner:Integration {id: 'integration-cerner-fhir'})
+  SET integ_cerner.name = 'Cerner FHIR',
+      integ_cerner.vendor = 'Oracle Cerner',
+      integ_cerner.status = 'live';
+MERGE (integ_nextgen:Integration {id: 'integration-nextgen'})
+  SET integ_nextgen.name = 'NextGen API',
+      integ_nextgen.vendor = 'NextGen',
+      integ_nextgen.status = 'live';
+MERGE (integ_athena:Integration {id: 'integration-athenahealth'})
+  SET integ_athena.name = 'athenahealth API',
+      integ_athena.vendor = 'athenahealth',
+      integ_athena.status = 'live';
 MERGE (svc_ui:Service {id: 'service-ui'})
   SET svc_ui.name = 'Rimidi User Interface',
       svc_ui.status = 'live',
@@ -117,6 +175,30 @@ MERGE (svc_dashboard:Service {id: 'service-analytics-dashboard'})
       svc_dashboard.owner_team = 'Product Experience',
       svc_dashboard.layer = 'business',
       svc_dashboard.service_type = 'analytics-ui';
+MERGE (svc_device:Service {id: 'service-device-api'})
+  SET svc_device.name = 'Device Integration API',
+      svc_device.status = 'live',
+      svc_device.owner_team = 'Platform Engineering',
+      svc_device.layer = 'business',
+      svc_device.service_type = 'ingestion';
+MERGE (svc_fhir:Service {id: 'service-fhir-gateway'})
+  SET svc_fhir.name = 'FHIR Gateway',
+      svc_fhir.status = 'live',
+      svc_fhir.owner_team = 'Platform Engineering',
+      svc_fhir.layer = 'business',
+      svc_fhir.service_type = 'interoperability';
+MERGE (svc_emr:Service {id: 'service-emr-adapters'})
+  SET svc_emr.name = 'EMR Adapter Suite',
+      svc_emr.status = 'live',
+      svc_emr.owner_team = 'Platform Engineering',
+      svc_emr.layer = 'business',
+      svc_emr.service_type = 'interoperability';
+MERGE (svc_export:Service {id: 'service-export-pipelines'})
+  SET svc_export.name = 'Data Export Pipelines',
+      svc_export.status = 'live',
+      svc_export.owner_team = 'Data Insights',
+      svc_export.layer = 'business',
+      svc_export.service_type = 'data-export';
 MERGE (svc_ui)-[:SUPPORTS]->(use1);
 MERGE (svc_ui)-[:SUPPORTS]->(use2);
 MERGE (svc_api)-[:SUPPORTS]->(use1);
@@ -131,6 +213,17 @@ MERGE (svc_api_platform)-[:SUPPORTS]->(use1);
 MERGE (svc_api_platform)-[:SUPPORTS]->(use4);
 MERGE (svc_dashboard)-[:SUPPORTS]->(use4);
 MERGE (svc_dashboard)-[:SUPPORTS]->(use1);
+MERGE (svc_device)-[:DEPENDS_ON {dependency_type: 'data'}]->(svc_api);
+MERGE (svc_device)-[:DEPENDS_ON {dependency_type: 'api'}]->(svc_api_platform);
+MERGE (svc_fhir)-[:DEPENDS_ON {dependency_type: 'api'}]->(svc_api_platform);
+MERGE (svc_emr)-[:DEPENDS_ON {dependency_type: 'api'}]->(svc_api_platform);
+MERGE (svc_export)-[:DEPENDS_ON {dependency_type: 'data'}]->(svc_device);
+MERGE (svc_export)-[:DEPENDS_ON {dependency_type: 'data'}]->(svc_billing);
+MERGE (svc_device)-[:SUPPORTS]->(use6);
+MERGE (svc_fhir)-[:SUPPORTS]->(use7);
+MERGE (svc_emr)-[:SUPPORTS]->(use7);
+MERGE (svc_export)-[:SUPPORTS]->(use8);
+MERGE (svc_export)-[:SUPPORTS]->(use4);
 MERGE (svc_dashboard)-[:DEPENDS_ON {dependency_type: 'data'}]->(svc_billing);
 
 MERGE (infra_ecs:InfraService {id: 'infra-ecs-rimidi'})
@@ -160,6 +253,10 @@ MERGE (svc_billing)-[:RUNS_ON {environment: 'production'}]->(infra_ecs);
 MERGE (svc_notes)-[:RUNS_ON {environment: 'production'}]->(infra_ecs);
 MERGE (svc_api_platform)-[:RUNS_ON {environment: 'production'}]->(infra_ecs);
 MERGE (svc_dashboard)-[:RUNS_ON {environment: 'production'}]->(infra_ecs);
+MERGE (svc_device)-[:RUNS_ON {environment: 'production'}]->(infra_ecs);
+MERGE (svc_fhir)-[:RUNS_ON {environment: 'production'}]->(infra_ecs);
+MERGE (svc_emr)-[:RUNS_ON {environment: 'production'}]->(infra_ecs);
+MERGE (svc_export)-[:RUNS_ON {environment: 'production'}]->(infra_ecs);
 
 MERGE (domain_hearth:Domain {id: 'domain-hearth'})
   SET domain_hearth.name = 'Hearth',
@@ -194,7 +291,25 @@ MERGE (svc_billing)-[:BACKED_BY]->(domain_audit);
 MERGE (svc_dashboard)-[:BACKED_BY]->(domain_aquifer);
 MERGE (svc_api_platform)-[:BACKED_BY]->(domain_hearth);
 MERGE (svc_notes)-[:BACKED_BY]->(domain_hearth);
+MERGE (svc_device)-[:BACKED_BY]->(domain_hearth);
+MERGE (svc_fhir)-[:BACKED_BY]->(domain_hearth);
+MERGE (svc_emr)-[:BACKED_BY]->(domain_hearth);
+MERGE (svc_export)-[:BACKED_BY]->(domain_aquifer);
+MERGE (svc_export)-[:BACKED_BY]->(domain_audit);
+MERGE (svc_device)-[:INTEGRATES_WITH]->(integ_dexcom);
+MERGE (svc_device)-[:INTEGRATES_WITH]->(integ_abbott);
+MERGE (svc_device)-[:INTEGRATES_WITH]->(integ_smartmeter);
+MERGE (svc_fhir)-[:INTEGRATES_WITH]->(integ);
+MERGE (svc_fhir)-[:INTEGRATES_WITH]->(integ_cerner);
+MERGE (svc_emr)-[:INTEGRATES_WITH]->(integ_nextgen);
+MERGE (svc_emr)-[:INTEGRATES_WITH]->(integ_athena);
+MERGE (svc_export)-[:INTEGRATES_WITH]->(integ_baxter);
+MERGE (svc_export)-[:INTEGRATES_WITH]->(integ_xealth);
 MERGE (domain_audit)-[:POWERS]->(svc_billing);
+MERGE (domain_hearth)-[:POWERS]->(svc_device);
+MERGE (domain_hearth)-[:POWERS]->(svc_fhir);
+MERGE (domain_hearth)-[:POWERS]->(svc_emr);
+MERGE (domain_aquifer)-[:POWERS]->(svc_export);
 MERGE (domain_aquifer)-[:POWERS]->(svc_dashboard);
 
 MERGE (collection_hearth:Collection {id: 'collection-hearth-patient-records'})
