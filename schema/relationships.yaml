@@ -1,0 +1,20 @@
+# Relationship taxonomy for the Rimidi knowledge graph.
+# Keys should match Neo4j relationship types.
+
+relationships:
+  - type: ENABLES
+    description: Capability unlocked by another entity.
+    source: ProductCapability
+    target: Workflow
+    properties:
+      criticality:
+        type: string
+        allowed: [informational, important, critical]
+  - type: IMPLEMENTS
+    description: Workflow implemented using a specific integration.
+    source: Workflow
+    target: Integration
+    properties:
+      coverage:
+        type: string
+        allowed: [partial, full]

@@ -1,0 +1,9 @@
+{
+  "allowed_verbs": ["MATCH", "RETURN", "WITH", "CALL", "UNWIND", "LIMIT", "ORDER BY"],
+  "disallowed_verbs": ["DELETE", "DETACH", "SET", "CREATE", "MERGE", "DROP"],
+  "response_requirements": {
+    "max_summary_tokens": 120,
+    "include_cypher": true,
+    "include_guardrails": true
+  }
+}

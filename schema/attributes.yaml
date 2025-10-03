@@ -1,0 +1,29 @@
+# Reusable attribute definitions keyed by namespace.
+
+attributes:
+  common:
+    id:
+      type: uuid
+      required: true
+      description: Stable unique identifier for the node.
+    name:
+      type: string
+      required: true
+      description: Human readable label.
+    description:
+      type: text
+      required: false
+      description: Freeform notes or context.
+    owner_team:
+      type: string
+      required: false
+      description: Primary team accountable for the node.
+    status:
+      type: string
+      required: false
+      allowed: [planned, in-progress, live, deprecated]
+      description: Lifecycle state.
+    vendor:
+      type: string
+      required: false
+      description: Vendor or system owner when applicable.

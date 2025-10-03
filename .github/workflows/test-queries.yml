@@ -1,0 +1,16 @@
+name: Test Queries
+
+on:
+  pull_request:
+    paths:
+      - 'queries/**'
+  workflow_dispatch:
+
+jobs:
+  cypher-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Cypher formatting
+        run: |
+          echo "Static placeholder - replace with real Cypher checks when available."

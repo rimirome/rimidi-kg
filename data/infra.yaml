@@ -1,0 +1,13 @@
+# Rimidi 2.0 infrastructure mappings for hosting the knowledge graph workloads.
+
+neo4j:
+  deployment: auradb
+  region: us-east-1
+  uri: bolt+routing://neo4j.rimidi.internal:7687
+  secrets_ref: aws-secretsmanager://neo4j/rimidi-kg
+
+integration_endpoints:
+  - name: n8n-automation-gateway
+    type: http
+    url: https://automation.rimidi.com/hooks/kg
+    auth: aws_sigv4

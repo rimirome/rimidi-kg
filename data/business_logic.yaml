@@ -1,0 +1,22 @@
+# Rimidi 1.0-style logical components captured from legacy documentation.
+
+components:
+  - name: Blood Pressure Review
+    related_capabilities:
+      - capability-remote-monitoring
+    workflows:
+      - workflow-hypertension-care-plan
+    triggers:
+      - type: metric_threshold
+        metric: systolic_bp
+        comparison: ">"
+        threshold: 140
+  - name: Care Team Huddle
+    related_capabilities:
+      - capability-remote-monitoring
+    workflows:
+      - workflow-hypertension-care-plan
+    triggers:
+      - type: schedule
+        cadence: daily
+        window: "08:00-09:00"

@@ -1,0 +1,21 @@
+name: Sync Neo4j
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install prerequisites
+        run: pip install pyyaml
+      - name: Generate payload
+        run: python tools/loader.py --schema --data > artifact.json
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rimidi-kg-payload
+          path: artifact.json
+      # TODO: add deploy step to push payload into managed Neo4j instance.

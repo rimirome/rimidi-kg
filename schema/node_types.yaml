@@ -1,0 +1,25 @@
+# Canonical node type definitions for the Rimidi knowledge graph.
+# Each node type references reusable attributes defined in attributes.yaml.
+
+node_types:
+  - name: ProductCapability
+    description: High-level capability offered by the Rimidi platform.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.status
+  - name: Workflow
+    description: Sequenced steps that deliver a clinical or operational outcome.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+  - name: Integration
+    description: External system or interface the platform relies on.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.vendor
+      - ref: attributes.common.status
