@@ -1,5 +1,9 @@
 # Schema Changelog
 
+## 0.4.0 - Device & Interop Links
+- Added `INTEGRATES_WITH` relationship type to describe service connections to external device and partner systems.
+- Prepared schema for expanded device ingestion, EHR interoperability, and integration partner modeling.
+
 ## 0.3.0 - Product Insights from Release Notes
 - Added product-focused capabilities, use cases, and services reflecting release note enhancements.
 - Extended relationships to capture UI collaboration, analytics usability, and audit-ready domains.

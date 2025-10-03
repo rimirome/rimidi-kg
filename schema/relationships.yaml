@@ -79,6 +79,10 @@ relationships:
     description: Feeder sourcing data from a domain.
     source: Feeder
     target: Domain
+  - type: INTEGRATES_WITH
+    description: Service leveraging an external integration partner or device network.
+    source: Service
+    target: Integration
   - type: POWERS
     description: Domain or collection powering a service.
     source: Domain
