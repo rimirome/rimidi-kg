@@ -1,21 +1,35 @@
 # Rimidi Knowledge Graph Repository
 
-This repository packages the Rimidi knowledge graph schema, seed data, AI assistant context, and automation assets. Start with `docs/README.md` for the why and how, then explore domain-specific folders as needed.
+The Rimidi KG is the single source of truth for how Rimidi capabilities, services, integrations, data domains, and infrastructure connect. It powers change-impact analysis for Product & Engineering and acts as the contract that keeps Sunny/n8n automations aligned with reality.
 
-Recent updates capture device integration pipelines, SMART-on-FHIR interoperability, partner integrations, and data export services so engineering and product teams can reason about the broader platform footprint.
+## Getting Started
+1. Read `docs/README.md` to understand the node types (`ProductCapability`, `UseCase`, `Service`, `Integration`, `Domain`, `InfraService`, etc.) and how they map to Rimidi terminology.
+2. Seed a Neo4j instance with `data/seed.cypher` (or inspect the declarative YAML in `data/`).
+3. Try a quick query to explore the graph:
+   ```cypher
+   MATCH (svc:Service)-[:SUPPORTS]->(:UseCase {id: 'usecase-rpm-support'})
+   RETURN svc.id AS service_id, svc.name AS service_name
+   ORDER BY service_name;
+   ```
+4. Browse curated queries in `queries/` or run ad-hoc Cypher using the prompts in `ai/examples.md`.
 
 ```
 rimidi-kg/
 ├── schema/      # Canonical definitions of nodes, relationships, attributes
-├── data/        # Seed dataset, business logic, and domains/infra governance
-├── ai/          # Prompts, guardrails, and FAQ for the Rimidi KG agent and n8n flows
-├── queries/     # Curated Cypher queries for product, engineering, compliance, data
-├── docs/        # Documentation, contribution guide, usage playbook, changelog
-├── tools/       # Validators, loaders, and analysis notebooks
-└── .github/     # CI workflows for validation and sync operations
+├── data/        # Seed dataset, business logic, domains/infra governance
+├── ai/          # Prompts, guardrails, and FAQ for Sunny / n8n automations
+├── queries/     # Curated Cypher for product, engineering, compliance, data
+├── docs/        # README, CONTRIBUTING, playbook, changelog
+├── tools/       # Validator, loader, analysis notebooks
+└── .github/     # CI workflows for validation & sync operations
 ```
 
-> Tip: run `python tools/validator.py` before opening a pull request to ensure schema and data remain consistent. Capture new release-driven features in `data/business_logic.yaml` with `release_date` metadata so automations stay traceable.
+## Contribution Guardrails
+- **Schema changes** (`schema/`) require PR review from both Product and Engineering before merge.
+- **Data changes** (`data/`) must reference a release note / Jira ticket and pass `python tools/validator.py --data`.
+- **AI contract updates** (`ai/`) must refresh the NL→Cypher examples in `ai/examples.md`.
+
+For detailed workflows see `docs/CONTRIBUTING.md` and `docs/playbook.md`. Run `python tools/validator.py` before every PR to keep the repo consistent. Capture new release-driven features in `data/business_logic.yaml` (use the `release_date` field for traceability).
 
 ## Docker Quickstart
 
@@ -23,11 +37,11 @@ rimidi-kg/
    ```bash
    docker compose build
    ```
-2. Start the long-lived container (keeps the repo mounted so you and n8n can exec commands):
+2. Start the long-lived container (mounts the repo so you and n8n can exec commands):
    ```bash
    docker compose up -d
    ```
-3. Run utilities as needed. Examples:
+3. Run utilities as needed:
    ```bash
    docker compose exec rimidi-kg python tools/validator.py
    docker compose exec rimidi-kg python tools/loader.py --schema --data > payload.json
@@ -38,19 +52,3 @@ rimidi-kg/
    ```
 
 > n8n can run the same `docker compose exec` commands inside workflows to trigger validator or loader tasks. Mounting `.:/workspace` keeps repo changes in sync with your host and the agent.
-
-## Getting Started
-1. Review `docs/README.md` for domain terminology and schema node types.
-2. Seed Neo4j with `data/seed.cypher`, then explore the example queries in `queries/`.
-3. Try an ad-hoc query straight from the docs: 
-   ```cypher
-   MATCH (svc:Service)-[:SUPPORTS]->(:UseCase {id: 'usecase-rpm-support'})
-   RETURN svc.id, svc.name;
-   ```
-
-## Contribution Guardrails
-- Schema changes require PR review by Product and Engineering.
-- Data additions should reference a release note / Jira ticket and pass `python tools/validator.py --data`.
-- AI prompt updates must update NL→Cypher examples (`ai/examples.md`).
-
-For deeper guidance see `docs/CONTRIBUTING.md` and `docs/playbook.md`.
