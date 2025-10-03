@@ -22,3 +22,7 @@ OPTIONAL MATCH (svc:Service)-[:SUPPORTS]->(u)
 RETURN cap.id AS capability_id, cap.name AS capability_name,
        collect(DISTINCT svc.id) AS supporting_services
 ORDER BY capability_name;
+
+// Device ingestion services and their integration partners.
+MATCH (svc:Service {id: 'service-device-api'})-[:INTEGRATES_WITH]->(i:Integration)
+RETURN svc.id AS service_id, collect(DISTINCT i.name) AS integrations;

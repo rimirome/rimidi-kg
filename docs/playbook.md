@@ -15,6 +15,11 @@
 2. Confirm that each collection and feeder has the required governance tags as defined in `schema/attributes.yaml`.
 3. Document remediation tasks or decision logs in `docs/CHANGELOG.md` for compliance traceability.
 
+## Device & EHR Integration Planning
+1. Map the affected device vendors or EHR partners to Integration nodes (Dexcom, Abbott, Smart Meter, Cerner, Epic, NextGen, athenahealth) and confirm `INTEGRATES_WITH` edges exist.
+2. Update `data/business_logic.yaml` components (Device Integration Hub, SMART-on-FHIR Interop, EMR Adapter Integrations) with new requirements or release context.
+3. Ensure `data/infra.yaml` reflects supporting services (`service-device-api`, `service-fhir-gateway`, `service-emr-adapters`) and add additional integration partners in `data/seed.cypher`.
+
 ## AI / Automation Updates
 1. When Sunny or n8n needs new behavior, update the relevant `ai/` files and store supporting Cypher in `queries/`.
 2. Raise a pull request so human reviewers confirm guardrails before the automation runs in production.

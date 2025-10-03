@@ -6,7 +6,7 @@
 3. When introducing new relationship verbs, update `ai/prompt_context.md` and `ai/examples.md` so Sunny/n8n know how to reference them.
 
 ## Data Updates
-1. Modify `data/infra.yaml`, `data/business_logic.yaml`, or supporting files to add services, domains, feeders, analytics surfaces, release-note components, or governance tags.
+1. Modify `data/infra.yaml`, `data/business_logic.yaml`, or supporting files to add services, domains, integrations, feeders, analytics surfaces, release-note components, or governance tags.
 2. Ensure identifiers follow slug-style conventions (for example, `service-rimidi-container`).
 3. When mapping product release notes, include `release_date` metadata so downstream automations trace source material.
 4. Validate with `tools/validator.py --data` before opening a pull request.

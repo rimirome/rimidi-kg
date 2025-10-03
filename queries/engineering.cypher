@@ -23,3 +23,9 @@ RETURN s.id AS service_id, up.id AS upstream_service;
 MATCH (s:Service)
 WHERE NOT (s)-[:MONITORED_BY]->(:AnalyticsSurface)
 RETURN s.id AS service_id, s.name AS service_name;
+
+// Integration coverage: ingestion and interop services missing partner connections.
+MATCH (s:Service)
+WHERE s.id IN ['service-device-api', 'service-fhir-gateway', 'service-emr-adapters', 'service-export-pipelines']
+  AND NOT (s)-[:INTEGRATES_WITH]->(:Integration)
+RETURN s.id AS service_id, s.name AS service_name;

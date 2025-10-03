@@ -2,6 +2,8 @@
 
 This repository packages the Rimidi knowledge graph schema, seed data, AI assistant context, and automation assets. Start with `docs/README.md` for the why and how, then explore domain-specific folders as needed.
 
+Recent updates capture device integration pipelines, SMART-on-FHIR interoperability, partner integrations, and data export services so engineering and product teams can reason about the broader platform footprint.
+
 ```
 rimidi-kg/
 ├── schema/      # Canonical definitions of nodes, relationships, attributes

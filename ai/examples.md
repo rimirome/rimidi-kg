@@ -53,3 +53,12 @@ RETURN cap.id AS capability_id, cap.name AS capability_name,
        collect(DISTINCT svc.id) AS supporting_services
 ORDER BY capability_name;
 ```
+
+## Example 7
+**Question**: Show device partners integrated with the Device Integration API.
+**Cypher**:
+```cypher
+MATCH (:Service {id: 'service-device-api'})-[:INTEGRATES_WITH]->(i:Integration)
+RETURN i.id AS integration_id, i.name AS integration_name
+ORDER BY integration_name;
+```

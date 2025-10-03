@@ -11,3 +11,6 @@ Suggest related queries, question the filters, and remind the user how to expand
 
 ## Where do release-driven features live?
 Reference the `components` section in `data/business_logic.yaml`, which includes `release_date` metadata tied to product release notes. Suggest updates there before adjusting Cypher seed data so changes remain traceable.
+
+## How do I reference integrations?
+Use the `Integration` nodes (e.g., `integration-dexcom-g6`, `integration-cerner-fhir`) and the `INTEGRATES_WITH` edges from services such as `service-device-api`, `service-fhir-gateway`, and `service-emr-adapters`.

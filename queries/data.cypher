@@ -30,3 +30,9 @@ RETURN s.id AS seed_id, s.name AS seed_name;
 MATCH (:Domain {id: 'domain-audit-repository'})-[:CONTAINS_COLLECTION]->(c:Collection)
 OPTIONAL MATCH (svc:Service)-[:BACKED_BY]->(:Domain)-[:CONTAINS_COLLECTION]->(c)
 RETURN c.id AS collection_id, collect(DISTINCT svc.id) AS consuming_services;
+
+// Integration partners mapped to interoperability services.
+MATCH (svc:Service)
+WHERE svc.id IN ['service-device-api', 'service-fhir-gateway', 'service-emr-adapters', 'service-export-pipelines']
+MATCH (svc)-[:INTEGRATES_WITH]->(i:Integration)
+RETURN svc.id AS service_id, collect(DISTINCT i.id) AS partner_ids;
