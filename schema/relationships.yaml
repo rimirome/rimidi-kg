@@ -99,3 +99,27 @@ relationships:
     description: Service persisting data into a domain.
     source: Service
     target: Domain
+  - type: OWNS
+    description: Team accountable for a resource.
+    source: Team
+    target: Service
+  - type: RESPONSIBLE_FOR
+    description: Team responsible for a domain, integration, or workflow.
+    source: Team
+    target: Domain
+  - type: REQUESTED_BY
+    description: Actor initiating a configuration or workflow change.
+    source: Actor
+    target: Service
+  - type: APPROVED_BY
+    description: Actor approving a policy, configuration, or workflow change.
+    source: Actor
+    target: Service
+  - type: GOVERNS
+    description: Policy governing services, domains, or tenants.
+    source: Policy
+    target: Service
+  - type: APPLIES_TO
+    description: Policy applied directly to a data domain or tenant.
+    source: Policy
+    target: Domain

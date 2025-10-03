@@ -31,6 +31,12 @@ def validate_schema() -> None:
     )
 
 
+
+
+def validate_ontology() -> None:
+    ontology_path = ROOT / 'docs' / 'ontology.md'
+    ensure_exists([ontology_path])
+
 def validate_infra_structure() -> None:
     if yaml is None:
         raise SystemExit("PyYAML not installed. Run `pip install pyyaml` before validating data.")
@@ -110,6 +116,7 @@ def main() -> None:
 
     if args.schema:
         validate_schema()
+        validate_ontology()
     if args.data:
         validate_data()
 

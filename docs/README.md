@@ -23,6 +23,8 @@ The Rimidi Knowledge Graph (KG) is the single source of truth for how product ca
 
 ## Contribution Workflow
 
+For the canonical vocabulary, see `docs/ontology.md`.
+
 - **Schema edits** (`schema/`) require a pull request and review from Product and Engineering to safeguard backward compatibility.
 - **Data updates** (`data/`) should reference a release note, ADR, or Jira ticket; run `python tools/validator.py --data` before requesting review.
 - **AI context changes** (`ai/`) must include updated natural-language-to-Cypher examples so Sunny/n8n stay aligned.

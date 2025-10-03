@@ -83,3 +83,25 @@ attributes:
       required: false
       allowed: [audit-grade, exploratory, insight, ops, reporting, monitoring, transformation, ingestion, observability, training]
       description: Intended use of the data handled by the component.
+
+  governance:
+    valid_from:
+      type: datetime
+      required: false
+      description: Timestamp when the entity became active.
+    valid_to:
+      type: datetime
+      required: false
+      description: Timestamp when the entity was deactivated.
+    source_system:
+      type: string
+      required: false
+      description: Source of truth for the entity (e.g., Jira, Release Notes).
+    jira_id:
+      type: string
+      required: false
+      description: Jira ticket or issue key associated with this entity.
+    release_note:
+      type: string
+      required: false
+      description: Reference to product release notes or ADR.

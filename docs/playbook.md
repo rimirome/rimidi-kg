@@ -24,3 +24,13 @@
 1. When Sunny or n8n needs new behavior, update the relevant `ai/` files and store supporting Cypher in `queries/`.
 2. Raise a pull request so human reviewers confirm guardrails before the automation runs in production.
 3. Coordinate with TechOps to deploy any validator or workflow changes in `.github/workflows/`.
+
+## Ontology Governance
+1. Review new node/edge definitions in `docs/ontology.md` with Product + Engineering before merging schema changes.
+2. Version ontology updates alongside schema releases and record the version in `schema/changelog.md`.
+3. Validate that ownership and policy assignments are populated for newly introduced services or domains.
+
+## Data Pipeline & Reasoning Demos
+1. Use `tools/loader.py --schema --data` to generate JSON payloads that can feed reasoning notebooks.
+2. Populate `tools/pipeline/` scripts (see TODO stubs) when onboarding new data sources such as Jira or device vendor exports.
+3. Demonstrate value via curated queries (e.g., integration readiness) and attach screenshots or cypher snippets to product playbooks.
