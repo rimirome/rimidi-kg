@@ -1,5 +1,10 @@
 # Schema Changelog
 
+## 0.5.0 - Governance & Ownership
+- Added governance attributes (valid_from/valid_to/source) across core node types.
+- Introduced Policy, Team, and Actor node types plus ownership/policy relationships.
+- Documented ontology in `docs/ontology.md` and wired validator to ensure it exists.
+
 ## 0.4.0 - Device & Interop Links
 - Added `INTEGRATES_WITH` relationship type to describe service connections to external device and partner systems.
 - Prepared schema for expanded device ingestion, EHR interoperability, and integration partner modeling.
