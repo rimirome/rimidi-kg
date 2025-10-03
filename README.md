@@ -38,3 +38,19 @@ rimidi-kg/
    ```
 
 > n8n can run the same `docker compose exec` commands inside workflows to trigger validator or loader tasks. Mounting `.:/workspace` keeps repo changes in sync with your host and the agent.
+
+## Getting Started
+1. Review `docs/README.md` for domain terminology and schema node types.
+2. Seed Neo4j with `data/seed.cypher`, then explore the example queries in `queries/`.
+3. Try an ad-hoc query straight from the docs: 
+   ```cypher
+   MATCH (svc:Service)-[:SUPPORTS]->(:UseCase {id: 'usecase-rpm-support'})
+   RETURN svc.id, svc.name;
+   ```
+
+## Contribution Guardrails
+- Schema changes require PR review by Product and Engineering.
+- Data additions should reference a release note / Jira ticket and pass `python tools/validator.py --data`.
+- AI prompt updates must update NL→Cypher examples (`ai/examples.md`).
+
+For deeper guidance see `docs/CONTRIBUTING.md` and `docs/playbook.md`.

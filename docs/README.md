@@ -3,16 +3,37 @@
 The Rimidi Knowledge Graph (KG) is the single source of truth for how product capabilities, services, data domains, and infrastructure primitives connect. It helps product, engineering, data, and compliance teams reason about change impact, answer traceability questions, and power AI-driven insights (including n8n automations backed by Sunny).
 
 ## Getting Started
-1. Review the schema definitions under `schema/` to understand supported node types (capabilities, use cases, services, infra, domains, feeders, analytics surfaces).
+1. Review the schema definitions under `schema/` to understand the node types we model (`ProductCapability`, `UseCase`, `Service`, `Integration`, `InfraService`, `Domain`, `Collection`, `Feeder`, `Seed`, `AnalyticsSurface`).
 2. Load the starter dataset from `data/seed.cypher` into your Neo4j environment, or inspect the declarative YAML in `data/` for richer context.
-3. Explore curated queries in `queries/` or run ad-hoc Cypher using the examples in `ai/examples.md`.
+3. Explore curated queries in `queries/` or run ad-hoc Cypher using the examples in `ai/examples.md`. For example:
 
-- **Business Services**: UI, Rimidi container, Coldbrew, Rimidify, Surve, reporting pipelines.
-- **Device Integrations**: Device API service ingesting data from scales, cuffs, CGMs, glucometers, and pulse oximeters plus guardrails for partner connections.
-- **EHR Interoperability**: SMART-on-FHIR gateway and EMR adapter suite modeled alongside Cerner, Epic, NextGen, and athenahealth integrations.
-- **Integration Partners & Exports**: Xealth, Baxter ShareSource, and data export pipelines powering downstream analytics and patient care operations, including telehealth vendor enablement.
-- **Data Ecosystem**: Domains like Hearth, Apothecary, Aquifer, Canal, Jetty, Stillwater; collections, feeders, and seeds with governance tags.
-- **Observability**: Bluejay, Kaleidoscope, Canopy surfaces and their telemetry relationships.
-- **AI Contract**: Prompt context, guardrails, and examples that guide Sunny and n8n flows.
+   ```cypher
+   MATCH (svc:Service)-[:SUPPORTS]->(:UseCase {id: 'usecase-rpm-support'})
+   RETURN svc.id AS service_id, svc.name AS service_name
+   ORDER BY service_name;
+   ```
+
+- **Services (`Service`)**: UI, Rimidi container, Coldbrew, Rimidify, Surve, analytics dashboard, billing toolkit, patient chart subnavs, telehealth vendor enablement.
+- **Integrations (`Integration`)**: Device manufacturers (Dexcom, Abbott, Smart Meter), EHR partners (Cerner, Epic, NextGen, athenahealth), ecosystem partners (Xealth, Baxter ShareSource).
+- **Use Cases (`UseCase`)**: Remote patient monitoring, chronic care, billing operations, data exports, device ingestion, EHR interoperability, telehealth vendor enablement, care coordination.
+- **Domains & Collections (`Domain`, `Collection`)**: Hearth, Apothecary, Aquifer, Canal, Jetty, Stillwater, Audit Repository and their governed datasets.
+- **Infrastructure (`InfraService`)**: ECS workloads, Lambda/EventBridge schedulers, RDS, Redis, S3, CloudFront, ALB, CloudWatch, Secrets Manager, Grafana.
+- **Analytics & Observability (`AnalyticsSurface`)**: Bluejay, Kaleidoscope, Canopy, and their telemetry relationships.
+- **AI Contract (`ai/`)**: Prompt context, guardrails, examples, and FAQ guiding Sunny and n8n flows.
+
+## Contribution Workflow
+
+- **Schema edits** (`schema/`) require a pull request and review from Product and Engineering to safeguard backward compatibility.
+- **Data updates** (`data/`) should reference a release note, ADR, or Jira ticket; run `python tools/validator.py --data` before requesting review.
+- **AI context changes** (`ai/`) must include updated natural-language-to-Cypher examples so Sunny/n8n stay aligned.
 
 For contribution guidelines and workflow examples, check `docs/CONTRIBUTING.md` and `docs/playbook.md`. Release-driven enhancements are recorded in `data/business_logic.yaml` with `release_date` metadata sourced from product release notes.
+
+## Emerging Dimensions
+
+To keep the graph future-proof for compliance, RCA, and ownership clarity, we plan to extend the schema with:
+
+- **Temporal history**: versioned nodes or `valid_from` / `valid_to` attributes so we can query historical schema and workflow states.
+- **Ownership & responsibility**: explicit `Actor` / `Team` nodes with `OWNS` or `RESPONSIBLE_FOR` edges for services, domains, and configurations.
+- **Policy guardrails**: lightweight `Policy` nodes linking tenants, services, and workflows to enforce compliance or tenant-specific restrictions.
+- **Outcome tracking**: status edges/events capturing whether configuration changes or workflows succeeded, enabling RCA and audit reporting.
