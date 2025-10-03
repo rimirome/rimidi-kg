@@ -16,3 +16,25 @@ rimidi-kg/
 ```
 
 > Tip: run `python tools/validator.py` before opening a pull request to ensure schema and data remain consistent. Capture new release-driven features in `data/business_logic.yaml` with `release_date` metadata so automations stay traceable.
+
+## Docker Quickstart
+
+1. Build the image:
+   ```bash
+   docker compose build
+   ```
+2. Start the long-lived container (keeps the repo mounted so you and n8n can exec commands):
+   ```bash
+   docker compose up -d
+   ```
+3. Run utilities as needed. Examples:
+   ```bash
+   docker compose exec rimidi-kg python tools/validator.py
+   docker compose exec rimidi-kg python tools/loader.py --schema --data > payload.json
+   ```
+4. Stop the container when finished:
+   ```bash
+   docker compose down
+   ```
+
+> n8n can run the same `docker compose exec` commands inside workflows to trigger validator or loader tasks. Mounting `.:/workspace` keeps repo changes in sync with your host and the agent.

@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  rimidi-kg:
+    build: .
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    command: sleep infinity
