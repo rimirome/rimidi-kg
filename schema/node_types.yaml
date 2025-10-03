@@ -9,6 +9,13 @@ node_types:
       - ref: attributes.common.name
       - ref: attributes.common.owner_team
       - ref: attributes.common.status
+  - name: UseCase
+    description: Business outcomes delivered to healthcare providers or patients.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
   - name: Workflow
     description: Sequenced steps that deliver a clinical or operational outcome.
     attributes:
@@ -16,6 +23,7 @@ node_types:
       - ref: attributes.common.name
       - ref: attributes.common.description
       - ref: attributes.common.owner_team
+      - ref: attributes.common.status
   - name: Integration
     description: External system or interface the platform relies on.
     attributes:
@@ -23,3 +31,82 @@ node_types:
       - ref: attributes.common.name
       - ref: attributes.common.vendor
       - ref: attributes.common.status
+  - name: Service
+    description: Application or shared service expressed in Rimidi terminology (for example, UI, Rimidi container, Coldbrew).
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.status
+      - ref: attributes.service.layer
+      - ref: attributes.service.service_type
+      - ref: attributes.service.code_name
+  - name: InfraService
+    description: Cloud infrastructure primitives or managed services backing Rimidi workloads.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.service.provider
+      - ref: attributes.service.service_type
+  - name: Domain
+    description: Logical grouping of collections governed for a specific data purpose (for example, Hearth, Aquifer).
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.data.domain_kind
+      - ref: attributes.access.phi_sensitivity
+      - ref: attributes.access.access_role
+      - ref: attributes.access.access_mode
+      - ref: attributes.access.data_purpose
+  - name: Collection
+    description: Concrete data collection within a domain.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.data.collection_type
+      - ref: attributes.access.phi_sensitivity
+      - ref: attributes.access.access_role
+      - ref: attributes.access.access_mode
+      - ref: attributes.access.data_purpose
+  - name: Feeder
+    description: Data pipeline that moves or transforms data between domains.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.data.feeder_kind
+      - ref: attributes.access.phi_sensitivity
+      - ref: attributes.access.access_role
+      - ref: attributes.access.access_mode
+      - ref: attributes.access.data_purpose
+  - name: Seed
+    description: Versioned dataset curated for ML, analytics, or agent workflows.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.access.phi_sensitivity
+      - ref: attributes.access.access_role
+      - ref: attributes.access.access_mode
+      - ref: attributes.access.data_purpose
+  - name: AnalyticsSurface
+    description: Reporting, dashboarding, or observability surface (for example, Bluejay, Kaleidoscope, Canopy).
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.data.surface_type
+      - ref: attributes.access.phi_sensitivity
+      - ref: attributes.access.access_role
+      - ref: attributes.access.access_mode
+      - ref: attributes.access.data_purpose
