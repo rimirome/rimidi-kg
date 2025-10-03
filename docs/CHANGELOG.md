@@ -1,9 +1,9 @@
 # Rimidi KG Repository Changelog
 
 ## 0.4.0 - Device & Interop Modeling
-- Added patient device ingestion, EHR interoperability, and data export use cases with supporting services in `data/infra.yaml` and `data/seed.cypher`.
+- Added patient device ingestion, EHR interoperability, disease view experience, and data export use cases with supporting services in `data/infra.yaml` and `data/seed.cypher`.
 - Captured integration partners (Dexcom, Abbott, Smart Meter, Xealth, Baxter, Cerner, NextGen, athenahealth) via `Integration` nodes and `INTEGRATES_WITH` edges.
-- Documented business logic, prompts, and queries for the new functional areas.
+- Documented business logic, prompts, and queries for the new functional areas, including patient chart subnavs and telehealth vendor enablement.
 
 ## 0.3.0 - Release Notes Alignment
 - Modeled product capabilities, services, and use cases derived from 2024-2025 release notes in `data/infra.yaml`, `data/seed.cypher`, and `data/business_logic.yaml`.

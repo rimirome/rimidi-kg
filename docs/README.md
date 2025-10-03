@@ -10,7 +10,7 @@ The Rimidi Knowledge Graph (KG) is the single source of truth for how product ca
 - **Business Services**: UI, Rimidi container, Coldbrew, Rimidify, Surve, reporting pipelines.
 - **Device Integrations**: Device API service ingesting data from scales, cuffs, CGMs, glucometers, and pulse oximeters plus guardrails for partner connections.
 - **EHR Interoperability**: SMART-on-FHIR gateway and EMR adapter suite modeled alongside Cerner, Epic, NextGen, and athenahealth integrations.
-- **Integration Partners & Exports**: Xealth, Baxter ShareSource, and data export pipelines powering downstream analytics and patient care operations.
+- **Integration Partners & Exports**: Xealth, Baxter ShareSource, and data export pipelines powering downstream analytics and patient care operations, including telehealth vendor enablement.
 - **Data Ecosystem**: Domains like Hearth, Apothecary, Aquifer, Canal, Jetty, Stillwater; collections, feeders, and seeds with governance tags.
 - **Observability**: Bluejay, Kaleidoscope, Canopy surfaces and their telemetry relationships.
 - **AI Contract**: Prompt context, guardrails, and examples that guide Sunny and n8n flows.

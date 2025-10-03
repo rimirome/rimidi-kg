@@ -45,6 +45,18 @@ MERGE (cap_data_export:ProductCapability {id: 'capability-data-export'})
   SET cap_data_export.name = 'Data Exports & Reporting',
       cap_data_export.status = 'live',
       cap_data_export.owner_team = 'Data Insights';
+MERGE (cap_disease:ProductCapability {id: 'capability-disease-views'})
+  SET cap_disease.name = 'Disease View Experience',
+      cap_disease.status = 'live',
+      cap_disease.owner_team = 'Product Experience';
+MERGE (cap_chart_nav:ProductCapability {id: 'capability-patient-chart-navigation'})
+  SET cap_chart_nav.name = 'Patient Chart Subnavs',
+      cap_chart_nav.status = 'live',
+      cap_chart_nav.owner_team = 'Product Experience';
+MERGE (cap_telehealth:ProductCapability {id: 'capability-telehealth-programs'})
+  SET cap_telehealth.name = 'Telehealth Vendor Programs',
+      cap_telehealth.status = 'live',
+      cap_telehealth.owner_team = 'Commercial Operations';
 
 MERGE (use1:UseCase {id: 'usecase-rpm-support'})
   SET use1.name = 'Remote Patient Monitoring',

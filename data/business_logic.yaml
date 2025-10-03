@@ -90,6 +90,37 @@ components:
     use_cases:
       - usecase-rpm-support
     description: Configurable subject lines in device connection emails to increase patient email recognition.
+  - name: Disease View Experience
+    release_date: ongoing
+    related_capabilities:
+      - capability-disease-views
+    services:
+      - service-ui
+    use_cases:
+      - usecase-chronic-care
+    description: Condition-specific patient lists, columns, filters, and legends that surface the clinical data relevant to each chronic disease program.
+  - name: Patient Chart Subnavs
+    release_date: ongoing
+    related_capabilities:
+      - capability-patient-chart-navigation
+    services:
+      - service-ui
+      - service-device-api
+    use_cases:
+      - usecase-rpm-support
+      - usecase-chronic-care
+    description: Tabbed navigation inside the patient chart that exposes device data, care plans, and other feature-specific views.
+  - name: Telehealth Vendor Enablement
+    release_date: ongoing
+    related_capabilities:
+      - capability-telehealth-programs
+    services:
+      - service-api-platform
+      - service-export-pipelines
+    use_cases:
+      - usecase-care-coordination
+      - usecase-data-exports
+    description: Configurations and workflows that support third-party RPM/telehealth vendors delivering care through Rimidi.
   - name: Device Integration Hub
     release_date: ongoing
     related_capabilities:
