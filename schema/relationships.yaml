@@ -18,3 +18,136 @@ relationships:
       coverage:
         type: string
         allowed: [partial, full]
+  - type: DELIVERS
+    description: Product capability delivering a business use case.
+    source: ProductCapability
+    target: UseCase
+  - type: SUPPORTS
+    description: Service enabling a business use case.
+    source: Service
+    target: UseCase
+  - type: DEPENDS_ON
+    description: Service-level dependency across Rimidi components.
+    source: Service
+    target: Service
+    properties:
+      dependency_type:
+        type: string
+        allowed: [api, schedule, logging, data, delivery, ui]
+  - type: RUNS_ON
+    description: Service hosted on a specific infrastructure primitive.
+    source: Service
+    target: InfraService
+    properties:
+      environment:
+        type: string
+        required: false
+        allowed: [production, staging, development]
+  - type: SCHEDULED_BY
+    description: Service scheduled by an infrastructure service (for example, EventBridge scheduling Coldbrew Lambdas).
+    source: Service
+    target: InfraService
+  - type: USES_SECRET_FROM
+    description: Service retrieving credentials or configuration from an infra service.
+    source: Service
+    target: InfraService
+  - type: MONITORED_BY
+    description: Service observed via an analytics or observability surface.
+    source: Service
+    target: AnalyticsSurface
+  - type: OBSERVES
+    description: Analytics surface consuming telemetry from a service.
+    source: AnalyticsSurface
+    target: Service
+  - type: REPORTS_ON
+    description: Analytics surface surfacing insights about a domain.
+    source: AnalyticsSurface
+    target: Domain
+  - type: RELATES_TO
+    description: Conceptual relationship or dependency between product capabilities or features.
+    source: ProductCapability
+    target: ProductCapability
+  - type: CONTAINS_COLLECTION
+    description: Domain composed of subordinate collections.
+    source: Domain
+    target: Collection
+  - type: PERSISTED_IN
+    description: Domain or collection stored on an infrastructure primitive.
+    source: Domain
+    target: InfraService
+  - type: FEEDS
+    description: Feeder populating a downstream domain.
+    source: Feeder
+    target: Domain
+  - type: CONSUMES_FROM
+    description: Feeder sourcing data from a domain.
+    source: Feeder
+    target: Domain
+  - type: INTEGRATES_WITH
+    description: Service leveraging an external integration partner or device network.
+    source: Service
+    target: Integration
+  - type: POWERS
+    description: Domain or collection powering a service.
+    source: Domain
+    target: Service
+  - type: DERIVED_FROM
+    description: Seed or insight derived from a domain or collection.
+    source: Seed
+    target: Domain
+  - type: WRITES_TO
+    description: Seed or feeder writing results into a domain.
+    source: Seed
+    target: Domain
+  - type: BACKED_BY
+    description: Service persisting data into a domain.
+    source: Service
+    target: Domain
+  - type: OWNS
+    description: Team accountable for a resource.
+    source: Team
+    target: Service
+  - type: RESPONSIBLE_FOR
+    description: Team responsible for a domain, integration, or workflow.
+    source: Team
+    target: Domain
+  - type: REQUESTED_BY
+    description: Actor initiating a configuration or workflow change.
+    source: Actor
+    target: Service
+  - type: APPROVED_BY
+    description: Actor approving a policy, configuration, or workflow change.
+    source: Actor
+    target: Service
+  - type: GOVERNS
+    description: Policy governing services, domains, or tenants.
+    source: Policy
+    target: Service
+  - type: APPLIES_TO
+    description: Policy applied directly to a data domain or tenant.
+    source: Policy
+    target: Domain
+  - type: EXPLAINS
+    description: Knowledge article describing expected behavior of a capability or workflow.
+    source: KnowledgeArticle
+    target: ProductCapability
+  - type: DOCUMENTS
+    description: Knowledge article documenting a workflow or service runbook.
+    source: KnowledgeArticle
+    target: Workflow
+  - type: USES_CODE
+    description: Service or workflow implemented by a code artifact.
+    source: Service
+    target: CodeArtifact
+  - type: IMPLEMENTED_BY
+    description: Workflow implemented by a specific code artifact.
+    source: Workflow
+    target: CodeArtifact
+  - type: TRIGGERS
+    description: Event triggering a workflow or service.
+    source: Event
+    target: Service
+  - type: RESULTED_IN
+    description: Event resulting from a service, workflow, or incident outcome.
+    source: Event
+    target: Domain

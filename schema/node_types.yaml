@@ -9,6 +9,23 @@ node_types:
       - ref: attributes.common.name
       - ref: attributes.common.owner_team
       - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: UseCase
+    description: Business outcomes delivered to healthcare providers or patients.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
   - name: Workflow
     description: Sequenced steps that deliver a clinical or operational outcome.
     attributes:
@@ -16,6 +33,12 @@ node_types:
       - ref: attributes.common.name
       - ref: attributes.common.description
       - ref: attributes.common.owner_team
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
   - name: Integration
     description: External system or interface the platform relies on.
     attributes:
@@ -23,3 +46,182 @@ node_types:
       - ref: attributes.common.name
       - ref: attributes.common.vendor
       - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Service
+    description: Application or shared service expressed in Rimidi terminology (for example, UI, Rimidi container, Coldbrew).
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.status
+      - ref: attributes.service.layer
+      - ref: attributes.service.service_type
+      - ref: attributes.service.code_name
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: InfraService
+    description: Cloud infrastructure primitives or managed services backing Rimidi workloads.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.service.provider
+      - ref: attributes.service.service_type
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Domain
+    description: Logical grouping of collections governed for a specific data purpose (for example, Hearth, Aquifer).
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.data.domain_kind
+      - ref: attributes.access.phi_sensitivity
+      - ref: attributes.access.access_role
+      - ref: attributes.access.access_mode
+      - ref: attributes.access.data_purpose
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Collection
+    description: Concrete data collection within a domain.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.data.collection_type
+      - ref: attributes.access.phi_sensitivity
+      - ref: attributes.access.access_role
+      - ref: attributes.access.access_mode
+      - ref: attributes.access.data_purpose
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Feeder
+    description: Data pipeline that moves or transforms data between domains.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.data.feeder_kind
+      - ref: attributes.access.phi_sensitivity
+      - ref: attributes.access.access_role
+      - ref: attributes.access.access_mode
+      - ref: attributes.access.data_purpose
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Seed
+    description: Versioned dataset curated for ML, analytics, or agent workflows.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.access.phi_sensitivity
+      - ref: attributes.access.access_role
+      - ref: attributes.access.access_mode
+      - ref: attributes.access.data_purpose
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: AnalyticsSurface
+    description: Reporting, dashboarding, or observability surface (for example, Bluejay, Kaleidoscope, Canopy).
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.data.surface_type
+      - ref: attributes.access.phi_sensitivity
+      - ref: attributes.access.access_role
+      - ref: attributes.access.access_mode
+      - ref: attributes.access.data_purpose
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Policy
+    description: Compliance or business guardrail applied to services, domains, or tenants.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Team
+    description: Team or organizational unit responsible for Rimidi resources.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+  - name: Actor
+    description: Individual requester or approver associated with changes.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: KnowledgeArticle
+    description: Support or documentation article describing expected behavior.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: CodeArtifact
+    description: Source code reference (repo, path, language) implementing a capability or service.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Event
+    description: Timed occurrence such as deployment, incident, or configuration change.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note

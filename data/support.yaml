@@ -1,0 +1,13 @@
+# Client Success knowledge articles and expected behaviors.
+
+knowledge_articles:
+  - id: ka-rpm-billing-periods
+    title: RPM Billing Period Expectations
+    description: Explains how billing periods are calculated for RPM features and what clinicians should see in the UI.
+    source_system: confluence
+    url: https://docs.rimidi.com/rpm-billing-periods
+    owner_team: client-success
+    related_capabilities:
+      - capability-billing-insights
+    related_workflows:
+      - workflow-hypertension-care-plan

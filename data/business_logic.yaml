@@ -1,22 +1,221 @@
-# Rimidi 1.0-style logical components captured from legacy documentation.
+# Rimidi business logic groupings captured for knowledge graph seeding.
 
 components:
-  - name: Blood Pressure Review
+  - name: RPM Billing Period Intelligence
+    release_date: 2025-09-17
     related_capabilities:
-      - capability-remote-monitoring
-    workflows:
-      - workflow-hypertension-care-plan
-    triggers:
-      - type: metric_threshold
-        metric: systolic_bp
-        comparison: ">"
-        threshold: 140
-  - name: Care Team Huddle
+      - capability-billing-insights
+    services:
+      - service-billing-toolkit
+      - service-analytics-dashboard
+    use_cases:
+      - usecase-billing-operations
+      - usecase-rpm-support
+    description: Rolling 30-day and calendar-month billing visuals across patient chart and All/My Patients view to surface reimbursement readiness.
+  - name: True Measure Indicators
+    release_date: 2025-09-17
     related_capabilities:
-      - capability-remote-monitoring
-    workflows:
-      - workflow-hypertension-care-plan
-    triggers:
-      - type: schedule
-        cadence: daily
-        window: "08:00-09:00"
+      - capability-device-insights
+    services:
+      - service-ui
+      - service-billing-toolkit
+    use_cases:
+      - usecase-rpm-support
+      - usecase-billing-operations
+    description: Triangle markers, tooltips, and export columns flagging triple-mode blood pressure measurements across UI, copy/paste, and reporting.
+  - name: Patient Sticky Notes
+    release_date: 2025-09-04
+    related_capabilities:
+      - capability-care-coordination
+    services:
+      - service-patient-sticky-notes
+      - service-ui
+    use_cases:
+      - usecase-care-coordination
+    description: Collaborative notes in the patient header with real-time autosave, visibility persistence, and multi-note support.
+  - name: Care Plan Audit Bundles
+    release_date: 2025-09-04
+    related_capabilities:
+      - capability-audit-readiness
+    services:
+      - service-billing-toolkit
+    use_cases:
+      - usecase-billing-operations
+    description: Completed care plans merged into audit reports with conditional logic to omit unused questions and support compliance reviews.
+  - name: API Enrollment Enhancements
+    release_date: 2025-10-01
+    related_capabilities:
+      - capability-api-access
+    services:
+      - service-api-platform
+      - service-rimidi-container
+    use_cases:
+      - usecase-rpm-support
+      - usecase-billing-operations
+    description: Endpoint additions and auth token scopes enabling automated RPM enrollment with permission-scoped access.
+  - name: Analytics Provider Select-All
+    release_date: 2025-10-01
+    related_capabilities:
+      - capability-analytics-usability
+    services:
+      - service-analytics-dashboard
+    use_cases:
+      - usecase-billing-operations
+    description: Bulk provider group selection on analytics dashboards to generate comprehensive reports quickly.
+  - name: Libre Sensor Wear Tracking
+    release_date: 2025-09-04
+    related_capabilities:
+      - capability-device-insights
+    services:
+      - service-ui
+      - service-billing-toolkit
+    use_cases:
+      - usecase-rpm-support
+    description: Calendar month sensor wear counts for Libre CGM devices to streamline billing eligibility checks.
+  - name: Billing Documentation Options
+    release_date: 2025-09-04
+    related_capabilities:
+      - capability-billing-insights
+    services:
+      - service-billing-toolkit
+    use_cases:
+      - usecase-billing-operations
+    description: Additional documentation selections (Provider Follow Up, Chart Review, Patient Assistance) for RPM and CCM billing entries.
+  - name: Custom Device Invite Subjects
+    release_date: 2024-10-31
+    related_capabilities:
+      - capability-patient-engagement
+    services:
+      - service-surve
+    use_cases:
+      - usecase-rpm-support
+    description: Configurable subject lines in device connection emails to increase patient email recognition.
+  - name: Disease View Experience
+    release_date: ongoing
+    related_capabilities:
+      - capability-disease-views
+    services:
+      - service-ui
+    use_cases:
+      - usecase-chronic-care
+    description: Condition-specific patient lists, columns, filters, and legends that surface the clinical data relevant to each chronic disease program.
+  - name: Patient Chart Subnavs
+    release_date: ongoing
+    related_capabilities:
+      - capability-patient-chart-navigation
+    services:
+      - service-ui
+      - service-device-api
+    use_cases:
+      - usecase-rpm-support
+      - usecase-chronic-care
+    description: Tabbed navigation inside the patient chart that exposes device data, care plans, and other feature-specific views.
+  - name: Telehealth Vendor Enablement
+    release_date: ongoing
+    related_capabilities:
+      - capability-telehealth-programs
+    services:
+      - service-api-platform
+      - service-export-pipelines
+    use_cases:
+      - usecase-care-coordination
+      - usecase-data-exports
+    description: Configurations and workflows that support third-party RPM/telehealth vendors delivering care through Rimidi.
+  - name: Device Integration Hub
+    release_date: ongoing
+    related_capabilities:
+      - capability-device-ingestion
+    services:
+      - service-device-api
+    use_cases:
+      - usecase-device-ingestion
+    description: Unified ingestion and normalization paths for patient device data across scales, cuffs, CGMs, glucometers, and pulse oximeters.
+  - name: SMART-on-FHIR Interop
+    release_date: ongoing
+    related_capabilities:
+      - capability-ehr-interoperability
+    services:
+      - service-fhir-gateway
+    use_cases:
+      - usecase-ehr-interoperability
+    description: Launch workflows and FHIR resource synchronization enabling Rimidi to run inside customer EHRs.
+  - name: EMR Adapter Integrations
+    release_date: ongoing
+    related_capabilities:
+      - capability-ehr-interoperability
+    services:
+      - service-emr-adapters
+    use_cases:
+      - usecase-ehr-interoperability
+    description: Proprietary adapter library that connects to non-FHIR APIs for partners like Cerner, NextGen, and Athena.
+  - name: Partner Integration Channels
+    release_date: ongoing
+    related_capabilities:
+      - capability-integration-hub
+    services:
+      - service-api-platform
+      - service-export-pipelines
+    use_cases:
+      - usecase-ehr-interoperability
+      - usecase-data-exports
+    description: Managed channels for third-party partners such as Xealth and Baxter ShareSource.
+  - name: Data Export Workbench
+    release_date: ongoing
+    related_capabilities:
+      - capability-data-export
+    services:
+      - service-export-pipelines
+      - service-billing-toolkit
+    use_cases:
+      - usecase-data-exports
+      - usecase-billing-operations
+    description: Scheduled and on-demand exports that provide clinicians and partners with operational and clinical datasets.
+
+service_touchpoints:
+  - service: service-ui
+    description: Front-end surfaces for RPM visuals, sticky notes, device insights, and billing documentation.
+    primary_use_cases:
+      - usecase-rpm-support
+      - usecase-billing-operations
+      - usecase-care-coordination
+  - service: service-billing-toolkit
+    description: Combined UI and exports powering billing visuals, documentation, and audit bundles.
+    primary_use_cases:
+      - usecase-billing-operations
+      - usecase-rpm-support
+  - service: service-api-platform
+    description: External-facing API with enrollment endpoints and scoped auth tokens.
+    primary_use_cases:
+      - usecase-rpm-support
+      - usecase-billing-operations
+  - service: service-analytics-dashboard
+    description: Provider analytics UI supporting select-all workflows and cross-provider reporting.
+    primary_use_cases:
+      - usecase-billing-operations
+  - service: service-patient-sticky-notes
+    description: Shared patient header notes to coordinate care among users.
+    primary_use_cases:
+      - usecase-care-coordination
+  - service: service-device-api
+    description: Device ingestion endpoints accepting payloads from connected patient hardware.
+    primary_use_cases:
+      - usecase-device-ingestion
+  - service: service-fhir-gateway
+    description: SMART-on-FHIR launch surface for clinicians inside partner EHRs.
+    primary_use_cases:
+      - usecase-ehr-interoperability
+  - service: service-emr-adapters
+    description: Legacy API adapters and flat-file processors for non-FHIR EMR integrations.
+    primary_use_cases:
+      - usecase-ehr-interoperability
+  - service: service-export-pipelines
+    description: Automated generation of patient-level and aggregate exports for partners.
+    primary_use_cases:
+      - usecase-data-exports
+      - usecase-billing-operations
+
+capability_relationships:
+  - source: capability-billing-insights
+    target: capability-remote-monitoring
+    relationship: relates_to
+    description: Billing insights depends on RPM remote monitoring data feeds.

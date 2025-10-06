@@ -1,0 +1,13 @@
+# Code artifacts that implement Rimidi services and workflows.
+
+code_artifacts:
+  - id: code-rimidi-container-api
+    name: Rimidi Container API Module
+    repo: git@github.com:rimidi/app.git
+    path: services/rimidi_container/api/
+    language: python
+    source_system: git
+    related_services:
+      - service-rimidi-container
+    related_workflows:
+      - workflow-hypertension-care-plan

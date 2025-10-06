@@ -1,13 +1,914 @@
-# Rimidi 2.0 infrastructure mappings for hosting the knowledge graph workloads.
+# Rimidi 2.0 hosting and data ecosystem encoded for the knowledge graph.
 
-neo4j:
-  deployment: auradb
-  region: us-east-1
-  uri: bolt+routing://neo4j.rimidi.internal:7687
-  secrets_ref: aws-secretsmanager://neo4j/rimidi-kg
+use_cases:
+  - id: usecase-rpm-support
+    name: Remote Patient Monitoring
+    description: Supports clinicians managing patients with connected devices at home.
+    status: live
+  - id: usecase-chronic-care
+    name: Chronic Condition Management
+    description: Enables care teams to treat patients with long-term conditions.
+    status: live
+  - id: usecase-clinical-decision-support
+    name: Clinical Decision Support
+    description: Surfaces insights that guide point-of-care interventions.
+    status: planned
+  - id: usecase-billing-operations
+    name: Billing Operations & Compliance
+    description: Ensures RPM and CCM billing workflows meet reimbursement requirements and deadlines.
+    status: live
+  - id: usecase-care-coordination
+    name: Care Team Coordination
+    description: Improves multi-user collaboration on patient context, documentation, and tasks.
+    status: live
+  - id: usecase-device-ingestion
+    name: Patient Device Ingestion
+    description: Collects readings from connected devices such as scales, cuffs, CGMs, glucometers, and pulse oximeters.
+    status: live
+  - id: usecase-ehr-interoperability
+    name: EHR Interoperability
+    description: Exchanges data with partner EMRs via SMART-on-FHIR and proprietary APIs.
+    status: live
+  - id: usecase-data-exports
+    name: Data Exports & Reporting
+    description: Delivers operational and clinical datasets externally for analytics and patient care coordination.
+    status: live
 
-integration_endpoints:
-  - name: n8n-automation-gateway
-    type: http
-    url: https://automation.rimidi.com/hooks/kg
-    auth: aws_sigv4
+services:
+  - id: service-ui
+    name: Rimidi User Interface
+    description: Patient Chart, All-Patient lists, and Admin Console surfaces.
+    owner_team: product-experience
+    status: live
+    layer: business
+    service_type: ui
+  - id: service-rimidi-container
+    name: Rimidi Container
+    description: Containerized Django DRF application powering APIs and business logic.
+    owner_team: platform-engineering
+    status: live
+    layer: business
+    service_type: api
+    code_name: rimidi
+  - id: service-coldbrew
+    name: Coldbrew
+    description: Backend scheduler orchestrating Django jobs and tasks.
+    owner_team: platform-engineering
+    status: live
+    layer: business
+    service_type: scheduler
+  - id: service-rimidify
+    name: Rimidify
+    description: Clinical data transformation service that normalizes FHIR payloads.
+    owner_team: data-engineering
+    status: in-progress
+    layer: business
+    service_type: transformation
+  - id: service-surve
+    name: Surve
+    description: Patient-facing survey delivery and intake service.
+    owner_team: product-experience
+    status: live
+    layer: business
+    service_type: engagement
+  - id: service-reporting-analytics
+    name: Reporting and Analytics Pipeline
+    description: Unified reporting layer spanning operational, clinical, and business views.
+    owner_team: data-insights
+    status: proposed
+    layer: business
+    service_type: analytics
+  - id: service-analytics-dashboard
+    name: Analytics Dashboard
+    description: UI module surfacing cross-provider analytics with select-all provider workflows.
+    owner_team: product-experience
+    status: live
+    layer: business
+    service_type: analytics-ui
+  - id: service-api-platform
+    name: Public API Platform
+    description: External-facing API layer with granular authorization and enrollment endpoints.
+    owner_team: platform-engineering
+    status: live
+    layer: business
+    service_type: api
+  - id: service-patient-sticky-notes
+    name: Patient Sticky Notes
+    description: Collaborative patient header notes for rapid care-team communication.
+    owner_team: product-experience
+    status: live
+    layer: business
+    service_type: collaboration
+  - id: service-billing-toolkit
+    name: Billing Toolkit
+    description: UI and automation covering billing period visuals, documentation options, and compliance exports.
+    owner_team: product-experience
+    status: live
+    layer: business
+    service_type: billing
+
+  - id: service-device-api
+    name: Device Integration API
+    description: Ingests data from patient devices (scales, BP cuffs, CGMs, glucometers, pulse oximeters).
+    owner_team: platform-engineering
+    status: live
+    layer: business
+    service_type: ingestion
+  - id: service-fhir-gateway
+    name: FHIR Gateway
+    description: SMART-on-FHIR interface managing launch context, tokens, and resource synchronization.
+    owner_team: platform-engineering
+    status: live
+    layer: business
+    service_type: interoperability
+  - id: service-emr-adapters
+    name: EMR Adapter Suite
+    description: Handles non-FHIR proprietary APIs for partner EHR systems.
+    owner_team: platform-engineering
+    status: live
+    layer: business
+    service_type: interoperability
+  - id: service-export-pipelines
+    name: Data Export Pipelines
+    description: Generates patient care, operational, and analytics exports for downstream consumers.
+    owner_team: data-insights
+    status: live
+    layer: business
+    service_type: data-export
+
+infra_services:
+  - id: infra-ecs-rimidi
+    name: Amazon ECS (Rimidi Containers)
+    description: ECS cluster running the Rimidi Django workloads.
+    status: live
+    provider: aws
+    service_type: container-orchestration
+  - id: infra-ecs-rimidify
+    name: Amazon ECS (Rimidify)
+    description: ECS services that power the Rimidify transformations.
+    status: planned
+    provider: aws
+    service_type: container-orchestration
+  - id: infra-lambda-coldbrew
+    name: AWS Lambda (Coldbrew)
+    description: Lambda functions executing scheduled Coldbrew tasks.
+    status: live
+    provider: aws
+    service_type: function
+  - id: infra-eventbridge-coldbrew
+    name: Amazon EventBridge (Coldbrew Schedulers)
+    description: EventBridge rules triggering the Coldbrew Lambda functions.
+    status: live
+    provider: aws
+    service_type: scheduler
+  - id: infra-redis-coldbrew
+    name: Amazon ElastiCache for Redis (Task Queue)
+    description: Redis cache used for Coldbrew job coordination and Celery queues.
+    status: live
+    provider: aws
+    service_type: cache
+  - id: infra-rds-primary
+    name: Amazon RDS (Postgres)
+    description: Primary Postgres database for the Rimidi application.
+    status: live
+    provider: aws
+    service_type: database
+  - id: infra-s3-core
+    name: Amazon S3 (Core Storage)
+    description: Persistent file storage for application files and Kaleidoscope logs.
+    status: live
+    provider: aws
+    service_type: object-storage
+  - id: infra-cloudfront
+    name: Amazon CloudFront
+    description: CDN delivering the Rimidi UI to end users.
+    status: live
+    provider: aws
+    service_type: cdn
+  - id: infra-alb
+    name: Application Load Balancer
+    description: Load balancer fronting the Rimidi containers.
+    status: live
+    provider: aws
+    service_type: load-balancer
+  - id: infra-cloudwatch
+    name: Amazon CloudWatch
+    description: Metrics and log aggregation for runtime monitoring.
+    status: live
+    provider: aws
+    service_type: monitoring
+  - id: infra-secrets-manager
+    name: AWS Secrets Manager
+    description: Secure storage for application credentials.
+    status: live
+    provider: aws
+    service_type: secrets
+  - id: infra-ec2-grafana
+    name: Amazon EC2 (Grafana)
+    description: EC2 instance hosting the Grafana dashboards used by Kaleidoscope.
+    status: live
+    provider: aws
+    service_type: compute
+  - id: infra-s3-audit
+    name: Amazon S3 (Audit Exports)
+    description: Dedicated buckets storing care plan PDFs and audit-ready exports.
+    status: live
+    provider: aws
+    service_type: object-storage
+
+domains:
+  - id: domain-hearth
+    name: Hearth
+    description: Core application domain storing PHI-rich Rimidi data.
+    status: live
+    domain_kind: application
+    phi_sensitivity: phi
+    access_role: internal
+    access_mode: writable
+    data_purpose: [audit-grade, reporting]
+  - id: domain-apothecary
+    name: Apothecary
+    description: Clinical data domain staging PHI-inclusive data from Hearth, EMRs, and partners.
+    status: partial
+    domain_kind: clinical
+    phi_sensitivity: phi
+    access_role: internal
+    access_mode: writable
+    data_purpose: [audit-grade, transformation]
+  - id: domain-aquifer
+    name: Aquifer
+    description: De-identified analytics store for business intelligence and outcomes insights.
+    status: live
+    domain_kind: analytics
+    phi_sensitivity: non-phi
+    access_role: external-facing
+    access_mode: read-only
+    data_purpose: [insight, reporting]
+  - id: domain-canal
+    name: Canal
+    description: Customer-facing export domain delivering secure data extracts.
+    status: live
+    domain_kind: export
+    phi_sensitivity: phi
+    access_role: external-facing
+    access_mode: read-only
+    data_purpose: [reporting]
+  - id: domain-jetty
+    name: Jetty
+    description: System telemetry store for non-PHI operational metrics.
+    status: proposed
+    domain_kind: observability
+    phi_sensitivity: non-phi
+    access_role: internal
+    access_mode: writable
+    data_purpose: [ops, monitoring]
+  - id: domain-stillwater
+    name: Stillwater
+    description: Secure log store for PHI-inclusive debug and audit data.
+    status: proposed
+    domain_kind: observability
+    phi_sensitivity: phi
+    access_role: internal
+    access_mode: writable
+    data_purpose: [ops, audit-grade]
+  - id: domain-audit-repository
+    name: Audit Repository
+    description: Combined care plan and audit documentation domain for billing compliance.
+    status: live
+    domain_kind: audit
+    phi_sensitivity: phi
+    access_role: internal
+    access_mode: read-only
+    data_purpose: [audit-grade, reporting]
+
+collections:
+  - id: collection-hearth-patient-records
+    name: Hearth Patient Records
+    description: Patient demographics, encounters, and device data.
+    status: live
+    collection_type: relational-table
+    phi_sensitivity: phi
+    access_role: internal
+    access_mode: writable
+    data_purpose: [audit-grade, reporting]
+    domain: domain-hearth
+  - id: collection-apothecary-fhir-bundles
+    name: Apothecary FHIR Bundles
+    description: Versioned FHIR data bundles staged for transformation.
+    status: partial
+    collection_type: document-store
+    phi_sensitivity: phi
+    access_role: internal
+    access_mode: writable
+    data_purpose: [transformation, audit-grade]
+    domain: domain-apothecary
+  - id: collection-aquifer-outcomes
+    name: Aquifer Outcomes Insights
+    description: Aggregated metrics for cross-customer analytics.
+    status: live
+    collection_type: parquet-dataset
+    phi_sensitivity: non-phi
+    access_role: external-facing
+    access_mode: read-only
+    data_purpose: [insight, reporting]
+    domain: domain-aquifer
+  - id: collection-canal-exports
+    name: Canal Export Jobs
+    description: Curated data packages for customer delivery.
+    status: live
+    collection_type: file-drop
+    phi_sensitivity: phi
+    access_role: external-facing
+    access_mode: read-only
+    data_purpose: [reporting]
+    domain: domain-canal
+  - id: collection-jetty-telemetry
+    name: Jetty Telemetry Streams
+    description: Operational metrics powering Bluejay dashboards.
+    status: proposed
+    collection_type: time-series
+    phi_sensitivity: non-phi
+    access_role: internal
+    access_mode: writable
+    data_purpose: [ops, monitoring]
+    domain: domain-jetty
+  - id: collection-stillwater-audit-logs
+    name: Stillwater Audit Logs
+    description: PHI-inclusive audit trails for forensic investigation.
+    status: proposed
+    collection_type: append-only-log
+    phi_sensitivity: phi
+    access_role: internal
+    access_mode: writable
+    data_purpose: [ops, audit-grade]
+    domain: domain-stillwater
+  - id: collection-audit-care-plans
+    name: Audit Care Plan Archive
+    description: Completed care plans aggregated into audit-ready bundles.
+    status: live
+    collection_type: document-store
+    phi_sensitivity: phi
+    access_role: internal
+    access_mode: read-only
+    data_purpose: [audit-grade]
+    domain: domain-audit-repository
+
+feeders:
+  - id: feeder-apothecary
+    name: Apothecary Feeder
+    description: Notebook-driven export of clinical data from Hearth into Apothecary.
+    status: proposed
+    feeder_kind: notebook
+    phi_sensitivity: phi
+    access_role: internal
+    access_mode: writable
+    data_purpose: [exploratory, transformation, reporting]
+  - id: feeder-aquifer
+    name: Aquifer Feeder
+    description: Anonymized export pipeline from Hearth and Apothecary into Aquifer.
+    status: live
+    feeder_kind: batch
+    phi_sensitivity: phi
+    access_role: internal
+    access_mode: writable
+    data_purpose: [ingestion, transformation, insight]
+  - id: feeder-canal
+    name: Canal Feeder
+    description: Secure data export jobs delivering curated files to Canal.
+    status: live
+    feeder_kind: workflow
+    phi_sensitivity: phi
+    access_role: internal
+    access_mode: writable
+    data_purpose: [reporting, ops]
+  - id: feeder-tsunami
+    name: Tsunami Feeder
+    description: Operational metrics pipeline feeding Jetty and Stillwater.
+    status: proposed
+    feeder_kind: stream
+    phi_sensitivity: mixed
+    access_role: internal
+    access_mode: read-only
+    data_purpose: [ops, monitoring]
+
+analytics_surfaces:
+  - id: surface-bluejay
+    name: Bluejay Dashboards
+    description: Operational dashboards for TechOps and engineering.
+    status: partial
+    surface_type: dashboard
+    phi_sensitivity: non-phi
+    access_role: internal
+    access_mode: read-only
+    data_purpose: [ops, monitoring, reporting]
+  - id: surface-kaleidoscope
+    name: Kaleidoscope Observability
+    description: Developer-focused observability and debugging tooling.
+    status: live
+    surface_type: observability
+    phi_sensitivity: phi
+    access_role: internal
+    access_mode: read-only
+    data_purpose: [exploratory, observability]
+  - id: surface-canopy
+    name: Canopy Reporting
+    description: Unified analytics and reporting surface across domains.
+    status: partial
+    surface_type: reporting
+    phi_sensitivity: mixed
+    access_role: external-facing
+    access_mode: read-only
+    data_purpose: [insight, reporting]
+
+seeds:
+  - id: seed-rpm-device-signals
+    name: RPM Device Signals Seed
+    description: Curated dataset of de-identified device telemetry for experimentation.
+    status: planned
+    phi_sensitivity: mixed
+    access_role: internal
+    access_mode: read-only
+    data_purpose: [exploratory, insight, training]
+
+relationships:
+  - type: SUPPORTS
+    source: service-ui
+    target: usecase-rpm-support
+  - type: SUPPORTS
+    source: service-ui
+    target: usecase-chronic-care
+  - type: SUPPORTS
+    source: service-rimidi-container
+    target: usecase-rpm-support
+  - type: SUPPORTS
+    source: service-rimidi-container
+    target: usecase-clinical-decision-support
+  - type: SUPPORTS
+    source: service-rimidi-container
+    target: usecase-billing-operations
+  - type: SUPPORTS
+    source: service-api-platform
+    target: usecase-rpm-support
+  - type: SUPPORTS
+    source: service-api-platform
+    target: usecase-billing-operations
+  - type: SUPPORTS
+    source: service-patient-sticky-notes
+    target: usecase-care-coordination
+  - type: SUPPORTS
+    source: service-billing-toolkit
+    target: usecase-billing-operations
+  - type: SUPPORTS
+    source: service-device-api
+    target: usecase-device-ingestion
+  - type: SUPPORTS
+    source: service-fhir-gateway
+    target: usecase-ehr-interoperability
+  - type: SUPPORTS
+    source: service-emr-adapters
+    target: usecase-ehr-interoperability
+  - type: SUPPORTS
+    source: service-export-pipelines
+    target: usecase-data-exports
+  - type: SUPPORTS
+    source: service-export-pipelines
+    target: usecase-billing-operations
+  - type: DEPENDS_ON
+    source: service-ui
+    target: service-rimidi-container
+    properties:
+      dependency_type: api
+  - type: DEPENDS_ON
+    source: service-rimidi-container
+    target: service-coldbrew
+    properties:
+      dependency_type: schedule
+  - type: DEPENDS_ON
+    source: service-ui
+    target: service-reporting-analytics
+    properties:
+      dependency_type: data
+  - type: DEPENDS_ON
+    source: service-ui
+    target: service-surve
+    properties:
+      dependency_type: api
+  - type: DEPENDS_ON
+    source: service-analytics-dashboard
+    target: service-reporting-analytics
+    properties:
+      dependency_type: data
+  - type: DEPENDS_ON
+    source: service-analytics-dashboard
+    target: service-rimidi-container
+    properties:
+      dependency_type: api
+  - type: RUNS_ON
+    source: service-rimidi-container
+    target: infra-ecs-rimidi
+    properties:
+      environment: production
+  - type: RUNS_ON
+    source: service-coldbrew
+    target: infra-lambda-coldbrew
+    properties:
+      environment: production
+  - type: RUNS_ON
+    source: service-rimidify
+    target: infra-ecs-rimidify
+    properties:
+      environment: staging
+  - type: RUNS_ON
+    source: service-reporting-analytics
+    target: infra-ecs-rimidify
+    properties:
+      environment: staging
+  - type: RUNS_ON
+    source: service-analytics-dashboard
+    target: infra-ecs-rimidi
+    properties:
+      environment: production
+  - type: RUNS_ON
+    source: service-api-platform
+    target: infra-ecs-rimidi
+    properties:
+      environment: production
+  - type: RUNS_ON
+    source: service-patient-sticky-notes
+    target: infra-ecs-rimidi
+    properties:
+      environment: production
+  - type: RUNS_ON
+    source: service-billing-toolkit
+    target: infra-ecs-rimidi
+    properties:
+      environment: production
+  - type: RUNS_ON
+    source: service-device-api
+    target: infra-ecs-rimidi
+    properties:
+      environment: production
+  - type: RUNS_ON
+    source: service-fhir-gateway
+    target: infra-ecs-rimidi
+    properties:
+      environment: production
+  - type: RUNS_ON
+    source: service-emr-adapters
+    target: infra-ecs-rimidi
+    properties:
+      environment: production
+  - type: RUNS_ON
+    source: service-export-pipelines
+    target: infra-ecs-rimidify
+    properties:
+      environment: production
+  - type: SCHEDULED_BY
+    source: service-coldbrew
+    target: infra-eventbridge-coldbrew
+  - type: DEPENDS_ON
+    source: service-coldbrew
+    target: service-rimidi-container
+    properties:
+      dependency_type: api
+  - type: DEPENDS_ON
+    source: service-coldbrew
+    target: service-reporting-analytics
+    properties:
+      dependency_type: data
+  - type: DEPENDS_ON
+    source: service-rimidify
+    target: service-rimidi-container
+    properties:
+      dependency_type: api
+  - type: USES_SECRET_FROM
+    source: service-rimidi-container
+    target: infra-secrets-manager
+  - type: USES_SECRET_FROM
+    source: service-coldbrew
+    target: infra-secrets-manager
+  - type: USES_SECRET_FROM
+    source: service-rimidify
+    target: infra-secrets-manager
+  - type: DEPENDS_ON
+    source: service-ui
+    target: infra-cloudfront
+    properties:
+      dependency_type: delivery
+  - type: DEPENDS_ON
+    source: service-rimidi-container
+    target: infra-alb
+    properties:
+      dependency_type: delivery
+  - type: DEPENDS_ON
+    source: service-rimidi-container
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-coldbrew
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-reporting-analytics
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-analytics-dashboard
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-api-platform
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-billing-toolkit
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-device-api
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-fhir-gateway
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-emr-adapters
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-export-pipelines
+    target: infra-cloudwatch
+    properties:
+      dependency_type: logging
+  - type: DEPENDS_ON
+    source: service-coldbrew
+    target: infra-redis-coldbrew
+    properties:
+      dependency_type: data
+  - type: DEPENDS_ON
+    source: service-reporting-analytics
+    target: service-rimidi-container
+    properties:
+      dependency_type: data
+  - type: DEPENDS_ON
+    source: service-api-platform
+    target: service-rimidi-container
+    properties:
+      dependency_type: api
+  - type: DEPENDS_ON
+    source: service-billing-toolkit
+    target: service-coldbrew
+    properties:
+      dependency_type: schedule
+  - type: DEPENDS_ON
+    source: service-billing-toolkit
+    target: service-reporting-analytics
+    properties:
+      dependency_type: data
+  - type: DEPENDS_ON
+    source: service-device-api
+    target: service-rimidi-container
+    properties:
+      dependency_type: data
+  - type: DEPENDS_ON
+    source: service-device-api
+    target: service-api-platform
+    properties:
+      dependency_type: api
+  - type: DEPENDS_ON
+    source: service-fhir-gateway
+    target: service-api-platform
+    properties:
+      dependency_type: api
+  - type: DEPENDS_ON
+    source: service-emr-adapters
+    target: service-api-platform
+    properties:
+      dependency_type: api
+  - type: DEPENDS_ON
+    source: service-export-pipelines
+    target: service-reporting-analytics
+    properties:
+      dependency_type: data
+  - type: DEPENDS_ON
+    source: service-export-pipelines
+    target: service-device-api
+    properties:
+      dependency_type: data
+  - type: BACKED_BY
+    source: service-rimidi-container
+    target: domain-hearth
+  - type: BACKED_BY
+    source: service-coldbrew
+    target: domain-hearth
+  - type: BACKED_BY
+    source: service-rimidify
+    target: domain-apothecary
+  - type: BACKED_BY
+    source: service-surve
+    target: domain-hearth
+  - type: BACKED_BY
+    source: service-analytics-dashboard
+    target: domain-aquifer
+  - type: BACKED_BY
+    source: service-api-platform
+    target: domain-hearth
+  - type: BACKED_BY
+    source: service-billing-toolkit
+    target: domain-hearth
+  - type: BACKED_BY
+    source: service-billing-toolkit
+    target: domain-audit-repository
+  - type: BACKED_BY
+    source: service-device-api
+    target: domain-hearth
+  - type: BACKED_BY
+    source: service-fhir-gateway
+    target: domain-hearth
+  - type: BACKED_BY
+    source: service-emr-adapters
+    target: domain-hearth
+  - type: BACKED_BY
+    source: service-export-pipelines
+    target: domain-aquifer
+  - type: BACKED_BY
+    source: service-export-pipelines
+    target: domain-audit-repository
+  - type: POWERS
+    source: domain-hearth
+    target: service-ui
+  - type: POWERS
+    source: domain-hearth
+    target: service-rimidi-container
+  - type: POWERS
+    source: domain-aquifer
+    target: service-reporting-analytics
+  - type: POWERS
+    source: domain-aquifer
+    target: service-analytics-dashboard
+  - type: POWERS
+    source: domain-audit-repository
+    target: service-billing-toolkit
+  - type: POWERS
+    source: domain-hearth
+    target: service-device-api
+  - type: POWERS
+    source: domain-hearth
+    target: service-fhir-gateway
+  - type: POWERS
+    source: domain-hearth
+    target: service-emr-adapters
+  - type: POWERS
+    source: domain-aquifer
+    target: service-export-pipelines
+  - type: CONTAINS_COLLECTION
+    source: domain-hearth
+    target: collection-hearth-patient-records
+  - type: CONTAINS_COLLECTION
+    source: domain-apothecary
+    target: collection-apothecary-fhir-bundles
+  - type: CONTAINS_COLLECTION
+    source: domain-aquifer
+    target: collection-aquifer-outcomes
+  - type: CONTAINS_COLLECTION
+    source: domain-canal
+    target: collection-canal-exports
+  - type: CONTAINS_COLLECTION
+    source: domain-jetty
+    target: collection-jetty-telemetry
+  - type: CONTAINS_COLLECTION
+    source: domain-stillwater
+    target: collection-stillwater-audit-logs
+  - type: CONTAINS_COLLECTION
+    source: domain-audit-repository
+    target: collection-audit-care-plans
+  - type: PERSISTED_IN
+    source: domain-hearth
+    target: infra-rds-primary
+  - type: PERSISTED_IN
+    source: domain-hearth
+    target: infra-s3-core
+  - type: PERSISTED_IN
+    source: domain-apothecary
+    target: infra-s3-core
+  - type: PERSISTED_IN
+    source: domain-aquifer
+    target: infra-s3-core
+  - type: PERSISTED_IN
+    source: domain-canal
+    target: infra-s3-core
+  - type: PERSISTED_IN
+    source: domain-jetty
+    target: infra-s3-core
+  - type: PERSISTED_IN
+    source: domain-stillwater
+    target: infra-s3-core
+  - type: PERSISTED_IN
+    source: domain-audit-repository
+    target: infra-s3-audit
+  - type: FEEDS
+    source: feeder-aquifer
+    target: domain-aquifer
+  - type: CONSUMES_FROM
+    source: feeder-aquifer
+    target: domain-hearth
+  - type: CONSUMES_FROM
+    source: feeder-aquifer
+    target: domain-apothecary
+  - type: FEEDS
+    source: feeder-apothecary
+    target: domain-apothecary
+  - type: CONSUMES_FROM
+    source: feeder-apothecary
+    target: domain-hearth
+  - type: FEEDS
+    source: feeder-canal
+    target: domain-canal
+  - type: CONSUMES_FROM
+    source: feeder-canal
+    target: domain-hearth
+  - type: FEEDS
+    source: feeder-tsunami
+    target: domain-jetty
+  - type: FEEDS
+    source: feeder-tsunami
+    target: domain-stillwater
+  - type: FEEDS
+    source: feeder-canal
+    target: domain-audit-repository
+  - type: MONITORED_BY
+    source: service-rimidi-container
+    target: surface-kaleidoscope
+  - type: MONITORED_BY
+    source: service-coldbrew
+    target: surface-kaleidoscope
+  - type: MONITORED_BY
+    source: service-rimidi-container
+    target: surface-bluejay
+  - type: MONITORED_BY
+    source: service-coldbrew
+    target: surface-bluejay
+  - type: MONITORED_BY
+    source: service-analytics-dashboard
+    target: surface-bluejay
+  - type: MONITORED_BY
+    source: service-billing-toolkit
+    target: surface-kaleidoscope
+  - type: OBSERVES
+    source: surface-bluejay
+    target: service-rimidi-container
+  - type: OBSERVES
+    source: surface-bluejay
+    target: service-coldbrew
+  - type: OBSERVES
+    source: surface-kaleidoscope
+    target: service-rimidi-container
+  - type: OBSERVES
+    source: surface-kaleidoscope
+    target: service-coldbrew
+  - type: OBSERVES
+    source: surface-bluejay
+    target: service-analytics-dashboard
+  - type: REPORTS_ON
+    source: surface-bluejay
+    target: domain-jetty
+  - type: REPORTS_ON
+    source: surface-bluejay
+    target: domain-stillwater
+  - type: REPORTS_ON
+    source: surface-kaleidoscope
+    target: domain-hearth
+  - type: REPORTS_ON
+    source: surface-canopy
+    target: domain-aquifer
+  - type: REPORTS_ON
+    source: surface-canopy
+    target: domain-hearth
+  - type: REPORTS_ON
+    source: surface-canopy
+    target: domain-audit-repository
+  - type: DERIVED_FROM
+    source: seed-rpm-device-signals
+    target: domain-aquifer
+  - type: WRITES_TO
+    source: seed-rpm-device-signals
+    target: domain-aquifer
+  - type: SUPPORTS
+    source: service-surve
+    target: usecase-rpm-support
+  - type: SUPPORTS
+    source: service-rimidify
+    target: usecase-clinical-decision-support
+  - type: SUPPORTS
+    source: service-reporting-analytics
+    target: usecase-clinical-decision-support

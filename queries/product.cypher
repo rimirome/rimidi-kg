@@ -9,3 +9,28 @@ ORDER BY capability_name;
 MATCH (w:Workflow)
 WHERE w.owner_team IS NULL OR w.owner_team = ''
 RETURN w.id AS workflow_id, w.name AS workflow_name;
+
+// Use cases that currently have no supporting services documented.
+MATCH (u:UseCase)
+WHERE NOT (:Service)-[:SUPPORTS]->(u)
+RETURN u.id AS use_case_id, u.name AS use_case_name;
+
+// Capabilities powering Billing Operations & Compliance with their supporting services.
+MATCH (u:UseCase {id: 'usecase-billing-operations'})
+MATCH (cap:ProductCapability)-[:DELIVERS]->(u)
+OPTIONAL MATCH (svc:Service)-[:SUPPORTS]->(u)
+RETURN cap.id AS capability_id, cap.name AS capability_name,
+       collect(DISTINCT svc.id) AS supporting_services
+ORDER BY capability_name;
+
+// Feature relationships: capabilities related to RPM remote monitoring.
+MATCH (:ProductCapability {id: 'capability-remote-monitoring'})-[:RELATES_TO]->(cap:ProductCapability)
+RETURN cap.id AS related_capability_id, cap.name AS related_capability_name;
+
+// Knowledge articles documenting a capability.
+MATCH (ka:KnowledgeArticle)-[:EXPLAINS]->(cap:ProductCapability)
+RETURN cap.name AS capability, ka.name AS article, ka.source_system AS source;
+
+// Device ingestion services and their integration partners.
+MATCH (svc:Service {id: 'service-device-api'})-[:INTEGRATES_WITH]->(i:Integration)
+RETURN svc.id AS service_id, collect(DISTINCT i.name) AS integrations;

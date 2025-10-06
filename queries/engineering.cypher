@@ -1,10 +1,40 @@
 // Engineering-focused queries.
 
-// Integrations without explicit coverage on implementation relationships.
-MATCH (:Workflow)-[r:IMPLEMENTS]->(i:Integration)
-WHERE r.coverage IS NULL
-RETURN i.id AS integration_id, i.name AS integration_name;
+// Services missing explicit infrastructure hosting documentation.
+MATCH (s:Service)
+WHERE NOT (s)-[:RUNS_ON]->(:InfraService)
+RETURN s.id AS service_id, s.name AS service_name;
+
+// Infra primitives lacking dependent services.
+MATCH (i:InfraService)
+WHERE NOT (:Service)-[:RUNS_ON]->(i)
+RETURN i.id AS infra_id, i.name AS infra_name;
 
 // Capabilities flagged as deprecated but still enabling workflows.
 MATCH (c:ProductCapability {status: 'deprecated'})-[:ENABLES]->(w:Workflow)
 RETURN c.id AS capability_id, w.id AS workflow_id;
+
+// Services that depend on other services without specifying dependency type metadata.
+MATCH (s:Service)-[r:DEPENDS_ON]->(up:Service)
+WHERE r.dependency_type IS NULL
+RETURN s.id AS service_id, up.id AS upstream_service;
+
+// Observability coverage: services not monitored by any analytics surface.
+MATCH (s:Service)
+WHERE NOT (s)-[:MONITORED_BY]->(:AnalyticsSurface)
+RETURN s.id AS service_id, s.name AS service_name;
+
+// Integration coverage: ingestion and interop services missing partner connections.
+MATCH (s:Service)
+WHERE s.id IN ['service-device-api', 'service-fhir-gateway', 'service-emr-adapters', 'service-export-pipelines']
+  AND NOT (s)-[:INTEGRATES_WITH]->(:Integration)
+RETURN s.id AS service_id, s.name AS service_name;
+
+// Code artifacts associated with services.
+MATCH (s:Service)-[:USES_CODE]->(code:CodeArtifact)
+RETURN s.id AS service_id, code.repo AS repository, code.path AS path;
+
+// Recent events triggering services.
+MATCH (evt:Event)-[:TRIGGERS]->(s:Service)
+RETURN evt.id AS event_id, evt.valid_from AS occurred_at, s.id AS service_id
+ORDER BY evt.valid_from DESC;
