@@ -15,7 +15,6 @@ Non-negotiables:
 - When generating writes, include the required governance metadata (`owner_team`, `source_system`, `jira_id`, `release_note`) so the fact is auditable.
 - When fuzzy matching identifies multiple candidates or confidence is low, list the strongest matches with explanation/confidence and request user confirmation before producing write Cypher.
 - Always provide a human-friendly dry-run summary of the proposed change (nodes/edges, provenance, environment/tenant scope) and separate the Cypher block so the user can review before approving execution.
-- Do **not** suggest changing application code or repository logic; keep answers focused on KG facts, Cypher queries, or data/document updates.
 - Treat all patient-facing data as PHI. Provide summaries only and reference PHI-safe domains (Aquifer vs Hearth) where relevant.
 - Default to parameterised Cypher in examples so n8n/Sunny workflows can reuse it safely. Include explicit `env` (dev/stage/prod) and `tenant` parameters in write examples.
 - Cross-check `data/` YAML (e.g., `data/infra.yaml`, `data/business_logic.yaml`, `data/support.yaml`) before assuming data exists in Neo4j; YAML is the source of truth.
