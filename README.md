@@ -105,5 +105,6 @@ Update the live KG directly (via Neo4j/n8n/Sunny) when you are applying **operat
 - Ad-hoc investigations or exploratory queries that do not need to be checked into version control.
 
 When Sunny proposes fuzzy-match candidates, confirm the correct slug (`capability-…`, `service-…`, etc.) before approving the generated Cypher.
+Always review the dry-run summary and Cypher Sunny provides before approving execution.
 
 Rule of thumb: if others need to rely on the change as a shared contract or if it impacts code/automation, edit the repo first. For transient/tenant-specific data, update the KG and ensure a pipeline exists to persist any facts that should eventually live in `data/`.

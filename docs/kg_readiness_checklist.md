@@ -35,6 +35,7 @@ Before Sunny or n8n generates write Cypher, provide:
 - Environment and tenant context (production/staging, specific tenant ids).
 - Business context or expected behaviour so related knowledge articles/policies can link back to documentation.
 - Explicit confirmation when an update replaces or deletes existing relationships/data.
+- Review the dry-run summary Sunny generates before approving execution of write Cypher.
 
 ## 5. Recommended Enhancements (Backlog)
 Track these items and check them off as they are implemented:

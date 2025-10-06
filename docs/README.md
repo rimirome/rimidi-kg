@@ -40,7 +40,7 @@ When you interact with the KG through Sunny/n8n:
 - When Sunny lists multiple candidate slugs (`capability-…`, `service-…`, etc.), select the correct one before approving writes.
 - Provide required metadata for new facts (`id`, `name`, `owner_team`, `source_system`, `jira_id`, `release_note`).
 - Call out environment/tenant context (production vs staging, tenant identifier) so the generated Cypher is scoped correctly.
-- Expect Sunny to show Cypher for destructive updates and ask for explicit confirmation before executing it.
+- Expect Sunny to show a dry-run summary plus Cypher for any write (especially destructive updates) and ask for explicit confirmation before executing it.
 
 
 For contribution guidelines and workflow examples, check `docs/CONTRIBUTING.md` and `docs/playbook.md`. Release-driven enhancements are recorded in `data/business_logic.yaml` with `release_date` metadata sourced from product release notes.
