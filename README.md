@@ -88,3 +88,18 @@ When you add or modify information, work through these steps:
 7. Run `python tools/validator.py --schema --data` (or via Docker) before committing.
 
 Every PR should mention the ontology version and data provenance sources so future audits can trace changes.
+
+### Repo Files vs. Live KG Updates
+
+Use this repo whenever you are changing **structure, canonical content, or automation contracts**:
+- Introducing/changing node or relationship types, attributes, or ownership rules.
+- Adding or modifying source-of-truth data that should be versioned (seed data, business logic YAML, integration metadata).
+- Updating Sunny/n8n prompts, curated queries, or validator/tooling behavior.
+- Recording provenance, governance policies, or release-driven enhancements.
+
+Update the live KG directly (via Neo4j/n8n/Sunny) when you are applying **operational facts** that do not alter the ontology:
+- Tenant-specific or environment-specific configuration values already modeled in schema.
+- Runtime events (deployments, incidents) that will later be synced back through a pipeline.
+- Ad-hoc investigations or exploratory queries that do not need to be checked into version control.
+
+Rule of thumb: if others need to rely on the change as a shared contract or if it impacts code/automation, edit the repo first. For transient/tenant-specific data, update the KG and ensure a pipeline exists to persist any facts that should eventually live in `data/`.
