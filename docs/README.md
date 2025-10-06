@@ -33,6 +33,15 @@ For the canonical vocabulary, see `docs/ontology.md`.
 
 Before promoting schema or data changes, review `docs/kg_readiness_checklist.md`. It walks through ontology, schema, documentation, data, AI, and operational checks, plus recommended enhancements so nothing is missed.
 
+## Using Sunny (Chat-Only Workflows)
+
+When you interact with the KG through Sunny/n8n:
+- Describe the concept in plain language; Sunny will fuzzily match it against existing node labels or aliases.
+- When Sunny lists multiple candidate slugs (`capability-…`, `service-…`, etc.), select the correct one before approving writes.
+- Provide required metadata for new facts (`id`, `name`, `owner_team`, `source_system`, `jira_id`, `release_note`).
+- Call out environment/tenant context (production vs staging, tenant identifier) so the generated Cypher is scoped correctly.
+- Expect Sunny to show Cypher for destructive updates and ask for explicit confirmation before executing it.
+
 
 For contribution guidelines and workflow examples, check `docs/CONTRIBUTING.md` and `docs/playbook.md`. Release-driven enhancements are recorded in `data/business_logic.yaml` with `release_date` metadata sourced from product release notes.
 

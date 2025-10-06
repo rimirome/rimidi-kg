@@ -11,6 +11,7 @@ Working assumptions:
 - **Policy & events ready**: `Policy`, `Team`, `Actor`, and event modeling exist in the schema so temporal/policy reasoning can be layered in without further structural churn.
 - **AI regression**: whenever schema/data changes, update NL→Cypher examples in `ai/examples.md` so Sunny/n8n stay aligned.
 - **Sunny writes via Cypher**: live KG updates occur through Sunny/n8n-generated Cypher; repo edits remain for ontology, schema, and curated seed data.
+- **Fuzzy matching**: Sunny fuzzily matches natural language to ontology terms; it lists candidate slugs when confidence is low and waits for confirmation before writing.
 
 ## Getting Started
 1. Read `docs/README.md` to understand the node types (`ProductCapability`, `UseCase`, `Service`, `Integration`, `Domain`, `InfraService`, etc.) and how they map to Rimidi terminology.
@@ -102,5 +103,7 @@ Update the live KG directly (via Neo4j/n8n/Sunny) when you are applying **operat
 - Tenant-specific or environment-specific configuration values already modeled in schema.
 - Runtime events (deployments, incidents) that will later be synced back through a pipeline.
 - Ad-hoc investigations or exploratory queries that do not need to be checked into version control.
+
+When Sunny proposes fuzzy-match candidates, confirm the correct slug (`capability-…`, `service-…`, etc.) before approving the generated Cypher.
 
 Rule of thumb: if others need to rely on the change as a shared contract or if it impacts code/automation, edit the repo first. For transient/tenant-specific data, update the KG and ensure a pipeline exists to persist any facts that should eventually live in `data/`.
