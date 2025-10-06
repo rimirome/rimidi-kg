@@ -1,13 +1,13 @@
 # Rimidi KG Ontology
 
-The ontology defines the shared language across Product, Architecture (TechOps), and Shared/CRM teams. Every node label or relationship type in `schema/` should map to a business concept so automations, dashboards, and graph queries stay aligned with how the platform is actually described.
+The ontology defines the shared language across Product, Platform Architecture, and Shared/CRM teams. Every node label or relationship type in `schema/` should map to a business concept so automations, dashboards, and graph queries stay aligned with how the platform is actually described.
 
 ## Subgraph Overview
 - **Product Graph** — Capabilities, workflows, UI elements, report templates, and policies that describe what Rimidi delivers to users.
-- **Architecture Graph (TechOps)** — Services, internal tooling, infrastructure, data lineage, and operational events that explain how the platform runs.
+- **Platform Architecture Graph** — Services, internal tooling, infrastructure, data lineage, and operational events that explain how the platform runs. TechOps contributes heavily here, but the graph also reflects work by Product Engineering, Data, and Reliability teams.
 - **Shared / CRM Graph** — Clients, implementations, devices, contracts, channels, and partner contexts that connect Product to customer outcomes.
 
-Keep the graphs distinct but linked through explicit relationships (for example, Product capabilities referencing Architecture services and Shared device vendors).
+Keep the graphs distinct but linked through explicit relationships (for example, Product capabilities referencing platform services and Shared device vendors).
 
 ## Node Labels
 
@@ -25,7 +25,7 @@ Keep the graphs distinct but linked through explicit relationships (for example,
 | `Policy` | Compliance or business guardrail applied to services, domains, or tenants. | `policy-audit-billing` | Reference applicable subgraph nodes via `GOVERNS` or `APPLIES_TO`. |
 | `CodeArtifact` | Source code reference (repo/path) implementing a capability or workflow. | `code-rimidi-container-api` | Attach via `USES_CODE` / `IMPLEMENTED_BY`. |
 
-### Architecture Graph (TechOps)
+### Platform Architecture Graph
 
 | Label | Description | Example | Notes |
 | --- | --- | --- | --- |
