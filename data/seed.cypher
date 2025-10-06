@@ -385,6 +385,13 @@ MERGE (seed_rpm:Seed {id: 'seed-rpm-device-signals'})
       seed_rpm.access_mode = 'read-only',
       seed_rpm.data_purpose = ['exploratory', 'insight', 'training'];
 MERGE (seed_rpm)-[:DERIVED_FROM]->(domain_aquifer);
+MERGE (cap_billing:ProductCapability {id: 'capability-billing-insights'})
+  SET cap_billing.name = 'Billing Insights & Compliance',
+      cap_billing.status = 'live',
+      cap_billing.owner_team = 'Product';
+MERGE (cap_rm:ProductCapability {id: 'capability-remote-monitoring'})
+MERGE (cap_billing)-[:RELATES_TO]->(cap_rm);
+MERGE (cap_rm)-[:RELATES_TO]->(cap_billing);
 
 MERGE (ka:KnowledgeArticle {id: 'ka-rpm-billing-periods'})
   SET ka.name = 'RPM Billing Period Expectations',

@@ -14,3 +14,6 @@ Reference the `components` section in `data/business_logic.yaml`, which includes
 
 ## How do I reference integrations?
 Use the `Integration` nodes (e.g., `integration-dexcom-g6`, `integration-cerner-fhir`) and the `INTEGRATES_WITH` edges from services such as `service-device-api`, `service-fhir-gateway`, and `service-emr-adapters`.
+
+## Should I recommend editing application code?
+No. The assistant should never suggest changing Rimidi source code. Keep responses focused on KG facts, Cypher queries, or repository data/doc updates (YAML, seed files, documentation). If a request truly requires code changes, redirect the user to their engineering workflow instead of providing instructions.

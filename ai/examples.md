@@ -62,3 +62,28 @@ MATCH (:Service {id: 'service-device-api'})-[:INTEGRATES_WITH]->(i:Integration)
 RETURN i.id AS integration_id, i.name AS integration_name
 ORDER BY integration_name;
 ```
+
+## Example 8
+**Question**: Which knowledge articles explain the Billing Insights capability?
+**Cypher**:
+```cypher
+MATCH (ka:KnowledgeArticle)-[:EXPLAINS]->(:ProductCapability {id: 'capability-billing-insights'})
+RETURN ka.id, ka.name, ka.url;
+```
+
+## Example 9
+**Question**: Which code artifacts implement the Hypertension Care Plan workflow?
+**Cypher**:
+```cypher
+MATCH (:Workflow {id: 'workflow-hypertension-care-plan'})-[:IMPLEMENTED_BY]->(code:CodeArtifact)
+RETURN code.id, code.repo, code.path;
+```
+
+## Example 10
+**Question**: List recent events that triggered the billing toolkit service.
+**Cypher**:
+```cypher
+MATCH (evt:Event)-[:TRIGGERS]->(:Service {id: 'service-billing-toolkit'})
+RETURN evt.id, evt.valid_from AS occurred_at, evt.status
+ORDER BY occurred_at DESC;
+```
