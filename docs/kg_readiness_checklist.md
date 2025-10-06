@@ -26,6 +26,15 @@ Use this checklist before loading new data, promoting schema changes, or turning
 - [ ] KG health automation (n8n) is still green (counts, orphan checks, sync timestamps).
 - [ ] If PHI is involved, confirm PHI guardrails are respected (segregated nodes, prompts exclude PHI).
 
+## SME Inputs Needed for Write Operations
+Before Sunny or n8n generates write Cypher, provide:
+- Target node/edge details (label, stable `id`, human-readable name/description).
+- Ownership metadata (`owner_team`, approver/actor if relevant).
+- Provenance fields (`source_system`, `jira_id`, `release_note`, `added_at`).
+- Environment and tenant context (production/staging, specific tenant ids).
+- Business context or expected behaviour so related knowledge articles/policies can link back to documentation.
+- Explicit confirmation when an update replaces or deletes existing relationships/data.
+
 ## 5. Recommended Enhancements (Backlog)
 Track these items and check them off as they are implemented:
 - [ ] Temporal events modeled (`Event` node/edges) with `valid_from` / `valid_to` populated in data.
