@@ -1,6 +1,15 @@
 # Rimidi Knowledge Graph Repository
 
+## Purpose & Assumptions
+
 The Rimidi KG is the single source of truth for how Rimidi capabilities, services, integrations, data domains, and infrastructure connect. It powers change-impact analysis for Product & Engineering and acts as the contract that keeps Sunny/n8n automations aligned with reality.
+
+Working assumptions:
+- **Ontology-first**: every node/edge type lives in `docs/ontology.md` before it appears in schema or data files.
+- **Governance metadata**: core nodes carry `valid_from`, `valid_to`, and provenance fields (`source_system`, `jira_id`, `release_note`).
+- **Ownership required**: services, domains, integrations, and capabilities will point to a `Team` via `OWNS` as ownership data is filled in.
+- **Policy & events ready**: `Policy`, `Team`, `Actor`, and event modeling exist in the schema so temporal/policy reasoning can be layered in without further structural churn.
+- **AI regression**: whenever schema/data changes, update NL→Cypher examples in `ai/examples.md` so Sunny/n8n stay aligned.
 
 ## Getting Started
 1. Read `docs/README.md` to understand the node types (`ProductCapability`, `UseCase`, `Service`, `Integration`, `Domain`, `InfraService`, etc.) and how they map to Rimidi terminology.
@@ -52,3 +61,30 @@ For detailed workflows see `docs/CONTRIBUTING.md` and `docs/playbook.md`. Run `p
    ```
 
 > n8n can run the same `docker compose exec` commands inside workflows to trigger validator or loader tasks. Mounting `.:/workspace` keeps repo changes in sync with your host and the agent.
+
+## How to Maintain This Repo
+
+Think of the repo in two layers:
+
+**System files (edit with care)**
+- `docs/ontology.md` – canonical vocabulary, responsible teams.
+- `schema/` – node/relationship definitions, attributes, changelog.
+- `tools/` – validator, loader, pipeline scripts, notebooks.
+- `.github/` – CI workflows.
+
+**Config/content files (updated frequently with provenance)**
+- `data/` – YAML/Cypher facts, business logic, integrations.
+- `ai/` – prompt context, examples, guardrails for Sunny/n8n.
+- `queries/` – Cypher used by humans and automations.
+- `docs/CHANGELOG.md`, `docs/README.md`, `docs/playbook.md` – human-facing guidance.
+
+When you add or modify information, work through these steps:
+1. Update `docs/ontology.md` with any new labels/relationships and note owning teams.
+2. Reflect the ontology change in `schema/` and log it in `schema/changelog.md`.
+3. Refresh docs (`docs/README.md`, `docs/CONTRIBUTING.md`, `docs/playbook.md`) so Product/Engineering/TechOps understand the change.
+4. Edit `data/` files, including provenance fields (release note, Jira ID, source system).
+5. Update `ai/` prompts/examples and add or tweak queries in `queries/`.
+6. Adjust tooling (`tools/validator.py`, `tools/pipeline/`) if new validation or ingestion paths are required.
+7. Run `python tools/validator.py --schema --data` (or via Docker) before committing.
+
+Every PR should mention the ontology version and data provenance sources so future audits can trace changes.
