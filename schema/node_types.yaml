@@ -39,12 +39,52 @@ node_types:
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
+  - name: SupportWorkflow
+    description: Troubleshooting or support playbook used by Customer Success or Product teams.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: UIComponent
+    description: Visible or interactive UI element (for example, modals, headers, dashboards).
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.ui_area
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
   - name: Integration
     description: External system or interface the platform relies on.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
       - ref: attributes.common.vendor
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: DeviceVendor
+    description: Device manufacturer or partner organization that produces integrated hardware.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
       - ref: attributes.common.status
       - ref: attributes.governance.valid_from
       - ref: attributes.governance.valid_to
@@ -62,6 +102,36 @@ node_types:
       - ref: attributes.service.layer
       - ref: attributes.service.service_type
       - ref: attributes.service.code_name
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: ToolingService
+    description: Internal Rimidi utility or admin tool exposed to operations or back-office teams.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.ui_area
+      - ref: attributes.common.status
+      - ref: attributes.service.layer
+      - ref: attributes.service.service_type
+      - ref: attributes.service.code_name
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Channel
+    description: Communication pathway available to deliver alerts or outreach (SMS, email, telehealth, in-app).
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.status
       - ref: attributes.governance.valid_from
       - ref: attributes.governance.valid_to
       - ref: attributes.governance.source_system
@@ -165,6 +235,21 @@ node_types:
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
+  - name: ReportTemplate
+    description: Reusable report definition applied across clients, dashboards, or analytics surfaces.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.ui_area
+      - ref: attributes.common.status
+      - ref: attributes.data.surface_type
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
   - name: Policy
     description: Compliance or business guardrail applied to services, domains, or tenants.
     attributes:
@@ -222,6 +307,58 @@ node_types:
       - ref: attributes.common.description
       - ref: attributes.common.status
       - ref: attributes.governance.valid_from
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Client
+    description: Healthcare organization or customer entity licensed to use Rimidi.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Implementation
+    description: Client-specific deployment or environment configuration of the Rimidi platform.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Contract
+    description: Commercial agreement or SOW covering a client relationship.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: AccountContact
+    description: Individual contact at a client organization tied to relationship management.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note

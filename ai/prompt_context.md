@@ -22,9 +22,11 @@ Non-negotiables:
 - When unsure, ask for clarification instead of guessing.
 
 Graph conventions:
-- Node labels: `ProductCapability`, `UseCase`, `Workflow`, `Service`, `Integration`, `InfraService`, `Domain`, `Collection`, `Feeder`, `Seed`, `AnalyticsSurface`, `KnowledgeArticle`, `CodeArtifact`, `Event`, `Policy`, `Team`, `Actor`.
-- Relationships include `ENABLES`, `IMPLEMENTS`, `DELIVERS`, `SUPPORTS`, `DEPENDS_ON`, `RUNS_ON`, `SCHEDULED_BY`, `BACKED_BY`, `CONTAINS_COLLECTION`, `FEEDS`, `CONSUMES_FROM`, `INTEGRATES_WITH`, `RELATES_TO`, `REPORTS_ON`, `EXPLAINS`, `DOCUMENTS`, `USES_CODE`, `IMPLEMENTED_BY`, `TRIGGERS`, `RESULTED_IN`, and other observability or governance edges defined in `schema/relationships.yaml`.
-- IDs follow slug-style strings (e.g., `service-rimidi-container`, `domain-hearth`).
+- Keep Product, TechOps, and Shared/CRM subgraphs explicit—if unclear which layer the user references, ask.
+- Node labels now span Product (`ProductCapability`, `UseCase`, `Workflow`, `SupportWorkflow`, `UIComponent`, `ReportTemplate`), TechOps (`Service`, `ToolingService`, `InfraService`, `Domain`, `Collection`, `Feeder`, `Seed` @deprecated, `AnalyticsSurface`, `Event`), and Shared/CRM (`Integration`, `DeviceVendor`, `Channel`, `Client`, `Implementation`, `Contract`, `AccountContact`) plus cross-cutting (`KnowledgeArticle`, `CodeArtifact`, `Policy`, `Team`, `Actor`).
+- Relationships include `HAS_COMPONENT`, `PROVIDES_CHANNEL`, `MANUFACTURED_BY`, `USES_TEMPLATE`, `SUPPORTS_TROUBLESHOOTING`, `ADMINISTERED_BY`, alongside existing `ENABLES`, `IMPLEMENTS`, `DELIVERS`, `SUPPORTS`, `DEPENDS_ON`, `RUNS_ON`, `SCHEDULED_BY`, `BACKED_BY`, `CONTAINS_COLLECTION`, `FEEDS`, `CONSUMES_FROM`, `INTEGRATES_WITH`, `RELATES_TO`, `REPORTS_ON`, `EXPLAINS`, `DOCUMENTS`, `USES_CODE`, `IMPLEMENTED_BY`, `TRIGGERS`, `RESULTED_IN`.
+- IDs follow slug-style strings (e.g., `service-rimidi-container`, `component-disease-view-column`).
+- Use the `ui_area` attribute when present to understand where UI components, report templates, or tooling services live inside the product.
 
 Response format:
 1. Natural language summary.

@@ -26,6 +26,12 @@ relationships:
     description: Service enabling a business use case.
     source: Service
     target: UseCase
+  - type: SUPPORTS_TROUBLESHOOTING
+    description: Capability or service documented by a support workflow.
+    source:
+      - Service
+      - ProductCapability
+    target: SupportWorkflow
   - type: DEPENDS_ON
     description: Service-level dependency across Rimidi components.
     source: Service
@@ -63,10 +69,22 @@ relationships:
     description: Analytics surface surfacing insights about a domain.
     source: AnalyticsSurface
     target: Domain
+  - type: USES_TEMPLATE
+    description: Workflow or analytics surface leveraging a reusable report template.
+    source:
+      - Workflow
+      - AnalyticsSurface
+    target: ReportTemplate
   - type: RELATES_TO
     description: Conceptual relationship or dependency between product capabilities or features.
     source: ProductCapability
     target: ProductCapability
+  - type: HAS_COMPONENT
+    description: Capability or service composed of a UI component for user experience delivery.
+    source:
+      - ProductCapability
+      - Service
+    target: UIComponent
   - type: CONTAINS_COLLECTION
     description: Domain composed of subordinate collections.
     source: Domain
@@ -87,6 +105,14 @@ relationships:
     description: Service leveraging an external integration partner or device network.
     source: Service
     target: Integration
+  - type: PROVIDES_CHANNEL
+    description: Service exposing a communication pathway to end users or clinicians.
+    source: Service
+    target: Channel
+  - type: MANUFACTURED_BY
+    description: Integration linked to its device manufacturer for traceability.
+    source: Integration
+    target: DeviceVendor
   - type: POWERS
     description: Domain or collection powering a service.
     source: Domain
@@ -107,6 +133,10 @@ relationships:
     description: Team accountable for a resource.
     source: Team
     target: Service
+  - type: ADMINISTERED_BY
+    description: Tooling service managed by a specific operational team.
+    source: ToolingService
+    target: Team
   - type: RESPONSIBLE_FOR
     description: Team responsible for a domain, integration, or workflow.
     source: Team

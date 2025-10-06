@@ -18,6 +18,10 @@ attributes:
       type: string
       required: false
       description: Primary team accountable for the node.
+    ui_area:
+      type: string
+      required: false
+      description: Short label for the functional UI area or surface.
     status:
       type: string
       required: false

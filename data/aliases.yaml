@@ -6,3 +6,11 @@
 # services:
 #   - id: service-rimidi-container
 #     aliases: ['core api', 'backend api', 'rimidi api']
+
+label_aliases:
+  - label: UIComponent
+    aliases: ['FeatureElement']
+  - label: DeviceVendor
+    aliases: ['Vendor']
+  - label: ToolingService
+    aliases: ['AdminTool']

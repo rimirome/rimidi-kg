@@ -1,5 +1,10 @@
 # Schema Changelog
 
+## 0.6.0 - UI & CRM Alignment
+- Added node types for UI components, support workflows, report templates, tooling services, device vendors, communication channels, and CRM entities (Client, Implementation, Contract, AccountContact).
+- Extended relationship vocabulary with HAS_COMPONENT, PROVIDES_CHANNEL, MANUFACTURED_BY, USES_TEMPLATE, SUPPORTS_TROUBLESHOOTING, and ADMINISTERED_BY.
+- Introduced optional `ui_area` attribute for product-facing artifacts and refreshed ontology documentation to reinforce the Product / TechOps / Shared split.
+
 ## 0.5.0 - Governance & Ownership
 - Added governance attributes (valid_from/valid_to/source) across core node types.
 - Introduced Policy, Team, and Actor node types plus ownership/policy relationships.
