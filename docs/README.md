@@ -29,6 +29,11 @@ For the canonical vocabulary, see `docs/ontology.md`.
 - **Data updates** (`data/`) should reference a release note, ADR, or Jira ticket; run `python tools/validator.py --data` before requesting review.
 - **AI context changes** (`ai/`) must include updated natural-language-to-Cypher examples so Sunny/n8n stay aligned.
 
+### Readiness Checklist
+
+Before promoting schema or data changes, review `docs/kg_readiness_checklist.md`. It walks through ontology, schema, documentation, data, AI, and operational checks, plus recommended enhancements so nothing is missed.
+
+
 For contribution guidelines and workflow examples, check `docs/CONTRIBUTING.md` and `docs/playbook.md`. Release-driven enhancements are recorded in `data/business_logic.yaml` with `release_date` metadata sourced from product release notes.
 
 ## Emerging Dimensions
