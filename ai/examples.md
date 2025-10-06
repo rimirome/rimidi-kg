@@ -87,3 +87,12 @@ MATCH (evt:Event)-[:TRIGGERS]->(:Service {id: 'service-billing-toolkit'})
 RETURN evt.id, evt.valid_from AS occurred_at, evt.status
 ORDER BY occurred_at DESC;
 ```
+
+## Example 11
+**Question**: Which services and domains would be impacted if we modify the Billing Insights capability?
+**Cypher**:
+```cypher
+MATCH (cap:ProductCapability {id: 'capability-billing-insights'})-[:DELIVERS]->(:UseCase)<-[:SUPPORTS]-(svc:Service)
+OPTIONAL MATCH (svc)-[:BACKED_BY]->(domain:Domain)
+RETURN svc.id AS service_id, collect(DISTINCT domain.id) AS domains
+```

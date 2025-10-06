@@ -12,6 +12,7 @@ Working assumptions:
 - **AI regression**: whenever schema/data changes, update NL→Cypher examples in `ai/examples.md` so Sunny/n8n stay aligned.
 - **Sunny writes via Cypher**: live KG updates occur through Sunny/n8n-generated Cypher; repo edits remain for ontology, schema, and curated seed data.
 - **Fuzzy matching**: Sunny fuzzily matches natural language to ontology terms; it lists candidate slugs when confidence is low and waits for confirmation before writing.
+- Maintain `data/aliases.yaml` so the alias vocabulary stays in sync with user terminology.
 
 ## Getting Started
 1. Read `docs/README.md` to understand the node types (`ProductCapability`, `UseCase`, `Service`, `Integration`, `Domain`, `InfraService`, etc.) and how they map to Rimidi terminology.

@@ -41,6 +41,9 @@ When you interact with the KG through Sunny/n8n:
 - Provide required metadata for new facts (`id`, `name`, `owner_team`, `source_system`, `jira_id`, `release_note`).
 - Call out environment/tenant context (production vs staging, tenant identifier) so the generated Cypher is scoped correctly.
 - Expect Sunny to show a dry-run summary plus Cypher for any write (especially destructive updates) and ask for explicit confirmation before executing it.
+- Mention whether you are working in the Product, TechOps, or Shared graph; Sunny will default to asking if unclear.
+- Keep `data/aliases.yaml` up to date with common synonyms so fuzzy matching succeeds.
+- Expect Sunny to surface upstream/downstream impact summaries (up to three hops) when you ask impact questions.
 
 
 For contribution guidelines and workflow examples, check `docs/CONTRIBUTING.md` and `docs/playbook.md`. Release-driven enhancements are recorded in `data/business_logic.yaml` with `release_date` metadata sourced from product release notes.

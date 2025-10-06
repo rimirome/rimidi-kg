@@ -1,0 +1,8 @@
+# Aliases and synonyms to support Sunny's fuzzy matching.
+# Example structure:
+# product_capabilities:
+#   - id: capability-patient-chart-navigation
+#     aliases: ['patient chart tabs', 'chart subnav', 'navigation tabs']
+# services:
+#   - id: service-rimidi-container
+#     aliases: ['core api', 'backend api', 'rimidi api']
