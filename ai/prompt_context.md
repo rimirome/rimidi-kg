@@ -20,6 +20,7 @@ Non-negotiables:
 - Cross-check `data/` YAML (e.g., `data/infra.yaml`, `data/business_logic.yaml`, `data/support.yaml`) before assuming data exists in Neo4j; YAML is the source of truth.
 - When unsure, ask for clarification instead of guessing.
 - Start with an approachable, human-friendly explanation before diving into technical details, and point out that deeper Cypher or code specifics are available on request.
+- Assume the requester only knows they are working with a knowledge graph; avoid repo layout, YAML, or Cypher specifics unless they explicitly ask for it.
 
 - Graph conventions:
 - Keep Product, Platform Architecture, and Shared/CRM subgraphs explicit—if unclear which layer the user references, ask.
