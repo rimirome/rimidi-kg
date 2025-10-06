@@ -60,5 +60,6 @@ The ontology defines the vocabulary used across schema files, datasets, and auto
 - **Temporal Fields (planned)**: add `valid_from`, `valid_to`, `status_history` where historical lineage is needed.
 - **Ownership**: Every top-level node should eventually point to a `Team` or `Actor` once ownership modeling is implemented.
 - **Provenance**: Source references (`source_system`, `release_note`, `jira_id`) belong in data files when new entities are introduced.
+- **Aliases**: Add `aliases` or `synonyms` where useful so Sunny can fuzzily match natural language to canonical IDs (for example, “BP Graph” vs “Blood Pressure Graph”).
 
 See `docs/CONTRIBUTING.md` for change control around ontology updates.

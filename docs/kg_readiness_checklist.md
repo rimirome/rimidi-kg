@@ -4,6 +4,7 @@ Use this checklist before loading new data, promoting schema changes, or turning
 
 ## 1. Vocabulary & Schema
 - [ ] Proposed concepts are defined in `docs/ontology.md` (label, description, owning team).
+- [ ] Alias/synonym lists for fuzzy matching are recorded in the ontology when terminology varies.
 - [ ] `schema/node_types.yaml` and `schema/relationships.yaml` reflect the ontology update.
 - [ ] Governance attributes (`valid_from`, `valid_to`, `source_system`, `jira_id`, `release_note`) are present where required.
 - [ ] `schema/changelog.md` has a new entry explaining the change.
