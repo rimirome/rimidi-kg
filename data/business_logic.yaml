@@ -213,3 +213,9 @@ service_touchpoints:
     primary_use_cases:
       - usecase-data-exports
       - usecase-billing-operations
+
+capability_relationships:
+  - source: capability-billing-insights
+    target: capability-remote-monitoring
+    relationship: relates_to
+    description: Billing insights depends on RPM remote monitoring data feeds.

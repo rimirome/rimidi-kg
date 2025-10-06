@@ -6,3 +6,5 @@ This folder contains starter scripts aligned with the knowledge graph developmen
 - `device_partner_loader.py` – converts a JSON list of device partners into an integration payload for downstream loaders.
 
 > These scripts are intentionally lightweight. As we add new data sources (telehealth vendors, FHIR writeback results, RCA events), add modules here and document them in `docs/playbook.md`.
+- `support_ingest.py` *(future)* – ingest support or expected behavior docs into `data/support.yaml`.
+- `events_loader.py` *(future)* – normalize deploy/incident events into `data/events.yaml`.

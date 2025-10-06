@@ -1,0 +1,15 @@
+# Operational events such as deployments, incidents, or configuration changes.
+
+events:
+  - id: event-rpm-config-2025-03-01
+    name: RPM Billing Config Deployment
+    description: Enabled new billing period calculation for RPM hypertension workflows.
+    status: completed
+    valid_from: 2025-03-01T02:30:00Z
+    source_system: change-management
+    jira_id: RPM-2410
+    release_note: 2025-03-01 RPM Billing Update
+    triggers_services:
+      - service-billing-toolkit
+    impacts_domains:
+      - domain-audit-repository

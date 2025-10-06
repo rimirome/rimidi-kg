@@ -63,6 +63,10 @@ relationships:
     description: Analytics surface surfacing insights about a domain.
     source: AnalyticsSurface
     target: Domain
+  - type: RELATES_TO
+    description: Conceptual relationship or dependency between product capabilities or features.
+    source: ProductCapability
+    target: ProductCapability
   - type: CONTAINS_COLLECTION
     description: Domain composed of subordinate collections.
     source: Domain
@@ -122,4 +126,28 @@ relationships:
   - type: APPLIES_TO
     description: Policy applied directly to a data domain or tenant.
     source: Policy
+    target: Domain
+  - type: EXPLAINS
+    description: Knowledge article describing expected behavior of a capability or workflow.
+    source: KnowledgeArticle
+    target: ProductCapability
+  - type: DOCUMENTS
+    description: Knowledge article documenting a workflow or service runbook.
+    source: KnowledgeArticle
+    target: Workflow
+  - type: USES_CODE
+    description: Service or workflow implemented by a code artifact.
+    source: Service
+    target: CodeArtifact
+  - type: IMPLEMENTED_BY
+    description: Workflow implemented by a specific code artifact.
+    source: Workflow
+    target: CodeArtifact
+  - type: TRIGGERS
+    description: Event triggering a workflow or service.
+    source: Event
+    target: Service
+  - type: RESULTED_IN
+    description: Event resulting from a service, workflow, or incident outcome.
+    source: Event
     target: Domain

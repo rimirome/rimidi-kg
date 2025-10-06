@@ -29,3 +29,12 @@ MATCH (s:Service)
 WHERE s.id IN ['service-device-api', 'service-fhir-gateway', 'service-emr-adapters', 'service-export-pipelines']
   AND NOT (s)-[:INTEGRATES_WITH]->(:Integration)
 RETURN s.id AS service_id, s.name AS service_name;
+
+// Code artifacts associated with services.
+MATCH (s:Service)-[:USES_CODE]->(code:CodeArtifact)
+RETURN s.id AS service_id, code.repo AS repository, code.path AS path;
+
+// Recent events triggering services.
+MATCH (evt:Event)-[:TRIGGERS]->(s:Service)
+RETURN evt.id AS event_id, evt.valid_from AS occurred_at, s.id AS service_id
+ORDER BY evt.valid_from DESC;

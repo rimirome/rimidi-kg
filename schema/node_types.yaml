@@ -194,3 +194,34 @@ node_types:
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
+  - name: KnowledgeArticle
+    description: Support or documentation article describing expected behavior.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: CodeArtifact
+    description: Source code reference (repo, path, language) implementing a capability or service.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: Event
+    description: Timed occurrence such as deployment, incident, or configuration change.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note

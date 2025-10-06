@@ -6,19 +6,23 @@ The ontology defines the vocabulary used across schema files, datasets, and auto
 
 | Label | Description | Example | Owned By |
 | --- | --- | --- | --- |
-| `ProductCapability` | End-to-end product capability or feature area that delivers user value. | `capability-billing-insights` | Product Experience |
-| `UseCase` | Business outcome delivered to Rimidi customers or internal teams. | `usecase-rpm-support` | Product Experience |
-| `Workflow` | Operational or clinical sequence of actions, often powered by automations. | `workflow-hypertension-care-plan` | Clinical Ops |
-| `Service` | Application or shared service that Rimidi operates. | `service-device-api` | Platform Engineering |
-| `Integration` | External system, vendor, or API connected to Rimidi services. | `integration-dexcom-g6` | Integration Engineering |
-| `InfraService` | Cloud infrastructure primitive providing hosting, storage, or monitoring. | `infra-ecs-rimidi` | TechOps |
-| `Domain` | Governed data store or logical grouping of datasets. | `domain-aquifer` | Data Insights |
-| `Collection` | Concrete dataset within a domain. | `collection-audit-care-plans` | Data Insights |
-| `Feeder` | Pipeline or process that moves/derives data between domains. | `feeder-aquifer` | Data Engineering |
-| `Seed` | Curated dataset for ML/analytics experimentation. | `seed-rpm-device-signals` | Data Insights |
-| `AnalyticsSurface` | Observable surface (dashboard/report) that consumes the graph. | `surface-bluejay` | TechOps |
-| `Policy` *(planned)* | Compliance or business rule constraining configurations. | `policy-audit-billing` | Compliance |
-| `Actor` / `Team` *(planned)* | Person or team accountable for services, domains, or policies. | `team-platform-engineering` | People Ops |
+| `ProductCapability` | End-to-end product capability or feature area that delivers user value. | `capability-billing-insights` | Product Team |
+| `UseCase` | Business outcome delivered to Rimidi customers or internal teams. | `usecase-rpm-support` | Product Team |
+| `Workflow` | Operational or clinical sequence of actions, often powered by automations. | `workflow-hypertension-care-plan` | Development Team |
+| `Service` | Application or shared service that Rimidi operates. | `service-device-api` | Development Team |
+| `Integration` | External system, vendor, or API connected to Rimidi services. | `integration-dexcom-g6` | Development Team |
+| `InfraService` | Cloud infrastructure primitive providing hosting, storage, or monitoring. | `infra-ecs-rimidi` | TechOps Team |
+| `Domain` | Governed data store or logical grouping of datasets. | `domain-aquifer` | Client Success Team |
+| `Collection` | Concrete dataset within a domain. | `collection-audit-care-plans` | Client Success Team |
+| `Feeder` | Pipeline or process that moves/derives data between domains. | `feeder-aquifer` | Development Team |
+| `Seed` | Curated dataset for ML/analytics experimentation. | `seed-rpm-device-signals` | Quality Engineering Team |
+| `AnalyticsSurface` | Observable surface (dashboard/report) that consumes the graph. | `surface-bluejay` | TechOps Team |
+| `Policy` *(planned)* | Compliance or business rule constraining configurations. | `policy-audit-billing` | Cybersecurity Team |
+| `Team` *(planned)* | Organizational unit responsible for Rimidi resources. | `team-techops` | Executives |
+| `Actor` *(planned)* | Individual requester or approver associated with changes. | `actor-rpeters` | HR Team |
+| `KnowledgeArticle` | Support or documentation entry describing expected behavior or troubleshooting steps. | `ka-rpm-billing-periods` | Client Success Team |
+| `CodeArtifact` | Source code reference (repo/path) implementing a capability or service. | `code-rimidi-container-api` | Development Team |
+| `Event` | Deployment, incident, or configuration change with temporal metadata. | `event-rpm-config-2025-03-01` | TechOps Team |
 
 ## Relationship Types
 
@@ -32,6 +36,7 @@ The ontology defines the vocabulary used across schema files, datasets, and auto
 | `SCHEDULED_BY` | Service execution is triggered by infra. | Service → InfraService |
 | `DEPENDS_ON` | Service dependency graph (api/data/logging/etc.). | Service → Service |
 | `INTEGRATES_WITH` | Service connects to external integration. | Service → Integration |
+| `RELATES_TO` | Conceptual relationship or dependency between capabilities. | ProductCapability → ProductCapability |
 | `BACKED_BY` | Service persists data in a domain. | Service → Domain |
 | `POWERS` | Domain enables a service. | Domain → Service |
 | `CONTAINS_COLLECTION` | Domain contains a dataset. | Domain → Collection |
@@ -40,8 +45,14 @@ The ontology defines the vocabulary used across schema files, datasets, and auto
 | `MONITORED_BY` / `OBSERVES` | Services and analytics surfaces share telemetry. | Service ↔ AnalyticsSurface |
 | `REPORTS_ON` | Analytics surface reports on a domain. | AnalyticsSurface → Domain |
 | `DERIVED_FROM` / `WRITES_TO` | Seeds derived from or written to domains. | Seed ↔ Domain |
-| `OWNS` *(planned)* | Actor/Team accountable for a resource. | Team → Service |
-| `GOVERNS` *(planned)* | Policy regulates a resource. | Policy → Domain/Service |
+| `OWNS` | Team accountable for a resource. | Team → Service |
+| `GOVERNS` | Policy regulates a resource. | Policy → Domain/Service |
+| `EXPLAINS` | Knowledge article describing expected behavior. | KnowledgeArticle → ProductCapability |
+| `DOCUMENTS` | Knowledge article documenting a workflow or service. | KnowledgeArticle → Workflow |
+| `USES_CODE` | Service implemented by a code artifact. | Service → CodeArtifact |
+| `IMPLEMENTED_BY` | Workflow implemented by code artifact. | Workflow → CodeArtifact |
+| `TRIGGERS` | Event triggering a workflow or service. | Event → Service |
+| `RESULTED_IN` | Event outcome impacting a domain. | Event → Domain |
 
 ## Metadata & Governance
 

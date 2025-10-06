@@ -4,16 +4,23 @@
 1. Identify the target capability or use case in the KG.
 2. Run `queries/product.cypher` to understand which services support it and which domains back those services. Cross-reference `data/business_logic.yaml` for recent release contexts or `release_date` tags.
 3. Document affected workflows, services, domains, feeders, and release alignment in the requirement for downstream teams.
+4. Use the "Feature relationships" query (`RELATES_TO`) to map dependent capabilities when scoping impact.
 
 ## Engineering Change Planning
 1. Locate the services or infra primitives impacted by the change (for example, Rimidi container, Coldbrew, ECS clusters).
 2. Execute `queries/engineering.cypher` to reveal dependency or observability gaps.
 3. Update `data/infra.yaml` to reflect new hosting mappings or dependency metadata, then run validator checks.
+4. Review associated code artifacts via `queries/engineering.cypher` to notify repo owners before deploying.
 
 ## Data Governance Review
 1. Use `queries/data.cypher` to audit PHI sensitivity, access roles, and feeder coverage across domains.
 2. Confirm that each collection and feeder has the required governance tags as defined in `schema/attributes.yaml`.
 3. Document remediation tasks or decision logs in `docs/CHANGELOG.md` for compliance traceability.
+
+## Client Success Support
+1. Run `queries/client_success.cypher` to pull knowledge articles (`KnowledgeArticle` nodes) for a capability or workflow.
+2. Update `data/support.yaml` whenever new runbooks, FAQs, or expected behavior docs are published (with provenance fields).
+3. Keep Sunny/n8n prompts aligned so expected-behavior responses reference these articles rather than ad-hoc explanations.
 
 ## Device & EHR Integration Planning
 1. Map the affected device vendors or EHR partners to Integration nodes (Dexcom, Abbott, Smart Meter, Cerner, Epic, NextGen, athenahealth) and confirm `INTEGRATES_WITH` edges exist.

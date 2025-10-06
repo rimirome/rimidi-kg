@@ -385,3 +385,30 @@ MERGE (seed_rpm:Seed {id: 'seed-rpm-device-signals'})
       seed_rpm.access_mode = 'read-only',
       seed_rpm.data_purpose = ['exploratory', 'insight', 'training'];
 MERGE (seed_rpm)-[:DERIVED_FROM]->(domain_aquifer);
+
+MERGE (ka:KnowledgeArticle {id: 'ka-rpm-billing-periods'})
+  SET ka.name = 'RPM Billing Period Expectations',
+      ka.description = 'Explains how billing periods are calculated for RPM features and what clinicians should see in the UI.',
+      ka.status = 'live',
+      ka.source_system = 'confluence',
+      ka.release_note = '2025-02-17 RPM Enhancements';
+MERGE (ka)-[:EXPLAINS]->(cap);
+
+MERGE (code:CodeArtifact {id: 'code-rimidi-container-api'})
+  SET code.name = 'Rimidi Container API Module',
+      code.description = 'Primary Django module powering Rimidi APIs.',
+      code.status = 'live',
+      code.source_system = 'git',
+      code.release_note = '2025-02-17 RPM Enhancements';
+MERGE (svc_api)-[:USES_CODE]->(code);
+MERGE (wf)-[:IMPLEMENTED_BY]->(code);
+
+MERGE (evt:Event {id: 'event-rpm-config-2025-03-01'})
+  SET evt.name = 'RPM Billing Config Deployment',
+      evt.description = 'Enabled new billing period calculation for RPM hypertension workflows.',
+      evt.status = 'completed',
+      evt.valid_from = datetime('2025-03-01T02:30:00Z'),
+      evt.source_system = 'change-management',
+      evt.jira_id = 'RPM-2410';
+MERGE (evt)-[:TRIGGERS]->(svc_billing);
+MERGE (evt)-[:RESULTED_IN]->(domain_audit);
