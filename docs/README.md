@@ -7,6 +7,12 @@ The Rimidi Knowledge Graph (KG) is the single source of truth for how product ca
 2. Load the starter dataset from `data/seed.cypher` into your Neo4j environment, or inspect the declarative YAML in `data/` for richer context.
 3. Explore curated queries in `queries/` or run ad-hoc Cypher using the examples in `ai/examples.md`. For example:
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+For contribution guidelines and workflow examples, check `docs/CONTRIBUTING.md` and `docs/playbook.md`.
+=======
+>>>>>>> Stashed changes
    ```cypher
    MATCH (svc:Service)-[:SUPPORTS]->(:UseCase {id: 'usecase-rpm-support'})
    RETURN svc.id AS service_id, svc.name AS service_name
@@ -55,3 +61,12 @@ To keep the graph future-proof for compliance, RCA, and ownership clarity, we pl
 - **Ownership & responsibility**: explicit `Actor` / `Team` nodes with `OWNS` or `RESPONSIBLE_FOR` edges for services, domains, and configurations.
 - **Policy guardrails**: lightweight `Policy` nodes linking tenants, services, and workflows to enforce compliance or tenant-specific restrictions.
 - **Outcome tracking**: status edges/events capturing whether configuration changes or workflows succeeded, enabling RCA and audit reporting.
+<<<<<<< Updated upstream
+=======
+
+## Key Assumptions
+- Documentation here is descriptive only; n8n workflows implement orchestration logic.
+- Schema and ontology text must always match the generated YAML in `schema/`.
+- Examples and playbooks reference sanitized identifiers so PHI never lands in the repo.
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
