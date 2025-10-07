@@ -28,21 +28,21 @@ Use this checklist before loading new data, promoting schema changes, or turning
 - [ ] If PHI is involved, confirm PHI guardrails are respected (segregated nodes, prompts exclude PHI).
 
 ## SME Inputs Needed for Write Operations
-Before Sunny or n8n generates write Cypher, provide:
+Before Lexi normalizes the request and Sunny generates write Cypher, provide:
 - Target node/edge details (label, stable `id`, human-readable name/description).
 - Ownership metadata (`owner_team`, approver/actor if relevant).
 - Provenance fields (`source_system`, `jira_id`, `release_note`, `added_at`).
 - Environment and tenant context (production/staging, specific tenant ids).
 - Business context or expected behaviour so related knowledge articles/policies can link back to documentation.
 - Explicit confirmation when an update replaces or deletes existing relationships/data.
-- Review the dry-run summary Sunny generates before approving execution of write Cypher.
+- Review the dry-run summary Sunny generates before approving execution of write Cypher, then hand the results to Luna for documentation linkage.
 
 ## 5. Recommended Enhancements (Backlog)
 Track these items and check them off as they are implemented:
 - [ ] Temporal events modeled (`Event` node/edges) with `valid_from` / `valid_to` populated in data.
 - [ ] Ownership edges enforced (`OWNS` / `RESPONSIBLE_FOR`), validator fails when missing.
 - [ ] Canonical relationship allowlist lint in place (rejects unregistered edge types).
-- [ ] NL→Cypher regression tests running in CI for Sunny/n8n prompts.
+- [ ] NL→Cypher regression tests running in CI for Lexi/Sunny/Luna prompts.
 - [ ] PHI checks in validator (blocks PHI leakage into AI contexts).
 - [ ] Daily/weekly KG health workflow posts metrics to Slack.
 - [ ] Tenant/environment separation modeled explicitly (`Tenant`, `Environment`).

@@ -40,67 +40,59 @@ class BlockDiff:
 
 
 def extract_blocks(text: str, key: str) -> Dict[str, str]:
+    """Extract top-level list blocks keyed by ``key`` (e.g., ``name`` or ``type``)."""
+
     blocks: dict[str, str] = {}
     current_name: str | None = None
     current_lines: list[str] = []
+    block_indent: int | None = None
+    key_prefix = f"- {key}:"
+
+    def flush() -> None:
+        nonlocal current_name, current_lines, block_indent
+        if current_name is not None:
+            blocks[current_name] = "\n".join(current_lines).strip()
+        current_name = None
+        current_lines = []
+        block_indent = None
+
     for line in text.splitlines():
-        stripped = line.strip()
-        if stripped.startswith(f"{key}:"):
-            value = stripped.split(":", 1)[1].strip()
-            if value:
-                name = value
-            else:
-                name = line.split(":", 1)[0].strip()
-        if stripped.startswith("- name:") or stripped.startswith("- type:"):
-            if current_name is not None:
-                blocks[current_name] = "\n".join(current_lines).strip()
-                current_lines = []
+        stripped = line.lstrip()
+        indent = len(line) - len(stripped)
+
+        if stripped.startswith(key_prefix) and indent <= 2:
+            flush()
             current_name = stripped.split(":", 1)[1].strip()
-        elif current_name is not None and line.startswith("  "):
+            block_indent = indent if indent else 0
+            continue
+
+        if stripped.startswith("- ") and indent <= (block_indent if block_indent is not None else 2) and not stripped.startswith(key_prefix):
+            flush()
+            continue
+
+        if current_name is None:
+            continue
+
+        if stripped == "":
             current_lines.append(line)
-    if current_name is not None:
-        blocks[current_name] = "\n".join(current_lines).strip()
+            continue
+
+        if indent <= (block_indent if block_indent is not None else 0):
+            flush()
+            continue
+
+        current_lines.append(line)
+
+    flush()
     return blocks
 
 
 def extract_node_entries(text: str) -> Dict[str, str]:
-    blocks: dict[str, str] = {}
-    current_name: str | None = None
-    current_lines: list[str] = []
-    for line in text.splitlines():
-        stripped = line.strip()
-        if stripped.startswith("- name:"):
-            if current_name is not None:
-                blocks[current_name] = "\n".join(current_lines).strip()
-                current_lines = []
-            current_name = stripped.split(":", 1)[1].strip()
-        elif current_name is not None:
-            if stripped.startswith("- name:"):
-                continue
-            if stripped.startswith("- type:"):
-                continue
-            current_lines.append(line)
-    if current_name is not None:
-        blocks[current_name] = "\n".join(current_lines).strip()
-    return blocks
+    return extract_blocks(text, "name")
 
 
 def extract_relationship_entries(text: str) -> Dict[str, str]:
-    blocks: dict[str, str] = {}
-    current_name: str | None = None
-    current_lines: list[str] = []
-    for line in text.splitlines():
-        stripped = line.strip()
-        if stripped.startswith("- type:"):
-            if current_name is not None:
-                blocks[current_name] = "\n".join(current_lines).strip()
-                current_lines = []
-            current_name = stripped.split(":", 1)[1].strip()
-        elif current_name is not None:
-            current_lines.append(line)
-    if current_name is not None:
-        blocks[current_name] = "\n".join(current_lines).strip()
-    return blocks
+    return extract_blocks(text, "type")
 
 
 def extract_attribute_names(text: str) -> Dict[str, str]:

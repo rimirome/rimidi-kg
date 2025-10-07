@@ -7,10 +7,62 @@
 #   - id: service-rimidi-container
 #     aliases: ['core api', 'backend api', 'rimidi api']
 
+# Aliases and synonyms to support Sunny's fuzzy matching.
+
 label_aliases:
-  - label: UIComponent
-    aliases: ['FeatureElement']
-  - label: DeviceVendor
-    aliases: ['Vendor']
-  - label: ToolingService
-    aliases: ['AdminTool']
+  - label: ProductCapability
+    aliases: ['feature', 'module', 'functionality', 'product area', 'component']
+  - label: UseCase
+    aliases: ['business outcome', 'goal', 'user objective']
+  - label: Workflow
+    aliases: ['process', 'automation flow', 'clinical pathway', 'care plan']
+  - label: Service
+    aliases: ['backend', 'microservice', 'api service', 'app service']
+  - label: InfraService
+    aliases: ['infrastructure', 'aws resource', 'hosting service', 'storage bucket']
+  - label: IntegrationPartner
+    aliases: ['partner', 'vendor', 'integration', 'external system']
+  - label: EMRIntegration
+    aliases: ['ehr', 'emr', 'epic', 'cerner', 'nextgen', 'athena']
+  - label: DeviceIntegration
+    aliases: ['device', 'iot', 'wearable', 'bluetooth device', 'medical device']
+  - label: DataService
+    aliases: ['pipeline', 'etl', 'data feed', 'data flow', 'data loader']
+  - label: Reporting
+    aliases: ['report', 'dashboard', 'analytics view', 'canopy', 'aquifer']
+  - label: Observability
+    aliases: ['monitoring', 'telemetry', 'bluejay', 'kaleidoscope', 'log dashboard']
+  - label: DeploymentType
+    aliases: ['environment', 'tenant config', 'deployment archetype']
+  - label: Client
+    aliases: ['customer', 'organization', 'account', 'health system', 'clinic']
+  - label: Contract
+    aliases: ['agreement', 'deal', 'subscription', 'renewal']
+  - label: Team
+    aliases: ['group', 'department', 'engineering team', 'product team']
+  - label: Actor
+    aliases: ['user', 'employee', 'staff member', 'person']
+  - label: Policy
+    aliases: ['rule', 'governance', 'compliance policy', 'standard operating procedure']
+
+relationship_aliases:
+  - type: ENABLES
+    aliases: ['powers', 'drives', 'supports', 'facilitates']
+  - type: DELIVERS
+    aliases: ['produces', 'outputs', 'results in']
+  - type: CONFIGURED_FOR
+    aliases: ['applies to', 'setup for', 'provisioned for']
+  - type: USES
+    aliases: ['relies on', 'consumes', 'connects to']
+  - type: DEPENDS_ON
+    aliases: ['requires', 'built on', 'needs']
+  - type: MONITORED_BY
+    aliases: ['tracked by', 'watched by', 'observed by']
+  - type: ADMINISTERED_BY
+    aliases: ['owned by', 'maintained by', 'managed by']
+  - type: REQUESTED_BY
+    aliases: ['submitted by', 'initiated by', 'proposed by']
+  - type: APPROVED_BY
+    aliases: ['validated by', 'authorized by', 'signed off by']
+  - type: GOVERNS
+    aliases: ['controls', 'regulates', 'sets rules for']

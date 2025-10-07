@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE_PROMPT = ROOT / "ai" / "prompts" / "base_prompt.md"
+BASE_PROMPT = ROOT / "ai" / "prompts" / "base_prompt_sunny.md"
 CONTEXT_DIR = ROOT / "ai" / "context"
 CONTEXT_MAP = {
     "product": CONTEXT_DIR / "product.md",
@@ -65,6 +65,11 @@ def main() -> None:
         dest="history_path",
         help="Optional path to a file containing serialized chat history.",
     )
+    parser.add_argument(
+        "--alias-summary",
+        dest="alias_summary_path",
+        help="Optional path to a file containing Lexi alias resolution notes.",
+    )
     args = parser.parse_args()
 
     pieces: list[str] = [read_file(BASE_PROMPT)]
@@ -73,6 +78,9 @@ def main() -> None:
     history_text = load_history_text(args.history_path)
     if history_text:
         pieces.append(history_text)
+    alias_summary = load_history_text(args.alias_summary_path)
+    if alias_summary:
+        pieces.append(alias_summary)
 
     output = "\n\n".join(segment for segment in pieces if segment)
     print(output)
