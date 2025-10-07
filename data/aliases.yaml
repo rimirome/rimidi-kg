@@ -25,15 +25,26 @@ label_aliases:
   - label: IntegrationPartner
     aliases: ['partner', 'vendor', 'integration', 'external system']
   - label: EMRIntegration
-    aliases: ['ehr', 'emr', 'epic', 'cerner', 'nextgen', 'athena', 'oracle', 'all-patients launch', 'patient chart launch', 'fhir refresh']
+    aliases: ['ehr', 'emr', 'fhir launch', 'epic', 'bulk fhir', 'vulcan', 'cerner', 'nextgen', 'athena', 'oracle', 'all-patients launch', 'patient chart launch', 'fhir refresh']
   - label: DeviceIntegration
     aliases: ['device', 'home device', 'wearable', 'cellular device', 'bluetooth device', 'medical device', 'patient device', 'cgm', 'bp cuff', 'glucometer', 'pulse ox', 'inhaler']
   - label: DataService
-    aliases: ['pipeline', 'etl', 'data feed', 'data flow', 'data loader', 'feeder', 'collection', 'aquifer']
+    aliases: ['pipeline', 'etl', 'hl7v2', 'ehrmes', 'hermes', 'data feed', 'data flow', 'data loader', 'feeder', 'collection', 'aquifer']
   - label: Reporting
     aliases: ['report', 'mbr', 'monthly billing report', 'dashboard', 'pbi', 'power bi', 'powerbi', 'analytics view', 'canopy']
   - label: Observability
-    aliases: ['monitoring', 'telemetry', 'bluejay', 'kaleidoscope', 'log dashboard']
+    aliases:
+      - 'monitoring'
+      - 'telemetry'
+      - 'logging pipeline'
+      - 'log dashboard'
+      - 'loki'
+      - 'grafana'
+      - 'promtail'
+      - 'bluejay'
+      - 'kaleidoscope'
+      - 'kalei'
+      - 'dashboard'
   - label: DeploymentType
     aliases: ['environment', 'instance config', 'deployment type', 'integrated instance', 'standalone intstance']
   - label: Client
@@ -46,17 +57,6 @@ label_aliases:
     aliases: ['user', 'employee', 'staff member', 'person']
   - label: Policy
     aliases: ['rule', 'governance', 'compliance policy', 'standard operating procedure']
-  - label: Observability
-    aliases:
-      - 'monitoring'
-      - 'telemetry'
-      - 'logging pipeline'
-      - 'loki'
-      - 'grafana'
-      - 'promtail'
-      - 'bluejay'
-      - 'kaleidoscope'
-      - 'dashboard'
 
 
 relationship_aliases:
