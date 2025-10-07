@@ -1,64 +1,73 @@
-# Natural Language to Cypher Examples
+# Sunny Cypher Examples
 
-## Example 1
-**Question**: Which services support Remote Patient Monitoring?
-**Cypher**:
+## 1. Read: Inspect platform dependencies for an analytics request
+**Scenario**: A teammate wants to confirm which data service feeds the clinical quality reporting surface.
+
 ```cypher
-MATCH (s:Service)-[:SUPPORTS]->(:UseCase {id: 'usecase-rpm-support'})
-RETURN s.id AS service_id, s.name AS service_name
-ORDER BY service_name;
+MATCH (report:Reporting {id: $report_id})
+OPTIONAL MATCH (datasvc:DataService)-[:FEEDS]->(report)
+OPTIONAL MATCH (infra:InfraService)<-[:RUNS_ON]-(report)
+RETURN report.name AS reportingSurface,
+       collect(DISTINCT datasvc.id) AS upstreamPipelines,
+       collect(DISTINCT infra.id) AS storageTargets;
+```
+Parameters
+```json
+{
+  "report_id": "report-clinical-quality-scorecard"
+}
 ```
 
-## Example 2
-**Question**: Show infrastructure primitives hosting the Rimidi container.
-**Cypher**:
+## 2. Write: Propose a new DataService sourced from an EMR integration
+**Reminder**: Present this as a dry run, ask for confirmation, and note that the teammate must run `python tools/validator.py --schema --data` after applying to seed data.
+
 ```cypher
-MATCH (:Service {id: 'service-rimidi-container'})-[:RUNS_ON]->(i:InfraService)
-RETURN i.id AS infra_id, i.name AS infra_name;
+:param env => 'stage';
+:param tenant => 'coastal-health';
+:param datasource_id => 'datasvc-cerner-careplans';
+:param jira => 'INT-455';
+:param release_note => 'Schema sync 2025-10';
+
+MERGE (svc:DataService {id: $datasource_id})
+  ON CREATE SET svc.name = 'Cerner Care Plan Sync',
+                svc.description = 'Transforms Cerner care plan events into Rimidi workflows',
+                svc.owner_team = 'Data Platform',
+                svc.status = 'planned',
+                svc.service_type = 'pipeline',
+                svc.phi_sensitivity = 'phi',
+                svc.access_mode = 'mixed',
+                svc.data_purpose = ['transformation', 'reporting'],
+                svc.source_system = 'airflow-registry',
+                svc.jira_id = $jira,
+                svc.release_note = $release_note;
+
+MATCH (emr:EMRIntegration {id: 'integration-cerner'})
+MERGE (svc)-[:SOURCED_FROM]->(emr);
+MERGE (svc)-[:INTEGRATES_WITH]->(emr);
 ```
 
-## Example 3
-**Question**: Which domains feed Aquifer through anonymized pipelines?
-**Cypher**:
+## 3. Governance reminder: Tag release events
+**Scenario**: Closing out a release and linking affected services.
+
 ```cypher
-MATCH (f:Feeder {id: 'feeder-aquifer'})-[:CONSUMES_FROM]->(d:Domain)
-RETURN d.id AS source_domain, d.name AS source_name;
+:param env => 'prod';
+:param tenant => 'global';
+:param release_id => 'release-2025-11-observability-patch';
+:param jira => 'CHG-2201';
+:param note => 'Observability patch rollout 2025-11';
+
+MERGE (rel:ReleaseVersion {id: $release_id})
+  ON CREATE SET rel.name = 'Observability Patch - Nov 2025',
+                rel.description = 'Rolls out improved monitoring thresholds',
+                rel.owner_team = 'Reliability Engineering',
+                rel.status = 'planned',
+                rel.valid_from = datetime('2025-11-05T12:00:00Z'),
+                rel.source_system = 'change-control',
+                rel.jira_id = $jira,
+                rel.release_note = $note;
+
+MATCH (obs:Observability {id: 'observability-bluejay-dashboard'})
+MERGE (rel)-[:RESULTED_IN]->(obs);
 ```
 
-## Example 4
-**Question**: What analytics surfaces monitor Coldbrew?
-**Cypher**:
-```cypher
-MATCH (:Service {id: 'service-coldbrew'})-[:MONITORED_BY]->(a:AnalyticsSurface)
-RETURN a.id AS surface_id, a.name AS surface_name;
-```
-
-## Example 5
-**Question**: List domains that store PHI and their access modes.
-**Cypher**:
-```cypher
-MATCH (d:Domain)
-WHERE d.phi_sensitivity = 'phi'
-RETURN d.id, d.name, d.access_mode;
-```
-
-## Example 6
-**Question**: Which capabilities power billing operations and which services support the same use case?
-**Cypher**:
-```cypher
-MATCH (u:UseCase {id: 'usecase-billing-operations'})
-MATCH (cap:ProductCapability)-[:DELIVERS]->(u)
-OPTIONAL MATCH (svc:Service)-[:SUPPORTS]->(u)
-RETURN cap.id AS capability_id, cap.name AS capability_name,
-       collect(DISTINCT svc.id) AS supporting_services
-ORDER BY capability_name;
-```
-
-## Example 7
-**Question**: Show device partners integrated with the Device Integration API.
-**Cypher**:
-```cypher
-MATCH (:Service {id: 'service-device-api'})-[:INTEGRATES_WITH]->(i:Integration)
-RETURN i.id AS integration_id, i.name AS integration_name
-ORDER BY integration_name;
-```
+Sunny should always include a Dry Run Summary before surfacing the Cypher above and call out validation steps.

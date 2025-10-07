@@ -35,7 +35,7 @@ def main() -> None:
         payload["business_logic"] = load_yaml(ROOT / "data" / "business_logic.yaml")
         payload["infra"] = load_yaml(ROOT / "data" / "infra.yaml")
 
-    print(json.dumps(payload, indent=2))
+    print(json.dumps(payload, indent=2, default=str))
 
 
 if __name__ == "__main__":

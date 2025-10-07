@@ -1,0 +1,92 @@
+# Aliases and synonyms to support Sunny's fuzzy matching.
+# Example structure:
+# product_capabilities:
+#   - id: capability-patient-chart-navigation
+#     aliases: ['patient chart tabs', 'chart subnav', 'navigation tabs']
+# services:
+#   - id: service-rimidi-container
+#     aliases: ['core api', 'backend api', 'rimidi api']
+
+# Aliases and synonyms to support Sunny's fuzzy matching.
+
+label_aliases:
+  - label: ProductCapability
+    aliases: ['feature', 'module', 'functionality', 'product area', 'component']
+  - label: UseCase
+    aliases: ['business outcome', 'goal', 'user objective']
+  - label: Workflow
+    aliases: ['process', 'automation flow', 'clinical pathway', 'care plan']
+  - label: SupportWorkflow
+    aliases: ['sla', 'service level agreement', 'product support', 'ps issue', 'tech support', 'cs issue', 'client support']
+  - label: Service
+    aliases: ['backend', 'microservice', 'api service', 'app service', 'api endpoint']
+  - label: InfraService
+    aliases: ['infrastructure', 'aws resource', 'hosting service', 'storage bucket']
+  - label: IntegrationPartner
+    aliases: ['partner', 'vendor', 'integration', 'external system']
+  - label: EMRIntegration
+    aliases: ['ehr', 'emr', 'fhir launch', 'epic', 'bulk fhir', 'vulcan', 'cerner', 'nextgen', 'athena', 'oracle', 'all-patients launch', 'patient chart launch', 'fhir refresh']
+  - label: DeviceIntegration
+    aliases: ['device', 'home device', 'wearable', 'cellular device', 'bluetooth device', 'medical device', 'patient device', 'cgm', 'bp cuff', 'glucometer', 'pulse ox', 'inhaler']
+  - label: DataService
+    aliases: ['pipeline', 'etl', 'hl7v2', 'ehrmes', 'hermes', 'data feed', 'data flow', 'data loader', 'feeder', 'collection', 'aquifer']
+  - label: Reporting
+    aliases: ['report', 'mbr', 'monthly billing report', 'dashboard', 'pbi', 'power bi', 'powerbi', 'analytics view', 'canopy']
+  - label: Observability
+    aliases:
+      - 'monitoring'
+      - 'telemetry'
+      - 'logging pipeline'
+      - 'log dashboard'
+      - 'loki'
+      - 'grafana'
+      - 'promtail'
+      - 'bluejay'
+      - 'kaleidoscope'
+      - 'kalei'
+      - 'dashboard'
+  - label: DeploymentType
+    aliases: ['environment', 'instance config', 'deployment type', 'integrated instance', 'standalone intstance']
+  - label: Client
+    aliases: ['customer', 'fqhc', 'gatewaymd', 'henry schein', 'hs', 'organization', 'account', 'health system', 'clinic']
+  - label: Contract
+    aliases: ['agreement', 'deal', 'subscription', 'renewal']
+  - label: Team
+    aliases: ['group', 'department', 'cs', 'techops', 'qa team', 'qe team', 'engineering team', 'product team', 'dev team']
+  - label: Actor
+    aliases: ['user', 'employee', 'staff member', 'person']
+  - label: Policy
+    aliases: ['rule', 'governance', 'compliance policy', 'standard operating procedure']
+
+
+relationship_aliases:
+  - type: ENABLES
+    aliases: ['powers', 'drives', 'supports', 'facilitates']
+  - type: DELIVERS
+    aliases: ['produces', 'outputs', 'results in']
+  - type: CONFIGURED_FOR
+    aliases: ['applies to', 'setup for', 'provisioned for']
+  - type: USES
+    aliases: ['relies on', 'consumes', 'connects to']
+  - type: DEPENDS_ON
+    aliases: ['requires', 'built on', 'needs']
+  - type: MONITORED_BY
+    aliases: ['tracked by', 'watched by', 'observed by']
+  - type: ADMINISTERED_BY
+    aliases: ['owned by', 'maintained by', 'managed by']
+  - type: REQUESTED_BY
+    aliases: ['submitted by', 'initiated by', 'proposed by']
+  - type: APPROVED_BY
+    aliases: ['validated by', 'authorized by', 'signed off by']
+  - type: GOVERNS
+    aliases: ['controls', 'regulates', 'sets rules for']
+
+entity_aliases:
+  - id: infra-ecs-rimidi
+    aliases: ['ecs rimidi', 'tenant container', 'app container']
+  - id: infra-promtail
+    aliases: ['promtail', 'log shipper', 'container log collector', 'loki agent']
+  - id: infra-loki
+    aliases: ['loki', 'loki store', 'log database', 'log backend']
+  - id: infra-grafana
+    aliases: ['grafana', 'grafana dashboard', 'observability dashboard']

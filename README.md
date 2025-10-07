@@ -1,105 +1,62 @@
 # Rimidi Knowledge Graph Repository
 
-## Purpose & Assumptions
+The Rimidi knowledge graph has been reinitialized around the dual-plane architecture described in `data/rimidi_kg_review_master_v2.csv`. This repository is the single authority for schema, ontology, prompts, and governance workflows consumed by Sunny (query plane) and Luna (authoring plane).
 
-The Rimidi KG is the single source of truth for how Rimidi capabilities, services, integrations, data domains, and infrastructure connect. It powers change-impact analysis for Product & Engineering and acts as the contract that keeps Sunny/n8n automations aligned with reality.
+## Dual-Plane Overview
+| Plane | Agent | Responsibility | Access Role | Primary Endpoint |
+| --- | --- | --- | --- | --- |
+| Query | Sunny · gpt-4o-mini | Natural-language to Cypher translation, read-only reasoning, query safety checks | `neo4j_reader` | `/query` |
+| Authoring | Luna · n8n workflow | Schema and ontology authoring, governance automation, pull request generation | `neo4j_writer` | `/cypher` |
 
-Working assumptions:
-- **Ontology-first**: every node/edge type lives in `docs/ontology.md` before it appears in schema or data files.
-- **Governance metadata**: core nodes carry `valid_from`, `valid_to`, and provenance fields (`source_system`, `jira_id`, `release_note`).
-- **Ownership required**: services, domains, integrations, and capabilities will point to a `Team` via `OWNS` as ownership data is filled in.
-- **Policy & events ready**: `Policy`, `Team`, `Actor`, and event modeling exist in the schema so temporal/policy reasoning can be layered in without further structural churn.
-- **AI regression**: whenever schema/data changes, update NL→Cypher examples in `ai/examples.md` so Sunny/n8n stay aligned.
+Working agreements:
+- Every structural change (nodes, relationships, attributes, ontology text) starts in Git and is validated before reaching production.
+- Sunny must never mutate the KG; Luna executes approved write operations via governed playbooks.
+- The schema in `schema/` and ontology in `docs/ontology.md` are regenerated directly from `data/rimidi_kg_review_master_v2.csv` and represent the source of truth.
+- All PHI-adjacent identifiers remain redacted in examples; use sanitized sample IDs from the schema when crafting prompts or seed data.
+
+## Canonical Artifacts
+- `data/rimidi_kg_review_master_v2.csv` — master review sheet that enumerates every node label and relationship used in the refreshed ontology.
+- `schema/node_types.yaml`, `schema/relationships.yaml`, `schema/attributes.yaml` — generated definitions containing descriptions, ownership, usage frequency, and plane guidance.
+- `docs/ontology.md` — human-readable explanation of the ontology, aligned with the schema and dual-plane responsibilities.
+- `ai/context/` — slim knowledge cards Sunny references when grounding responses for product, platform architecture, and shared/CRM questions.
+- `schema/changelog.md` — log of notable schema releases (update when a structural change is merged).
 
 ## Getting Started
-1. Read `docs/README.md` to understand the node types (`ProductCapability`, `UseCase`, `Service`, `Integration`, `Domain`, `InfraService`, etc.) and how they map to Rimidi terminology.
-2. Seed a Neo4j instance with `data/seed.cypher` (or inspect the declarative YAML in `data/`).
-3. Try a quick query to explore the graph:
-   ```cypher
-   MATCH (svc:Service)-[:SUPPORTS]->(:UseCase {id: 'usecase-rpm-support'})
-   RETURN svc.id AS service_id, svc.name AS service_name
-   ORDER BY service_name;
-   ```
-4. Browse curated queries in `queries/` or run ad-hoc Cypher using the prompts in `ai/examples.md`.
+1. Review `docs/ontology.md` to understand the refreshed vocabulary and dual-plane guardrails.
+2. Run `python3 tools/validator.py --schema` to confirm the repo is in a valid state.
+3. Seed or update a Neo4j instance using the artifacts in `schema/` and `data/` (authoring changes always flow through Luna workflows).
+4. Use the context files in `ai/context/` when updating Sunny/Luna prompts so the agents stay aligned with the new ontology.
 
 ```
 rimidi-kg/
-├── schema/      # Canonical definitions of nodes, relationships, attributes
-├── data/        # Seed dataset, business logic, domains/infra governance
-├── ai/          # Prompts, guardrails, and FAQ for Sunny / n8n automations
-├── queries/     # Curated Cypher for product, engineering, compliance, data
-├── docs/        # README, CONTRIBUTING, playbook, changelog
-├── tools/       # Validator, loader, analysis notebooks
-└── .github/     # CI workflows for validation & sync operations
+├── ai/                 # Sunny and Luna guardrails, prompt context, tooling integrations
+├── data/               # Canonical CSVs, seed payloads, and governance metadata
+├── docs/               # Ontology, playbooks, contributor guidance
+├── queries/            # Curated Cypher aligned with the regenerated schema
+├── schema/             # Generated node, relationship, and attribute definitions
+├── tools/              # Validator, loaders, dev helpers
+└── ...                 # Supporting scripts, configs, CI workflows
 ```
 
-## Contribution Guardrails
-- **Schema changes** (`schema/`) require PR review from both Product and Engineering before merge.
-- **Data changes** (`data/`) must reference a release note / Jira ticket and pass `python tools/validator.py --data`.
-- **AI contract updates** (`ai/`) must refresh the NL→Cypher examples in `ai/examples.md`.
+## Change Workflow
+1. Update `data/rimidi_kg_review_master_v2.csv` (or the relevant canonical source) to reflect the desired ontology change.
+2. Regenerate `schema/node_types.yaml`, `schema/relationships.yaml`, and `schema/attributes.yaml` so usage frequency, maturity, and owner metadata stay in sync.
+3. Refresh `docs/ontology.md` and any affected `ai/context/` cards to keep human-facing guidance aligned.
+4. Adjust curated queries in `queries/` if the schema evolution changes expected patterns.
+5. Run `python3 tools/validator.py --schema` (and `--data` if seed artifacts changed) before opening a PR.
+6. Let Luna’s workflow propose the change downstream; Sunny should only consume the merged schema for read-only reasoning.
 
-For detailed workflows see `docs/CONTRIBUTING.md` and `docs/playbook.md`. Run `python tools/validator.py` before every PR to keep the repo consistent. Capture new release-driven features in `data/business_logic.yaml` (use the `release_date` field for traceability).
+## Governance Reminders
+- Every node or relationship committed to the repository must include `owner_group`, `usage_frequency`, and `governance_maturity` so audits remain deterministic.
+- Plane visibility is declared in the schema: Sunny is read-only; Luna is read-write. Do not bypass this separation when designing new automation.
+- Keep `schema/changelog.md` current so downstream teams understand when structural contracts moved.
+- Use sanitized identifiers in prompts, docs, and seed data; PHI never enters the repo or the KG.
 
-## Docker Quickstart
+## Validator & Tooling
+Run the lightweight validator before every PR to ensure required files exist and basic structure checks pass:
+```bash
+python3 tools/validator.py --schema
+```
+Add `--data` when seed payloads or infra definitions change. The same command is available inside Docker (`docker compose exec rimidi-kg python3 tools/validator.py`).
 
-1. Build the image:
-   ```bash
-   docker compose build
-   ```
-2. Start the long-lived container (mounts the repo so you and n8n can exec commands):
-   ```bash
-   docker compose up -d
-   ```
-3. Run utilities as needed:
-   ```bash
-   docker compose exec rimidi-kg python tools/validator.py
-   docker compose exec rimidi-kg python tools/loader.py --schema --data > payload.json
-   ```
-4. Stop the container when finished:
-   ```bash
-   docker compose down
-   ```
-
-> n8n can run the same `docker compose exec` commands inside workflows to trigger validator or loader tasks. Mounting `.:/workspace` keeps repo changes in sync with your host and the agent.
-
-## How to Maintain This Repo
-
-Think of the repo in two layers:
-
-**System files (edit with care)**
-- `docs/ontology.md` – canonical vocabulary, responsible teams.
-- `schema/` – node/relationship definitions, attributes, changelog.
-- `tools/` – validator, loader, pipeline scripts, notebooks.
-- `.github/` – CI workflows.
-
-**Config/content files (updated frequently with provenance)**
-- `data/` – YAML/Cypher facts, business logic, integrations.
-- `ai/` – prompt context, examples, guardrails for Sunny/n8n.
-- `queries/` – Cypher used by humans and automations.
-- `docs/CHANGELOG.md`, `docs/README.md`, `docs/playbook.md` – human-facing guidance.
-
-When you add or modify information, work through these steps:
-1. Update `docs/ontology.md` with any new labels/relationships and note owning teams.
-2. Reflect the ontology change in `schema/` and log it in `schema/changelog.md`.
-3. Refresh docs (`docs/README.md`, `docs/CONTRIBUTING.md`, `docs/playbook.md`) so Product/Engineering/TechOps understand the change.
-4. Edit `data/` files, including provenance fields (release note, Jira ID, source system).
-5. Update `ai/` prompts/examples and add or tweak queries in `queries/`.
-6. Adjust tooling (`tools/validator.py`, `tools/pipeline/`) if new validation or ingestion paths are required.
-7. Run `python tools/validator.py --schema --data` (or via Docker) before committing.
-
-Every PR should mention the ontology version and data provenance sources so future audits can trace changes.
-
-### Repo Files vs. Live KG Updates
-
-Use this repo whenever you are changing **structure, canonical content, or automation contracts**:
-- Introducing/changing node or relationship types, attributes, or ownership rules.
-- Adding or modifying source-of-truth data that should be versioned (seed data, business logic YAML, integration metadata).
-- Updating Sunny/n8n prompts, curated queries, or validator/tooling behavior.
-- Recording provenance, governance policies, or release-driven enhancements.
-
-Update the live KG directly (via Neo4j/n8n/Sunny) when you are applying **operational facts** that do not alter the ontology:
-- Tenant-specific or environment-specific configuration values already modeled in schema.
-- Runtime events (deployments, incidents) that will later be synced back through a pipeline.
-- Ad-hoc investigations or exploratory queries that do not need to be checked into version control.
-
-Rule of thumb: if others need to rely on the change as a shared contract or if it impacts code/automation, edit the repo first. For transient/tenant-specific data, update the KG and ensure a pipeline exists to persist any facts that should eventually live in `data/`.
+For deeper automation, reference the n8n workflows that wrap Luna’s authoring plane; guardrails in `ai/prompts/` should always mirror the schema regenerated from the CSV.

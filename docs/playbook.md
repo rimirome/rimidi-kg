@@ -20,7 +20,7 @@
 ## Client Success Support
 1. Run `queries/client_success.cypher` to pull knowledge articles (`KnowledgeArticle` nodes) for a capability or workflow.
 2. Update `data/support.yaml` whenever new runbooks, FAQs, or expected behavior docs are published (with provenance fields).
-3. Keep Sunny/n8n prompts aligned so expected-behavior responses reference these articles rather than ad-hoc explanations.
+3. Keep Lexi/Sunny/Luna prompts aligned so expected-behavior responses reference these articles rather than ad-hoc explanations.
 
 ## Device & EHR Integration Planning
 1. Map the affected device vendors or EHR partners to Integration nodes (Dexcom, Abbott, Smart Meter, Cerner, Epic, NextGen, athenahealth) and confirm `INTEGRATES_WITH` edges exist.
@@ -28,7 +28,7 @@
 3. Ensure `data/infra.yaml` reflects supporting services (`service-device-api`, `service-fhir-gateway`, `service-emr-adapters`) and add additional integration partners in `data/seed.cypher`.
 
 ## AI / Automation Updates
-1. When Sunny or n8n needs new behavior, update the relevant `ai/` files and store supporting Cypher in `queries/`.
+1. When Lexi, Sunny, or Luna needs new behavior, update the relevant `ai/` files and store supporting Cypher or reasoning guides in `queries/`.
 2. Raise a pull request so human reviewers confirm guardrails before the automation runs in production.
 3. Coordinate with TechOps to deploy any validator or workflow changes in `.github/workflows/`.
 
