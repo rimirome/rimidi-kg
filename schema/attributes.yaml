@@ -31,16 +31,17 @@ attributes:
       type: string
       required: false
       description: Vendor or system owner when applicable.
+
   service:
     layer:
       type: string
       required: false
       allowed: [business, infrastructure, data]
-      description: High-level layer the service operates within.
+      description: High-level layer the service or component operates within.
     service_type:
       type: string
       required: false
-      description: Functional classification (ui, api, scheduler, observability, etc.).
+      description: Functional classification (ui, api, worker, pipeline, observability, etc.).
     provider:
       type: string
       required: false
@@ -49,23 +50,13 @@ attributes:
       type: string
       required: false
       description: Internal code name or jargon for the service.
+
   data:
-    domain_kind:
-      type: string
-      required: false
-      description: Category of domain (application, clinical, analytics, export, observability, audit).
-    collection_type:
-      type: string
-      required: false
-      description: Logical grouping or data model represented by the collection.
-    feeder_kind:
-      type: string
-      required: false
-      description: Implementation approach for the feeder (batch, stream, notebook, workflow).
     surface_type:
       type: string
       required: false
-      description: Visualization or reporting surface classification.
+      description: Visualization, reporting, or telemetry surface classification.
+
   access:
     phi_sensitivity:
       type: string

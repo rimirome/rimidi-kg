@@ -2,11 +2,13 @@
 # Each node type references reusable attributes defined in attributes.yaml.
 
 node_types:
+  # Product Graph
   - name: ProductCapability
-    description: High-level capability offered by the Rimidi platform.
+    description: End-to-end product capability or feature area that delivers clinical or operational value.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
+      - ref: attributes.common.description
       - ref: attributes.common.owner_team
       - ref: attributes.common.status
       - ref: attributes.governance.valid_from
@@ -15,19 +17,7 @@ node_types:
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
   - name: UseCase
-    description: Business outcomes delivered to healthcare providers or patients.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: Workflow
-    description: Sequenced steps that deliver a clinical or operational outcome.
+    description: Business outcome delivered to providers, staff, or patients and measured for success.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
@@ -39,8 +29,22 @@ node_types:
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
+  - name: EndUserWorkflow
+    description: Sequenced set of product or service steps that teams and clinicians execute to achieve a use case.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.ui_area
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
   - name: SupportWorkflow
-    description: Troubleshooting or support playbook used by Customer Success or Product teams.
+    description: Troubleshooting or operational playbook used by Customer Success, Product, or TechOps.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
@@ -53,7 +57,7 @@ node_types:
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
   - name: UIComponent
-    description: Visible or interactive UI element (for example, modals, headers, dashboards).
+    description: Visible or interactive UI element such as a dashboard widget, header, or modal dialog.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
@@ -61,38 +65,16 @@ node_types:
       - ref: attributes.common.owner_team
       - ref: attributes.common.ui_area
       - ref: attributes.common.status
+      - ref: attributes.access.access_role
       - ref: attributes.governance.valid_from
       - ref: attributes.governance.valid_to
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
-  - name: Integration
-    description: External system or interface the platform relies on.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.vendor
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: DeviceVendor
-    description: Device manufacturer or partner organization that produces integrated hardware.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
+
+  # Platform Architecture Graph
   - name: Service
-    description: Application or shared service expressed in Rimidi terminology (for example, UI, Rimidi container, Coldbrew).
+    description: Application or shared service operated by Rimidi (UI, API, worker, automation, etc.).
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
@@ -101,14 +83,19 @@ node_types:
       - ref: attributes.common.status
       - ref: attributes.service.layer
       - ref: attributes.service.service_type
+      - ref: attributes.service.provider
       - ref: attributes.service.code_name
+      - ref: attributes.access.phi_sensitivity
+      - ref: attributes.access.access_role
+      - ref: attributes.access.access_mode
+      - ref: attributes.access.data_purpose
       - ref: attributes.governance.valid_from
       - ref: attributes.governance.valid_to
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
   - name: ToolingService
-    description: Internal Rimidi utility or admin tool exposed to operations or back-office teams.
+    description: Internal Rimidi utility or administrative tool exposed to operations or back-office teams.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
@@ -118,49 +105,26 @@ node_types:
       - ref: attributes.common.status
       - ref: attributes.service.layer
       - ref: attributes.service.service_type
+      - ref: attributes.service.provider
       - ref: attributes.service.code_name
+      - ref: attributes.access.access_role
+      - ref: attributes.access.access_mode
       - ref: attributes.governance.valid_from
       - ref: attributes.governance.valid_to
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
-  - name: Channel
-    description: Communication pathway available to deliver alerts or outreach (SMS, email, telehealth, in-app).
+  - name: DataService
+    description: Data platform job or pipeline responsible for extracting, transforming, or loading Rimidi data.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
       - ref: attributes.common.description
       - ref: attributes.common.owner_team
       - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: InfraService
-    description: Cloud infrastructure primitives or managed services backing Rimidi workloads.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.status
-      - ref: attributes.service.provider
       - ref: attributes.service.service_type
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: Domain
-    description: Logical grouping of collections governed for a specific data purpose (for example, Hearth, Aquifer).
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.status
-      - ref: attributes.data.domain_kind
+      - ref: attributes.service.code_name
       - ref: attributes.access.phi_sensitivity
-      - ref: attributes.access.access_role
       - ref: attributes.access.access_mode
       - ref: attributes.access.data_purpose
       - ref: attributes.governance.valid_from
@@ -168,75 +132,8 @@ node_types:
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
-  - name: Collection
-    description: Concrete data collection within a domain.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.status
-      - ref: attributes.data.collection_type
-      - ref: attributes.access.phi_sensitivity
-      - ref: attributes.access.access_role
-      - ref: attributes.access.access_mode
-      - ref: attributes.access.data_purpose
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: Feeder
-    description: Data pipeline that moves or transforms data between domains.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.status
-      - ref: attributes.data.feeder_kind
-      - ref: attributes.access.phi_sensitivity
-      - ref: attributes.access.access_role
-      - ref: attributes.access.access_mode
-      - ref: attributes.access.data_purpose
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: Seed
-    description: Versioned dataset curated for ML, analytics, or agent workflows.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.status
-      - ref: attributes.access.phi_sensitivity
-      - ref: attributes.access.access_role
-      - ref: attributes.access.access_mode
-      - ref: attributes.access.data_purpose
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: AnalyticsSurface
-    description: Reporting, dashboarding, or observability surface (for example, Bluejay, Kaleidoscope, Canopy).
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.status
-      - ref: attributes.data.surface_type
-      - ref: attributes.access.phi_sensitivity
-      - ref: attributes.access.access_role
-      - ref: attributes.access.access_mode
-      - ref: attributes.access.data_purpose
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: ReportTemplate
-    description: Reusable report definition applied across clients, dashboards, or analytics surfaces.
+  - name: Reporting
+    description: Business intelligence report or curated dataset published for analytics consumption.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
@@ -245,73 +142,88 @@ node_types:
       - ref: attributes.common.ui_area
       - ref: attributes.common.status
       - ref: attributes.data.surface_type
+      - ref: attributes.access.access_role
+      - ref: attributes.access.data_purpose
       - ref: attributes.governance.valid_from
       - ref: attributes.governance.valid_to
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
-  - name: Policy
-    description: Compliance or business guardrail applied to services, domains, or tenants.
+  - name: Observability
+    description: Telemetry, dashboarding, or logging surface used to monitor Rimidi services.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
       - ref: attributes.common.description
+      - ref: attributes.common.owner_team
       - ref: attributes.common.status
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: Team
-    description: Team or organizational unit responsible for Rimidi resources.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.status
-  - name: Actor
-    description: Individual requester or approver associated with changes.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.status
+      - ref: attributes.data.surface_type
+      - ref: attributes.access.access_role
+      - ref: attributes.access.data_purpose
       - ref: attributes.governance.valid_from
       - ref: attributes.governance.valid_to
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
-  - name: KnowledgeArticle
-    description: Support or documentation article describing expected behavior.
+  - name: InfraService
+    description: Cloud or infrastructure primitive that provides hosting, storage, scheduling, or messaging.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
       - ref: attributes.common.description
+      - ref: attributes.common.owner_team
       - ref: attributes.common.status
+      - ref: attributes.service.layer
+      - ref: attributes.service.provider
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: ReleaseVersion
+    description: Deployment, incident, configuration change, or release artifact captured with temporal metadata.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.status
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
   - name: CodeArtifact
-    description: Source code reference (repo, path, language) implementing a capability or service.
+    description: Source code repository, package, or path that implements a Rimidi capability or service.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
       - ref: attributes.common.description
-      - ref: attributes.common.status
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: Event
-    description: Timed occurrence such as deployment, incident, or configuration change.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
       - ref: attributes.common.status
       - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
+
+  # Shared / CRM Graph
   - name: Client
-    description: Healthcare organization or customer entity licensed to use Rimidi.
+    description: Healthcare organization or customer licensed to use Rimidi products and services.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.status
+      - ref: attributes.access.access_role
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: DeploymentType
+    description: Canonical deployment configuration or tenant archetype shared across multiple clients.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
@@ -323,8 +235,54 @@ node_types:
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
-  - name: Implementation
-    description: Client-specific deployment or environment configuration of the Rimidi platform.
+  - name: IntegrationPartner
+    description: Third-party vendor or platform integrated with Rimidi offerings beyond EMRs and devices.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.vendor
+      - ref: attributes.common.status
+      - ref: attributes.access.access_role
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: EMRIntegration
+    description: Connectivity to an electronic medical record vendor powering data exchange with Rimidi.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.vendor
+      - ref: attributes.common.status
+      - ref: attributes.access.access_role
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: DeviceIntegration
+    description: Device connectivity integration that ingests clinical measurements or patient-generated data.
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.vendor
+      - ref: attributes.common.status
+      - ref: attributes.access.access_role
+      - ref: attributes.access.data_purpose
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+  - name: DeviceVendor
+    description: Manufacturer that produces healthcare devices supported by Rimidi integrations.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
@@ -336,8 +294,25 @@ node_types:
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
-  - name: Contract
-    description: Commercial agreement or SOW covering a client relationship.
+  - name: CommChannel
+    description: Communication pathway used to reach clinicians, patients, or partners (SMS, email, phone, etc.).
+    attributes:
+      - ref: attributes.common.id
+      - ref: attributes.common.name
+      - ref: attributes.common.description
+      - ref: attributes.common.owner_team
+      - ref: attributes.common.status
+      - ref: attributes.access.access_mode
+      - ref: attributes.access.access_role
+      - ref: attributes.governance.valid_from
+      - ref: attributes.governance.valid_to
+      - ref: attributes.governance.source_system
+      - ref: attributes.governance.jira_id
+      - ref: attributes.governance.release_note
+
+  # Cross-cutting Graph
+  - name: Team
+    description: Organizational unit responsible for Rimidi resources and accountable outcomes.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name
@@ -349,8 +324,8 @@ node_types:
       - ref: attributes.governance.source_system
       - ref: attributes.governance.jira_id
       - ref: attributes.governance.release_note
-  - name: AccountContact
-    description: Individual contact at a client organization tied to relationship management.
+  - name: Actor
+    description: Individual requester or approver associated with product, platform, or client changes.
     attributes:
       - ref: attributes.common.id
       - ref: attributes.common.name

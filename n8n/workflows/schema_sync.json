@@ -1,0 +1,298 @@
+{
+  "name": "Schema Sync Automation",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": [
+          {
+            "mode": "everyWeek",
+            "hour": 3,
+            "minute": 0,
+            "weekday": 1
+          }
+        ]
+      },
+      "id": "1",
+      "name": "Weekly Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "command": "git fetch origin main schema-dev",
+        "workingDirectory": "{{ $json.repoPath || '/workspace/rimidi-kg' }}"
+      },
+      "id": "2",
+      "name": "Fetch Branches",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [460, 180]
+    },
+    {
+      "parameters": {
+        "command": "git checkout schema-dev && git reset --hard origin/schema-dev",
+        "workingDirectory": "{{ $json.repoPath || '/workspace/rimidi-kg' }}"
+      },
+      "id": "3",
+      "name": "Sync schema-dev",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [700, 180]
+    },
+    {
+      "parameters": {
+        "command": "python tools/auto_schema_diff.py --ref-a origin/main --ref-b schema-dev",
+        "workingDirectory": "{{ $json.repoPath || '/workspace/rimidi-kg' }}"
+      },
+      "id": "4",
+      "name": "Generate Diff JSON",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [940, 180]
+    },
+    {
+      "parameters": {
+        "functionCode": "const diff = JSON.parse(items[0].json.stdout || '{}');\nconst anythingToSync = [\n  diff.node_types?.added?.length,\n  diff.node_types?.removed?.length,\n  diff.node_types?.modified?.length,\n  diff.relationships?.added?.length,\n  diff.relationships?.removed?.length,\n  diff.relationships?.modified?.length,\n  diff.attributes?.added?.length,\n  diff.attributes?.removed?.length,\n  diff.attributes?.modified?.length,\n  diff.ontology_diff ? diff.ontology_diff.length : 0\n].some(count => (count || 0) > 0);\nreturn [{ json: { diff, anythingToSync } }];"
+      },
+      "id": "5",
+      "name": "Evaluate Diff",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1180, 180]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json[\"anythingToSync\"] }}"
+            }
+          ]
+        }
+      },
+      "id": "6",
+      "name": "Diff Exists?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1420, 180]
+    },
+    {
+      "parameters": {
+        "command": "python tools/validator.py --schema --data",
+        "workingDirectory": "{{ $json.repoPath || '/workspace/rimidi-kg' }}"
+      },
+      "id": "7",
+      "name": "Run Validator",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1660, 40]
+    },
+    {
+      "parameters": {
+        "command": "git config user.name 'rimidi-bot' && git config user.email 'kg-bot@rimidi.com' && git status --short && git add docs/ontology.md schema/node_types.yaml schema/relationships.yaml schema/attributes.yaml && git commit -m 'Automated Schema Sync' || echo 'nothing to commit'",
+        "workingDirectory": "{{ $json.repoPath || '/workspace/rimidi-kg' }}"
+      },
+      "id": "8",
+      "name": "Commit Updates",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1900, 40]
+    },
+    {
+      "parameters": {
+        "functionCode": "const diff = $json.diff;\nconst today = new Date().toISOString().slice(0, 10);\nconst body = [\n  '## Schema Sync Summary',\n  '',\n  `Compared **${diff.ref_a}** → **${diff.ref_b}**`,\n  '',\n  '### Node Types',\n  `Added: ${diff.node_types.added.join(', ') || 'none'}`,\n  `Removed: ${diff.node_types.removed.join(', ') || 'none'}`,\n  `Modified: ${diff.node_types.modified.join(', ') || 'none'}`,\n  '',\n  '### Relationships',\n  `Added: ${diff.relationships.added.join(', ') || 'none'}`,\n  `Removed: ${diff.relationships.removed.join(', ') || 'none'}`,\n  `Modified: ${diff.relationships.modified.join(', ') || 'none'}`,\n  '',\n  '### Attributes',\n  `Added: ${diff.attributes.added.join(', ') || 'none'}`,\n  `Removed: ${diff.attributes.removed.join(', ') || 'none'}`,\n  `Modified: ${diff.attributes.modified.join(', ') || 'none'}`,\n  '',\n  diff.ontology_diff ? '```diff\n' + diff.ontology_diff + '\n```' : ''\n].filter(Boolean).join('\n');\nreturn [{ json: { title: `Automated Schema Sync — ${today}`, body } }];"
+      },
+      "id": "9",
+      "name": "Compose PR Body",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [2140, 40]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "requestMethod": "POST",
+        "url": "https://api.github.com/repos/{{ $json.repo || 'rimidi/rimidi-kg' }}/pulls",
+        "jsonParameters": true,
+        "bodyParametersJson": "={\"title\": $json.title, \"head\": \"schema-dev\", \"base\": \"main\", \"body\": $json.body, \"draft\": false}",
+        "headerParametersJson": "={\"Accept\": \"application/vnd.github+json\", \"X-GitHub-Api-Version\": \"2022-11-28\"}"
+      },
+      "id": "10",
+      "name": "Create GitHub PR",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [2380, 40],
+      "credentials": {
+        "githubApi": "Rimidi Bot Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "requestMethod": "POST",
+        "url": "https://api.github.com/repos/{{ $json.repo || 'rimidi/rimidi-kg' }}/issues/{{ $node[\"Create GitHub PR\"].json.number }}/requested_reviewers",
+        "jsonParameters": true,
+        "bodyParametersJson": "={\"reviewers\": [\"RomeoCabanban\"]}",
+        "headerParametersJson": "={\"Accept\": \"application/vnd.github+json\", \"X-GitHub-Api-Version\": \"2022-11-28\"}"
+      },
+      "id": "11",
+      "name": "Assign Reviewer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [2620, 40],
+      "credentials": {
+        "githubApi": "Rimidi Bot Token"
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "requestMethod": "POST",
+        "url": "https://api.github.com/repos/{{ $json.repo || 'rimidi/rimidi-kg' }}/issues/{{ $node[\"Create GitHub PR\"].json.number }}/labels",
+        "jsonParameters": true,
+        "bodyParametersJson": "={\"labels\": [\"schema-sync\"]}",
+        "headerParametersJson": "={\"Accept\": \"application/vnd.github+json\", \"X-GitHub-Api-Version\": \"2022-11-28\"}"
+      },
+      "id": "12",
+      "name": "Label PR",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [2860, 40],
+      "credentials": {
+        "githubApi": "Rimidi Bot Token"
+      }
+    }
+  ],
+  "connections": {
+    "Weekly Cron": {
+      "main": [
+        [
+          {
+            "node": "Fetch Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Branches": {
+      "main": [
+        [
+          {
+            "node": "Sync schema-dev",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sync schema-dev": {
+      "main": [
+        [
+          {
+            "node": "Generate Diff JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Diff JSON": {
+      "main": [
+        [
+          {
+            "node": "Evaluate Diff",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate Diff": {
+      "main": [
+        [
+          {
+            "node": "Diff Exists?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diff Exists?": {
+      "main": [
+        [
+          {
+            "node": "Run Validator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Commit Updates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Validator": {
+      "main": [
+        [
+          {
+            "node": "Commit Updates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Commit Updates": {
+      "main": [
+        [
+          {
+            "node": "Compose PR Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose PR Body": {
+      "main": [
+        [
+          {
+            "node": "Create GitHub PR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create GitHub PR": {
+      "main": [
+        [
+          {
+            "node": "Assign Reviewer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Reviewer": {
+      "main": [
+        [
+          {
+            "node": "Label PR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

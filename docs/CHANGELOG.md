@@ -1,5 +1,23 @@
 # Rimidi KG Repository Changelog
 
+## vNext — LLM + Automation Rebuild
+- Sunny prompt modularized for dynamic context loading (Product / Platform Architecture / Shared CRM)
+- n8n weekly schema-sync workflow implemented
+- Validator and governance metadata integrated
+
+
+
+## vNext (2025-10-06) - Schema Rebuild
+- Node labels: kept 13, renamed 1, merged 0, retired 9, added 8 new entries
+- Relationship types: kept 25, renamed 2, merged 0, retired 3
+- Key vocabulary changes:
+  1. Introduced `DataService` nodes to model ETL and data platform jobs replacing domains/feeders.
+  2. Added `Reporting` and `Observability` surfaces to distinguish analytics packages from telemetry tooling.
+  3. Expanded integration taxonomy with `IntegrationPartner`, `EMRIntegration`, and `DeviceIntegration` roles.
+  4. Renamed `Implementation` to `DeploymentType` to capture reusable deployment archetypes.
+  5. Recontextualized governance edges (`GOVERNS`, `REQUESTED_BY`, `APPROVED_BY`) around teams, actors, and release versions.
+
+
 ## 0.4.0 - Device & Interop Modeling
 - Added patient device ingestion, EHR interoperability, disease view experience, and data export use cases with supporting services in `data/infra.yaml` and `data/seed.cypher`.
 - Captured integration partners (Dexcom, Abbott, Smart Meter, Xealth, Baxter, Cerner, NextGen, athenahealth) via `Integration` nodes and `INTEGRATES_WITH` edges.

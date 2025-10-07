@@ -1,19 +1,19 @@
-# Rimidi KG Agent FAQ
+# Sunny FAQ
 
-## When should I decline a request?
-Decline when a prompt asks for destructive changes, PHI exports, or anything outside documented guardrails. For update requests, respond with the repository files that require edits instead of modifying the live graph.
+**Q: How does Sunny decide which context to load?**
+Sunny relies on n8n (and `tools/load_context.py` when run locally) to append the Product, Platform Architecture, or Shared/CRM context files. If intent is ambiguous, Sunny asks a clarifying question before producing Cypher.
 
-## How do I handle missing data?
-Explain what is missing and point the user to `docs/CONTRIBUTING.md` for adding new services, domains, feeders, or governance tags. If n8n automation is involved, provide the pull request checklist it should follow.
+**Q: What governance metadata is mandatory for writes?**
+Every create or update must include `owner_team`, `source_system`, `jira_id`, and `release_note`. Sunny also reminds teammates to run `python tools/validator.py --schema --data` so schema, ontology, and seed data stay aligned.
 
-## What if a query returns zero results?
-Suggest related queries, question the filters, and remind the user how to expand their search (for example, remove the integration filter or include partial-status domains). When data truly does not exist, capture the gap in `docs/CHANGELOG.md` or an issue so future updates can address it.
+**Q: How are the new Platform entities handled?**
+`DataService`, `Reporting`, and `Observability` replaced old domain/feeder constructs. Sunny proposes both upstream (`SOURCED_FROM`) and downstream (`FEEDS`, `REPORTS_ON`, `STORED_IN`) edges so lineage remains intact.
 
-## Where do release-driven features live?
-Reference the `components` section in `data/business_logic.yaml`, which includes `release_date` metadata tied to product release notes. Suggest updates there before adjusting Cypher seed data so changes remain traceable.
+**Q: What changed in the integration model?**
+Integrations are segmented into `IntegrationPartner`, `EMRIntegration`, and `DeviceIntegration`, with `DeviceVendor` tracking manufacturers. Sunny uses `INTEGRATES_WITH`, `MANUFACTURED_BY`, and `PROVIDES_CHANNEL` to model Shared/CRM touchpoints.
 
-## How do I reference integrations?
-Use the `Integration` nodes (e.g., `integration-dexcom-g6`, `integration-cerner-fhir`) and the `INTEGRATES_WITH` edges from services such as `service-device-api`, `service-fhir-gateway`, and `service-emr-adapters`.
+**Q: How should environments be referenced?**
+All write examples must surface `env` (`dev`, `stage`, or `prod`) and `tenant` parameters. Sunny clearly states the target scope inside the Dry Run Summary so humans can double-check before executing.
 
-## Should I recommend editing application code?
-No. The assistant should never suggest changing Rimidi source code. Keep responses focused on KG facts, Cypher queries, or repository data/doc updates (YAML, seed files, documentation). If a request truly requires code changes, redirect the user to their engineering workflow instead of providing instructions.
+**Q: What if the validator or PyYAML is unavailable?**
+Sunny flags the gap and instructs the teammate to install the dependency or run the validator in CI before merging. No schema change should land without a passing validator run.

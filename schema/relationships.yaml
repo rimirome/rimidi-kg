@@ -2,47 +2,131 @@
 # Keys should match Neo4j relationship types.
 
 relationships:
+  # Product Graph
   - type: ENABLES
-    description: Capability unlocked by another entity.
+    description: Product capability provides required functionality to an end-user workflow.
     source: ProductCapability
-    target: Workflow
-    properties:
-      criticality:
-        type: string
-        allowed: [informational, important, critical]
-  - type: IMPLEMENTS
-    description: Workflow implemented using a specific integration.
-    source: Workflow
-    target: Integration
-    properties:
-      coverage:
-        type: string
-        allowed: [partial, full]
+    target: EndUserWorkflow
   - type: DELIVERS
-    description: Product capability delivering a business use case.
+    description: Product capability delivers or proves out a specific use case outcome.
     source: ProductCapability
     target: UseCase
   - type: SUPPORTS
-    description: Service enabling a business use case.
-    source: Service
-    target: UseCase
-  - type: SUPPORTS_TROUBLESHOOTING
-    description: Capability or service documented by a support workflow.
+    description: Operational or application service underpins a business use case.
     source:
       - Service
+      - DataService
+      - ToolingService
+    target: UseCase
+  - type: SUPPORTS_TROUBLESHOOTING
+    description: Capability or runtime service documented by a support workflow for incident response or recovery.
+    source:
       - ProductCapability
+      - Service
+      - DataService
     target: SupportWorkflow
+  - type: IMPLEMENTS
+    description: Workflow leverages an integration or shared data service to execute steps.
+    source: EndUserWorkflow
+    target:
+      - IntegrationPartner
+      - EMRIntegration
+      - DeviceIntegration
+      - DataService
+  - type: HAS_COMPONENT
+    description: Capability or service is composed of a UI component surfaced to users.
+    source:
+      - ProductCapability
+      - Service
+    target: UIComponent
+
+  # Cross-cutting governance
+  - type: OWNS
+    description: Team accountable for an asset across product, platform, or client contexts.
+    source: Team
+    target:
+      - ProductCapability
+      - UseCase
+      - EndUserWorkflow
+      - SupportWorkflow
+      - Service
+      - ToolingService
+      - DataService
+      - Reporting
+      - Observability
+      - InfraService
+      - Client
+      - DeploymentType
+      - IntegrationPartner
+      - EMRIntegration
+      - DeviceIntegration
+      - CommChannel
+      - CodeArtifact
+      - ReleaseVersion
+  - type: ADMINISTERED_BY
+    description: Tooling service managed day-to-day by a specific team.
+    source: ToolingService
+    target: Team
+  - type: RESPONSIBLE_FOR
+    description: Team charged with ongoing operations or quality of a workflow, integration, or service.
+    source: Team
+    target:
+      - Service
+      - DataService
+      - Reporting
+      - Observability
+      - EndUserWorkflow
+      - SupportWorkflow
+      - IntegrationPartner
+      - EMRIntegration
+      - DeviceIntegration
+      - CommChannel
+      - Client
+  - type: REQUESTED_BY
+    description: Actor initiating a change, deployment, or configuration update for a Rimidi asset.
+    source: Actor
+    target:
+      - Service
+      - DataService
+      - DeploymentType
+      - ReleaseVersion
+  - type: APPROVED_BY
+    description: Actor approving a change, deployment, or configuration update for a Rimidi asset.
+    source: Actor
+    target:
+      - Service
+      - DataService
+      - DeploymentType
+      - ReleaseVersion
+  - type: GOVERNS
+    description: Team-defined guardrail that constrains how a deployment type, service, or client handles data.
+    source: Team
+    target:
+      - DeploymentType
+      - Service
+      - DataService
+      - Client
+
+  # Platform Architecture
   - type: DEPENDS_ON
-    description: Service-level dependency across Rimidi components.
-    source: Service
-    target: Service
+    description: Service-level dependency across Rimidi services or data pipelines.
+    source:
+      - Service
+      - DataService
+    target:
+      - Service
+      - DataService
     properties:
       dependency_type:
         type: string
         allowed: [api, schedule, logging, data, delivery, ui]
   - type: RUNS_ON
-    description: Service hosted on a specific infrastructure primitive.
-    source: Service
+    description: Service, data pipeline, or reporting surface hosted on infrastructure.
+    source:
+      - Service
+      - DataService
+      - Reporting
+      - Observability
     target: InfraService
     properties:
       environment:
@@ -50,134 +134,92 @@ relationships:
         required: false
         allowed: [production, staging, development]
   - type: SCHEDULED_BY
-    description: Service scheduled by an infrastructure service (for example, EventBridge scheduling Coldbrew Lambdas).
-    source: Service
+    description: Service or data pipeline triggered by an infrastructure primitive.
+    source:
+      - Service
+      - DataService
     target: InfraService
   - type: USES_SECRET_FROM
-    description: Service retrieving credentials or configuration from an infra service.
-    source: Service
+    description: Service or pipeline retrieves credentials or configuration from an infrastructure primitive.
+    source:
+      - Service
+      - DataService
     target: InfraService
   - type: MONITORED_BY
-    description: Service observed via an analytics or observability surface.
-    source: Service
-    target: AnalyticsSurface
-  - type: OBSERVES
-    description: Analytics surface consuming telemetry from a service.
-    source: AnalyticsSurface
-    target: Service
-  - type: REPORTS_ON
-    description: Analytics surface surfacing insights about a domain.
-    source: AnalyticsSurface
-    target: Domain
-  - type: USES_TEMPLATE
-    description: Workflow or analytics surface leveraging a reusable report template.
+    description: Service, data pipeline, or report surface monitored by an observability tool.
     source:
-      - Workflow
-      - AnalyticsSurface
-    target: ReportTemplate
-  - type: RELATES_TO
-    description: Conceptual relationship or dependency between product capabilities or features.
-    source: ProductCapability
-    target: ProductCapability
-  - type: HAS_COMPONENT
-    description: Capability or service composed of a UI component for user experience delivery.
-    source:
-      - ProductCapability
       - Service
-    target: UIComponent
-  - type: CONTAINS_COLLECTION
-    description: Domain composed of subordinate collections.
-    source: Domain
-    target: Collection
-  - type: PERSISTED_IN
-    description: Domain or collection stored on an infrastructure primitive.
-    source: Domain
-    target: InfraService
+      - DataService
+      - Reporting
+    target: Observability
+  - type: REPORTS_ON
+    description: Reporting package or telemetry surface summarizes metrics for a capability, service, or pipeline.
+    source: Reporting
+    target:
+      - ProductCapability
+      - UseCase
+      - Service
+      - DataService
   - type: FEEDS
-    description: Feeder populating a downstream domain.
-    source: Feeder
-    target: Domain
-  - type: CONSUMES_FROM
-    description: Feeder sourcing data from a domain.
-    source: Feeder
-    target: Domain
-  - type: INTEGRATES_WITH
-    description: Service leveraging an external integration partner or device network.
-    source: Service
-    target: Integration
-  - type: PROVIDES_CHANNEL
-    description: Service exposing a communication pathway to end users or clinicians.
-    source: Service
-    target: Channel
-  - type: MANUFACTURED_BY
-    description: Integration linked to its device manufacturer for traceability.
-    source: Integration
-    target: DeviceVendor
-  - type: POWERS
-    description: Domain or collection powering a service.
-    source: Domain
-    target: Service
-  - type: DERIVED_FROM
-    description: Seed or insight derived from a domain or collection.
-    source: Seed
-    target: Domain
-  - type: WRITES_TO
-    description: Seed or feeder writing results into a domain.
-    source: Seed
-    target: Domain
-  - type: BACKED_BY
-    description: Service persisting data into a domain.
-    source: Service
-    target: Domain
-  - type: OWNS
-    description: Team accountable for a resource.
-    source: Team
-    target: Service
-  - type: ADMINISTERED_BY
-    description: Tooling service managed by a specific operational team.
-    source: ToolingService
-    target: Team
-  - type: RESPONSIBLE_FOR
-    description: Team responsible for a domain, integration, or workflow.
-    source: Team
-    target: Domain
-  - type: REQUESTED_BY
-    description: Actor initiating a configuration or workflow change.
-    source: Actor
-    target: Service
-  - type: APPROVED_BY
-    description: Actor approving a policy, configuration, or workflow change.
-    source: Actor
-    target: Service
-  - type: GOVERNS
-    description: Policy governing services, domains, or tenants.
-    source: Policy
-    target: Service
-  - type: APPLIES_TO
-    description: Policy applied directly to a data domain or tenant.
-    source: Policy
-    target: Domain
-  - type: EXPLAINS
-    description: Knowledge article describing expected behavior of a capability or workflow.
-    source: KnowledgeArticle
-    target: ProductCapability
-  - type: DOCUMENTS
-    description: Knowledge article documenting a workflow or service runbook.
-    source: KnowledgeArticle
-    target: Workflow
+    description: Data service publishes curated datasets or metrics into reporting or observability surfaces.
+    source: DataService
+    target:
+      - Reporting
+      - Observability
+  - type: SOURCED_FROM
+    description: Data service ingests data from an upstream service, integration, or reporting surface.
+    source: DataService
+    target:
+      - Service
+      - IntegrationPartner
+      - EMRIntegration
+      - DeviceIntegration
+      - Reporting
+  - type: STORED_IN
+    description: Reporting or observability asset persists data within an infrastructure primitive.
+    source:
+      - Reporting
+      - Observability
+    target: InfraService
   - type: USES_CODE
-    description: Service or workflow implemented by a code artifact.
-    source: Service
-    target: CodeArtifact
-  - type: IMPLEMENTED_BY
-    description: Workflow implemented by a specific code artifact.
-    source: Workflow
+    description: Runtime service or pipeline implemented by a specific code artifact.
+    source:
+      - Service
+      - DataService
+      - ToolingService
     target: CodeArtifact
   - type: TRIGGERS
-    description: Event triggering a workflow or service.
-    source: Event
-    target: Service
+    description: Release version or incident triggers downstream services or workflows.
+    source: ReleaseVersion
+    target:
+      - Service
+      - DataService
+      - EndUserWorkflow
+      - SupportWorkflow
   - type: RESULTED_IN
-    description: Event resulting from a service, workflow, or incident outcome.
-    source: Event
-    target: Domain
+    description: Release version produces new reporting, observability, or service state.
+    source: ReleaseVersion
+    target:
+      - Service
+      - DataService
+      - Reporting
+      - Observability
+
+  # Shared / CRM
+  - type: PROVIDES_CHANNEL
+    description: Service exposes a communication pathway to end users or partners.
+    source: Service
+    target: CommChannel
+  - type: MANUFACTURED_BY
+    description: Device integration associated with a device vendor for traceability.
+    source: DeviceIntegration
+    target: DeviceVendor
+  - type: INTEGRATES_WITH
+    description: Service connects to an external partner integration for data exchange or automation.
+    source:
+      - Service
+      - DataService
+    target:
+      - IntegrationPartner
+      - EMRIntegration
+      - DeviceIntegration

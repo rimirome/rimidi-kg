@@ -1,13 +1,14 @@
 # Rimidi KG Ontology
 
-The ontology defines the shared language across Product, Platform Architecture, and Shared/CRM teams. Every node label or relationship type in `schema/` should map to a business concept so automations, dashboards, and graph queries stay aligned with how the platform is actually described.
+The Rimidi knowledge graph organizes vocabulary across Product, Platform Architecture, Shared/CRM, and cross-cutting governance so teams can reason about the platform with a shared language. Every label or relationship defined below is sourced from `data/rimidi_kg_review_master_v2.csv` and mapped into the refreshed schema under `schema/`.
 
 ## Subgraph Overview
-- **Product Graph** — Capabilities, workflows, UI elements, report templates, and policies that describe what Rimidi delivers to users.
-- **Platform Architecture Graph** — Services, internal tooling, infrastructure, data lineage, and operational events that explain how the platform runs. TechOps contributes heavily here, but the graph also reflects work by Product Engineering, Data, and Reliability teams.
-- **Shared / CRM Graph** — Clients, implementations, devices, contracts, channels, and partner contexts that connect Product to customer outcomes.
+- **Product Graph** — Capabilities, use cases, workflows, and UI components that define how Rimidi delivers value to clinicians, patients, and staff.
+- **Platform Architecture Graph** — Runtime services, data pipelines, reporting packages, observability tooling, infrastructure, releases, and code artifacts that power the product.
+- **Shared / CRM Graph** — Clients, deployment archetypes, integration partners, EMR/device connections, device vendors, and communication channels that link Rimidi to the healthcare ecosystem.
+- **Cross-cutting** — Teams and actors (people) that request, approve, or govern changes across every subgraph.
 
-Keep the graphs distinct but linked through explicit relationships (for example, Product capabilities referencing platform services and Shared device vendors).
+Keep the subgraphs linked by explicit relationships (for example, services that support use cases, data services feeding reporting packages, or deployment types governed by a team) so governance and automation stay aligned.
 
 ## Node Labels
 
@@ -15,86 +16,79 @@ Keep the graphs distinct but linked through explicit relationships (for example,
 
 | Label | Description | Example | Notes |
 | --- | --- | --- | --- |
-| `ProductCapability` | End-to-end product capability or feature area powering clinical or operational value. | `capability-user-management` | Anchor for Product roadmap discussions. |
-| `UseCase` | Business outcome delivered to providers, staff, or patients. | `usecase-rpm-support` | Connects to capabilities and services that make it real. |
-| `Workflow` | Sequenced steps that deliver a clinical or operational outcome. | `workflow-hypertension-care-plan` | Often backed by automations or integrations. |
-| `SupportWorkflow` | Troubleshooting or support playbook used by Customer Success or Product. | `workflow-device-troubleshooting` | Reference these when mapping incident or support flows. |
-| `UIComponent` | Visible or interactive element (modal, header, dashboard widget). | `component-patient-chart-header` | Use `ui_area` to flag where in the product the component lives. |
-| `ReportTemplate` | Reusable report definition leveraged by analytics surfaces or workflows. | `report-rpm-summary-template` | Link from workflows or dashboards that embed it. |
-| `KnowledgeArticle` | Support or documentation entry describing expected behavior or guided troubleshooting. | `ka-rpm-billing-periods` | Connects to capabilities, workflows, or support workflows. |
-| `Policy` | Compliance or business guardrail applied to services, domains, or tenants. | `policy-audit-billing` | Reference applicable subgraph nodes via `GOVERNS` or `APPLIES_TO`. |
-| `CodeArtifact` | Source code reference (repo/path) implementing a capability or workflow. | `code-rimidi-container-api` | Attach via `USES_CODE` / `IMPLEMENTED_BY`. |
+| `ProductCapability` | End-to-end feature area that delivers measurable clinical or operational value. | `capability-remote-monitoring` | Anchor for roadmap, release notes, and outcomes. |
+| `UseCase` | Business outcome delivered to providers, staff, or patients. | `usecase-time-in-range` | Tied to capabilities and the services that make it real. |
+| `EndUserWorkflow` | Sequenced product or operational steps executed by humans or automations. | `workflow-device-onboarding` | Capture UI surface via `ui_area` and connect to supporting services. |
+| `SupportWorkflow` | Troubleshooting or incident playbook used by Customer Success, Product, or TechOps. | `workflow-rpm-alert-reset` | Reference runtime assets and integrations needed for recovery. |
+| `UIComponent` | Visible or interactive UI element such as a dashboard widget, modal, or navigation tab. | `component-patient-chart-overview` | Use `ui_area` plus `HAS_COMPONENT` to connect to capabilities and services. |
 
 ### Platform Architecture Graph
 
 | Label | Description | Example | Notes |
 | --- | --- | --- | --- |
-| `Service` | Application or shared service operated by Rimidi (UI, API, worker, etc.). | `service-device-api` | Model dependencies, infra, and integrations. |
-| `ToolingService` | Internal Rimidi utility or admin tool for back-office teams. | `tool-user-admin-table` | Always capture `owner_team` and optionally `ui_area`. |
-| `InfraService` | Cloud infrastructure primitive providing hosting, storage, or monitoring. | `infra-ecs-rimidi` | Connect via `RUNS_ON`, `SCHEDULED_BY`, or `PERSISTED_IN`. |
-| `Domain` | Governed data store or logical grouping. | `domain-aquifer` | Track PHI and access metadata. |
-| `Collection` | Concrete dataset within a domain. | `collection-audit-care-plans` | Link back to parent domain via `CONTAINS_COLLECTION`. |
-| `Feeder` | Pipeline or process that moves/derives data between domains. | `feeder-aquifer` | Use `FEEDS` / `CONSUMES_FROM` for lineage. |
-| `Seed` @deprecated | Versioned dataset historically curated for ML/analytics. | `seed-rpm-device-signals` | Prefer Domains + Collections; keep for legacy references only. |
-| `AnalyticsSurface` | Reporting, dashboarding, or observability UI. | `surface-bluejay` | Use `USES_TEMPLATE`, `REPORTS_ON`, `MONITORED_BY`. |
-| `Event` | Deployment, incident, or configuration change with temporal metadata. | `event-rpm-config-2025-03-01` | Link to services or domains impacted. |
+| `Service` | Application or shared service operated by Rimidi (UI, API, worker, automation, etc.). | `service-device-api` | Track dependencies, infra, integrations, and ownership. |
+| `ToolingService` | Internal utility or admin tool exposed to operations or back-office teams. | `tool-sso-admin-console` | Always include managing team and UI surface. |
+| `DataService` | Data platform job or pipeline that extracts, transforms, or loads Rimidi data. | `datasvc-aquifer-sync` | Model upstream sources, targets, and infra dependencies. |
+| `Reporting` | Business intelligence report or curated dataset published for analytics consumption. | `report-clinical-quality-scorecard` | Capture surface type and downstream consumers. |
+| `Observability` | Telemetry, dashboarding, or logging surface used to monitor the platform. | `observability-bluejay-dashboard` | Link to monitored services and infra persistence. |
+| `InfraService` | Cloud or infrastructure primitive providing hosting, scheduling, storage, or messaging. | `infra-aws-ecs-cluster` | Used by services, data pipelines, and reporting packages. |
+| `ReleaseVersion` | Deployment, incident, configuration change, or release artifact with temporal metadata. | `release-2025-04-rpm-ui` | Connect to triggered services/workflows and resulting assets. |
+| `CodeArtifact` | Source repository, package, or path that implements a capability, service, or pipeline. | `code-rimidi-container-api` | Map via `USES_CODE` to the runtime components that rely on it. |
 
 ### Shared / CRM Graph
 
 | Label | Description | Example | Notes |
 | --- | --- | --- | --- |
-| `Integration` | External system, vendor, or API connected to Rimidi services. | `integration-dexcom-g6` | Tie to services and the corresponding device vendor. |
-| `DeviceVendor` | Device manufacturer distinct from integration endpoints. | `vendor-omron` | Connect using `MANUFACTURED_BY`. |
-| `Channel` | Communication pathway (SMS, Email, In-App, Telehealth). | `channel-sms` | Services expose channels via `PROVIDES_CHANNEL`. |
-| `Client` | Healthcare organization or customer entity licensed to use Rimidi. | `client-coastal-health` | Optional until populated; connect to implementations and capabilities. |
-| `Implementation` | Client-specific deployment or environment configuration. | `implementation-coastal-prod` | Use future edges like `CONFIGURED_FOR`. |
-| `Contract` | Commercial agreement or SOW covering a client relationship. | `contract-coastal-2024` | Capture term metadata when available. |
-| `AccountContact` | Human relationship manager at a client organization. | `contact-sarah-jones` | Useful for CRM automations; populate as needed. |
-| `Team` | Organizational unit responsible for Rimidi resources. | `team-techops` | Connect via `OWNS`, `RESPONSIBLE_FOR`, `ADMINISTERED_BY`. |
-| `Actor` | Individual requester or approver associated with changes. | `actor-rpeters` | Use for change control and audit contexts. |
+| `Client` | Healthcare organization or customer licensed to use Rimidi. | `client-coastal-health` | Capture accountable team and deployment type. |
+| `DeploymentType` | Canonical deployment configuration or tenant archetype shared across clients. | `deployment-multitenant-prod` | Governs release and compliance guardrails for clients. |
+| `IntegrationPartner` | Third-party vendor or platform integrated with Rimidi offerings (non-EMR/device). | `integration-xealth` | Treat as partner-level surface; device/EMR specifics modeled separately. |
+| `EMRIntegration` | EMR vendor connection powering data exchange with Rimidi. | `integration-cerner` | Use alongside integration partners for broader workflows. |
+| `DeviceIntegration` | Device connectivity integration ingesting clinical measurements or PGHD. | `integration-dexcom-g7` | Links to device vendor and upstream/downstream services. |
+| `DeviceVendor` | Manufacturer that produces healthcare devices supported by Rimidi integrations. | `vendor-omron` | Attach from device integrations to retain traceability. |
+| `CommChannel` | Communication pathway used to reach clinicians, patients, or partners (SMS, email, phone, etc.). | `channel-sms` | Services expose channels the platform supports. |
 
-### Deprecated or Historical Concepts
-- `Seed` remains in the schema but is marked `@deprecated`; favor modeling analytics-ready data as Domains + Collections with Feeders.
-- Historical label `Seeder` (not currently defined) should not be reintroduced; rely on `Feeder` + provenance metadata instead.
+### Cross-cutting Graph
+
+| Label | Description | Example | Notes |
+| --- | --- | --- | --- |
+| `Team` | Organizational unit responsible for Rimidi resources and accountable outcomes. | `team-techops` | Use for ownership, governance, and operational responsibilities. |
+| `Actor` | Individual requester or approver associated with product, platform, or client changes. | `actor-rpeters` | Supports change control and audit requirements. |
 
 ## Relationship Types
 
-| Type | Description | Typical Usage |
+| Type | Description | Typical Source → Target |
 | --- | --- | --- |
-| `ENABLES` | Capability provides functionality to a workflow. | Capability → Workflow |
-| `DELIVERS` | Capability delivers a business use case. | Capability → UseCase |
-| `SUPPORTS` | Service supports a use case. | Service → UseCase |
-| `SUPPORTS_TROUBLESHOOTING` | Capability or service documented by a support workflow. | (Capability ∣ Service) → SupportWorkflow |
-| `IMPLEMENTS` | Workflow leverages an integration. | Workflow → Integration |
-| `HAS_COMPONENT` | Capability or service composed of a UI component. | (Capability ∣ Service) → UIComponent |
-| `PROVIDES_CHANNEL` | Service exposes a communication pathway. | Service → Channel |
-| `MANUFACTURED_BY` | Integration linked to its device manufacturer. | Integration → DeviceVendor |
-| `USES_TEMPLATE` | Workflow or analytics surface uses a report template. | (Workflow ∣ AnalyticsSurface) → ReportTemplate |
-| `DEPENDS_ON` | Service dependency graph (api/data/logging/etc.). | Service → Service |
-| `RUNS_ON` / `SCHEDULED_BY` | Service hosted on or triggered by infrastructure. | Service → InfraService |
-| `USES_SECRET_FROM` | Service retrieves credentials/config from infra. | Service → InfraService |
-| `MONITORED_BY` / `OBSERVES` | Services and analytics surfaces share telemetry. | Service ↔ AnalyticsSurface |
-| `REPORTS_ON` | Analytics surface reports on a domain. | AnalyticsSurface → Domain |
-| `INTEGRATES_WITH` | Service connects to external integration. | Service → Integration |
-| `CONTAINS_COLLECTION` | Domain contains a dataset. | Domain → Collection |
-| `FEEDS` / `CONSUMES_FROM` | Feeder populates or reads from a domain. | Feeder ↔ Domain |
-| `PERSISTED_IN` | Domain stored on infrastructure. | Domain → InfraService |
-| `POWERS` / `BACKED_BY` / `WRITES_TO` | Data powering services or written by seeds/feeders. | Domain/Seed ↔ Service/Domain |
-| `DERIVED_FROM` | Seed derived from a domain. | Seed → Domain |
-| `OWNS` | Team accountable for a resource. | Team → Service |
-| `ADMINISTERED_BY` | Tooling service managed by a team. | ToolingService → Team |
-| `RESPONSIBLE_FOR` | Team responsible for a domain, integration, or workflow. | Team → Domain/Integration/Workflow |
-| `REQUESTED_BY` / `APPROVED_BY` | Actor initiating or approving change. | Actor → Service |
-| `GOVERNS` / `APPLIES_TO` | Policy constrains configuration or data. | Policy → Service/Domain |
-| `EXPLAINS` / `DOCUMENTS` | Knowledge article documents capability or workflow. | KnowledgeArticle → Capability/Workflow |
-| `USES_CODE` / `IMPLEMENTED_BY` | Service or workflow implemented by a code artifact. | Service/Workflow ↔ CodeArtifact |
-| `TRIGGERS` / `RESULTED_IN` | Event drives workflow/service or impacts domain. | Event → Service/Domain |
+| `ENABLES` | Capability provides functionality to an end-user workflow. | `ProductCapability` → `EndUserWorkflow` |
+| `DELIVERS` | Capability delivers or proves out a use case. | `ProductCapability` → `UseCase` |
+| `SUPPORTS` | Runtime service underpins a business use case. | (`Service` ∣ `DataService` ∣ `ToolingService`) → `UseCase` |
+| `SUPPORTS_TROUBLESHOOTING` | Capability or runtime service documented by a support workflow. | (`ProductCapability` ∣ `Service` ∣ `DataService`) → `SupportWorkflow` |
+| `IMPLEMENTS` | Workflow leverages an integration or data service. | `EndUserWorkflow` → (`IntegrationPartner` ∣ `EMRIntegration` ∣ `DeviceIntegration` ∣ `DataService`) |
+| `HAS_COMPONENT` | Capability or service composed of a UI component. | (`ProductCapability` ∣ `Service`) → `UIComponent` |
+| `OWNS` | Team accountable for an asset across the graph. | `Team` → product/platform/CRM nodes |
+| `ADMINISTERED_BY` | Tooling service managed by a team. | `ToolingService` → `Team` |
+| `RESPONSIBLE_FOR` | Team charged with operations or quality of a workflow, integration, or service. | `Team` → (`Service` ∣ `DataService` ∣ `Reporting` ∣ `Observability` ∣ integrations ∣ workflows ∣ `Client`) |
+| `REQUESTED_BY` / `APPROVED_BY` | Actor initiates or approves changes. | `Actor` → (`Service` ∣ `DataService` ∣ `DeploymentType` ∣ `ReleaseVersion`) |
+| `GOVERNS` | Team-defined guardrail for deployments, services, or clients. | `Team` → (`DeploymentType` ∣ `Service` ∣ `DataService` ∣ `Client`) |
+| `DEPENDS_ON` | Service-level dependency (API, data, logging, etc.). | (`Service` ∣ `DataService`) → (`Service` ∣ `DataService`) |
+| `RUNS_ON` / `SCHEDULED_BY` | Runtime component hosted or scheduled by infrastructure. | service/data/report/observability → `InfraService` |
+| `USES_SECRET_FROM` | Service or pipeline retrieves credentials/config from infrastructure. | (`Service` ∣ `DataService`) → `InfraService` |
+| `MONITORED_BY` | Runtime component monitored by an observability surface. | (`Service` ∣ `DataService` ∣ `Reporting`) → `Observability` |
+| `REPORTS_ON` | Reporting package summarizes metrics for a capability, use case, service, or pipeline. | `Reporting` → (`ProductCapability` ∣ `UseCase` ∣ `Service` ∣ `DataService`) |
+| `FEEDS` | Data service publishes curated datasets to reporting or observability surfaces. | `DataService` → (`Reporting` ∣ `Observability`) |
+| `SOURCED_FROM` | Data service ingests from an upstream service or integration. | `DataService` → (`Service` ∣ `IntegrationPartner` ∣ `EMRIntegration` ∣ `DeviceIntegration` ∣ `Reporting`) |
+| `STORED_IN` | Reporting/observability assets persist into infrastructure. | (`Reporting` ∣ `Observability`) → `InfraService` |
+| `USES_CODE` | Runtime component implemented by a code artifact. | (`Service` ∣ `DataService` ∣ `ToolingService`) → `CodeArtifact` |
+| `TRIGGERS` | Release version or incident triggers downstream services or workflows. | `ReleaseVersion` → (`Service` ∣ `DataService` ∣ `EndUserWorkflow` ∣ `SupportWorkflow`) |
+| `RESULTED_IN` | Release version produces new runtime, reporting, or observability state. | `ReleaseVersion` → (`Service` ∣ `DataService` ∣ `Reporting` ∣ `Observability`) |
+| `PROVIDES_CHANNEL` | Service exposes a communication channel. | `Service` → `CommChannel` |
+| `MANUFACTURED_BY` | Device integration associated with its device vendor. | `DeviceIntegration` → `DeviceVendor` |
+| `INTEGRATES_WITH` | Service or data pipeline connects to an external partner integration. | (`Service` ∣ `DataService`) → (`IntegrationPartner` ∣ `EMRIntegration` ∣ `DeviceIntegration`) |
 
 ## Metadata & Governance
-- **Identifiers**: All nodes use slug-style IDs (`component-disease-view-column`, `tool-role-manager`). Prefer stable identifiers that survive organizational renames.
-- **Required provenance fields**: Always capture `owner_team`, `source_system`, `jira_id`, and `release_note` when adding new nodes or edges.
-- **Optional UI context**: Use `ui_area` (new attribute) to tag the part of the product a component, template, or tool supports (e.g., "Patient Chart", "Device Integration").
-- **Access controls**: Apply PHI and access-level attributes on domains, collections, feeders, and services that handle sensitive data.
-- **Aliases**: Maintain synonyms in `data/aliases.yaml` so Sunny can fuzzy-match natural language terms (for example, "Admin Tool" → `ToolingService`).
+- **Identifiers**: Use stable, slug-style IDs (`service-device-api`, `report-rpm-dashboard`, `deployment-multitenant-prod`). They should survive renames and align with automation payloads.
+- **Required provenance fields**: Capture `owner_team`, `source_system`, `jira_id`, and `release_note` (via `attributes.governance.*`) whenever nodes or edges are created.
+- **Runtime context**: Apply `service.layer`, `service.service_type`, `service.provider`, and `access.*` attributes to clarify architecture posture and data handling expectations.
+- **Surface tagging**: `ui_area` and `data.surface_type` help Sunny or downstream tooling present the right UI and reporting surfaces for a request.
+- **Change tracking**: Connect `ReleaseVersion` nodes to the services, pipelines, and reporting assets they trigger or update, and link the responsible `Actor`/`Team` via change-control relationships.
 
-Consistently applying the ontology ensures Sunny can guide Rimidi teammates across product capabilities, operational services, and client-facing contexts without ambiguity.
+Consistently applying these definitions allows Sunny, TechOps, and Product teams to navigate the platform with shared intent and reduce translation overhead between engineering, operations, and customer-facing workflows.
