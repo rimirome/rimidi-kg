@@ -1,36 +1,31 @@
-// Product management insights.
+// Product management insights aligned with the dual-plane schema.
 
-// Capabilities supporting the Hypertension Care Plan.
-MATCH (c:ProductCapability)-[:ENABLES]->(w:Workflow {id: 'workflow-hypertension-care-plan'})
-RETURN c.id AS capability_id, c.name AS capability_name
+// Capabilities delivering the hypertension management use case.
+MATCH (cap:ProductCapability)-[:DELIVERS]->(:UseCase {id: 'usecase-hypertension-management'})
+RETURN cap.id AS capability_id, cap.name AS capability_name
 ORDER BY capability_name;
 
-// Workflows missing an assigned owner.
-MATCH (w:Workflow)
-WHERE w.owner_team IS NULL OR w.owner_team = ''
-RETURN w.id AS workflow_id, w.name AS workflow_name;
+// Workflows missing an explicit implementation partner or data service.
+MATCH (wf:EndUserWorkflow)
+WHERE NOT (wf)-[:IMPLEMENTS]->(:IntegrationPartner)
+  AND NOT (wf)-[:IMPLEMENTS]->(:EMRIntegration)
+  AND NOT (wf)-[:IMPLEMENTS]->(:DeviceIntegration)
+  AND NOT (wf)-[:IMPLEMENTS]->(:DataService)
+RETURN wf.id AS workflow_id, wf.name AS workflow_name
+ORDER BY workflow_name;
 
-// Use cases that currently have no supporting services documented.
-MATCH (u:UseCase)
-WHERE NOT (:Service)-[:SUPPORTS]->(u)
-RETURN u.id AS use_case_id, u.name AS use_case_name;
+// UI components attached to the remote monitoring capability.
+MATCH (:ProductCapability {id: 'capability-remote-monitoring'})-[:HAS_COMPONENT]->(ui:UIComponent)
+RETURN ui.id AS component_id, ui.name AS component_name
+ORDER BY component_name;
 
-// Capabilities powering Billing Operations & Compliance with their supporting services.
-MATCH (u:UseCase {id: 'usecase-billing-operations'})
-MATCH (cap:ProductCapability)-[:DELIVERS]->(u)
-OPTIONAL MATCH (svc:Service)-[:SUPPORTS]->(u)
-RETURN cap.id AS capability_id, cap.name AS capability_name,
-       collect(DISTINCT svc.id) AS supporting_services
-ORDER BY capability_name;
+// Support workflows tied to the device API service via troubleshooting documentation.
+MATCH (:Service {id: 'service-device-api'})-[:SUPPORTS_TROUBLESHOOTING]->(sw:SupportWorkflow)
+RETURN sw.id AS workflow_id, sw.name AS workflow_name;
 
-// Feature relationships: capabilities related to RPM remote monitoring.
-MATCH (:ProductCapability {id: 'capability-remote-monitoring'})-[:RELATES_TO]->(cap:ProductCapability)
-RETURN cap.id AS related_capability_id, cap.name AS related_capability_name;
-
-// Knowledge articles documenting a capability.
-MATCH (ka:KnowledgeArticle)-[:EXPLAINS]->(cap:ProductCapability)
-RETURN cap.name AS capability, ka.name AS article, ka.source_system AS source;
-
-// Device ingestion services and their integration partners.
-MATCH (svc:Service {id: 'service-device-api'})-[:INTEGRATES_WITH]->(i:Integration)
-RETURN svc.id AS service_id, collect(DISTINCT i.name) AS integrations;
+// Release records that trigger product workflows.
+MATCH (rel:ReleaseVersion)-[:TRIGGERS]->(wf:EndUserWorkflow)
+RETURN rel.id AS release_id,
+       rel.release_reference AS release_reference,
+       wf.id AS workflow_id
+ORDER BY release_reference DESC;

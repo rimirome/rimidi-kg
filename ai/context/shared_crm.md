@@ -1,24 +1,26 @@
 ## Shared / CRM Subgraph Snapshot
 
 ### Node labels
-- `Client`: Customer organisation using Rimidi. Example `client-coastal-health`.
-- `DeploymentType`: Canonical deployment archetype shared across clients. Example `deployment-standalone-prod`.
+- `Client`: Customer organisation licensed to use Rimidi. Example `client-coastal-health`.
+- `DeploymentType`: Canonical deployment archetype across clients. Example `deployment-multitenant-prod`.
+- `ImplementationVariant`: Configuration variant tailored to a specific tenant. Example `implementation-variant-standard`.
 - `IntegrationPartner`: Third-party platform integration (non-EMR/device). Example `integration-xealth`.
 - `EMRIntegration`: EMR vendor connectivity. Example `integration-cerner`.
 - `DeviceIntegration`: Device connectivity endpoint. Example `integration-dexcom-g7`.
 - `DeviceVendor`: Manufacturer linked to device integrations. Example `vendor-dexcom`.
-- `CommChannel`: Communication pathway (SMS, email, phone). Example `channel-sms`.
+- `CommChannel`: Communication pathway (SMS, email, phone, webhook). Example `channel-secure-messaging`.
 
 ### Relationships
-- `Service -[:PROVIDES_CHANNEL]-> CommChannel`: Runtime surfaces exposing communications.
+- `ImplementationVariant -[:CONFIGURED_FOR]-> Client`: Tenant-specific configuration applied to a client.
+- `Client -[:USES]-> ProductCapability`: Product capability relied on by a client process.
+- `Team -[:OWNS|RESPONSIBLE_FOR|GOVERNS]-> Client|DeploymentType|ImplementationVariant|IntegrationPartner|EMRIntegration|DeviceIntegration|CommChannel`: Accountability and guardrails.
+- `Service|ToolingService -[:PROVIDES_CHANNEL]-> CommChannel`: Runtime surfaces exposing communications.
+- `Service|DataService -[:INTEGRATES_WITH]-> IntegrationPartner|EMRIntegration|DeviceIntegration`: External dependencies (`integration_mode` optional).
 - `DeviceIntegration -[:MANUFACTURED_BY]-> DeviceVendor`: Traceability for hardware partners.
-- `Service|DataService -[:INTEGRATES_WITH]-> IntegrationPartner|EMRIntegration|DeviceIntegration`: External dependencies.
-- `Team -[:OWNS]-> Client|DeploymentType|IntegrationPartner|EMRIntegration|DeviceIntegration|CommChannel`: Accountability.
-- `Team -[:RESPONSIBLE_FOR]-> Client|IntegrationPartner|EMRIntegration|DeviceIntegration|CommChannel`: Operational responsibility.
-- `Team -[:GOVERNS]-> DeploymentType|Client`: Compliance guardrails.
-- `Actor -[:APPROVED_BY/REQUESTED_BY]-> DeploymentType`: Change-control links when deployments shift.
+- `EndUserWorkflow -[:SUPPORTS]-> Client`: Workflow operationally supports a client process when modeled.
 
 ### Modeling tips
-- When creating new clients or integrations, ensure `owner_team`, `source_system`, `jira_id`, and `release_note` document provenance.
-- Always tag environment (`env`) and `tenant` parameters in change Cypher; CRM changes often target specific tenants.
-- Reference existing integrations in `data/seed.cypher` before inventing new identifiers to avoid duplication.
+- Record `owner_team`, `category`, and provenance fields (`source_system`, `jira_reference`, `release_reference`) for every CRM node and relationship to keep lineage auditable.
+- Use sanitized IDs (e.g., `client-coastal-health`) in Cypher; patient or tenant-specific values never enter the repo.
+- When a client requires a distinct setup, model both the `DeploymentType` and `ImplementationVariant` so Luna can reason about upgrades via `CONFIGURED_FOR` and `GOVERNS`.
+- Connect client usage back to product and platform nodes via `USES`, `SUPPORTS`, and `INTEGRATES_WITH` edges to keep cross-plane impact analysis deterministic.

@@ -1,40 +1,44 @@
-// Engineering-focused queries.
+// Engineering-focused queries aligned with the regenerated schema.
 
 // Services missing explicit infrastructure hosting documentation.
 MATCH (s:Service)
 WHERE NOT (s)-[:RUNS_ON]->(:InfraService)
-RETURN s.id AS service_id, s.name AS service_name;
+RETURN s.id AS service_id, s.name AS service_name
+ORDER BY service_name;
 
-// Infra primitives lacking dependent services.
-MATCH (i:InfraService)
-WHERE NOT (:Service)-[:RUNS_ON]->(i)
-RETURN i.id AS infra_id, i.name AS infra_name;
+// Infra primitives that currently lack dependent workloads.
+MATCH (infra:InfraService)
+WHERE NOT (:Service)-[:RUNS_ON]->(infra)
+  AND NOT (:DataService)-[:RUNS_ON]->(infra)
+RETURN infra.id AS infra_id, infra.name AS infra_name;
 
-// Capabilities flagged as deprecated but still enabling workflows.
-MATCH (c:ProductCapability {status: 'deprecated'})-[:ENABLES]->(w:Workflow)
-RETURN c.id AS capability_id, w.id AS workflow_id;
+// Capabilities marked deprecated but still enabling workflows.
+MATCH (cap:ProductCapability {lifecycle_state: 'deprecated'})-[:ENABLES]->(wf:EndUserWorkflow)
+RETURN cap.id AS capability_id, wf.id AS workflow_id;
 
-// Services that depend on other services without specifying dependency type metadata.
-MATCH (s:Service)-[r:DEPENDS_ON]->(up:Service)
-WHERE r.dependency_type IS NULL
+// Service-to-service dependencies missing dependency_type metadata.
+MATCH (s:Service)-[rel:DEPENDS_ON]->(up:Service)
+WHERE rel.dependency_type IS NULL
 RETURN s.id AS service_id, up.id AS upstream_service;
 
-// Observability coverage: services not monitored by any analytics surface.
+// Services not monitored by any observability surface.
 MATCH (s:Service)
-WHERE NOT (s)-[:MONITORED_BY]->(:AnalyticsSurface)
+WHERE NOT (s)-[:MONITORED_BY]->(:Observability)
 RETURN s.id AS service_id, s.name AS service_name;
 
-// Integration coverage: ingestion and interop services missing partner connections.
+// Integration coverage: ingestion and interop services missing external links.
 MATCH (s:Service)
 WHERE s.id IN ['service-device-api', 'service-fhir-gateway', 'service-emr-adapters', 'service-export-pipelines']
-  AND NOT (s)-[:INTEGRATES_WITH]->(:Integration)
+  AND NOT (s)-[:INTEGRATES_WITH]->(:IntegrationPartner)
+  AND NOT (s)-[:INTEGRATES_WITH]->(:EMRIntegration)
+  AND NOT (s)-[:INTEGRATES_WITH]->(:DeviceIntegration)
 RETURN s.id AS service_id, s.name AS service_name;
 
 // Code artifacts associated with services.
 MATCH (s:Service)-[:USES_CODE]->(code:CodeArtifact)
-RETURN s.id AS service_id, code.repo AS repository, code.path AS path;
+RETURN s.id AS service_id, code.id AS artifact_id;
 
-// Recent events triggering services.
-MATCH (evt:Event)-[:TRIGGERS]->(s:Service)
-RETURN evt.id AS event_id, evt.valid_from AS occurred_at, s.id AS service_id
-ORDER BY evt.valid_from DESC;
+// Release versions triggering downstream services.
+MATCH (rel:ReleaseVersion)-[:TRIGGERS]->(s:Service)
+RETURN rel.id AS release_id, rel.release_reference AS release_reference, s.id AS service_id
+ORDER BY release_reference DESC;

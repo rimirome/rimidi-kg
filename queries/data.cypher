@@ -1,38 +1,38 @@
-// Data ecosystem and governance queries.
+// Data ecosystem and lineage queries for the refreshed ontology.
 
-// Domains with PHI access that are still proposed or partial.
-MATCH (d:Domain)
-WHERE d.phi_sensitivity = 'phi' AND d.status IN ['proposed', 'partial']
-RETURN d.id AS domain_id, d.name AS domain_name, d.status;
+// Data services without upstream source definitions.
+MATCH (ds:DataService)
+WHERE NOT (ds)-[:SOURCED_FROM]->(:Service)
+  AND NOT (ds)-[:SOURCED_FROM]->(:IntegrationPartner)
+  AND NOT (ds)-[:SOURCED_FROM]->(:EMRIntegration)
+  AND NOT (ds)-[:SOURCED_FROM]->(:DeviceIntegration)
+  AND NOT (ds)-[:SOURCED_FROM]->(:Reporting)
+RETURN ds.id AS data_service_id, ds.name AS data_service_name
+ORDER BY data_service_name;
 
-// Feeders without both source and target mappings.
-MATCH (f:Feeder)
-WHERE NOT (f)-[:CONSUMES_FROM]->(:Domain)
-   OR NOT (f)-[:FEEDS]->(:Domain)
-RETURN f.id AS feeder_id, f.name AS feeder_name;
+// Data services that do not publish to reporting or observability surfaces.
+MATCH (ds:DataService)
+WHERE NOT (ds)-[:FEEDS]->(:Reporting)
+  AND NOT (ds)-[:FEEDS]->(:Observability)
+RETURN ds.id AS data_service_id, ds.name AS data_service_name;
 
-// Collections lacking domain ownership tags.
-MATCH (c:Collection)
-WHERE NOT ( (:Domain)-[:CONTAINS_COLLECTION]->(c) )
-RETURN c.id AS collection_id, c.name AS collection_name;
+// Reporting assets missing explicit storage targets.
+MATCH (rep:Reporting)
+WHERE NOT (rep)-[:STORED_IN]->(:InfraService)
+RETURN rep.id AS reporting_id, rep.name AS reporting_name;
 
-// Analytics surfaces reporting on PHI domains.
-MATCH (a:AnalyticsSurface)-[:REPORTS_ON]->(d:Domain)
-WHERE d.phi_sensitivity = 'phi'
-RETURN a.id AS surface_id, a.name AS surface_name, d.id AS domain_id;
+// Observability tooling without hosting metadata.
+MATCH (obs:Observability)
+WHERE NOT (obs)-[:RUNS_ON]->(:InfraService)
+RETURN obs.id AS observability_id, obs.name AS observability_name;
 
-// Seeds derived from Aquifer but not yet writing results anywhere.
-MATCH (s:Seed)-[:DERIVED_FROM]->(:Domain {id: 'domain-aquifer'})
-WHERE NOT (s)-[:WRITES_TO]->(:Domain)
-RETURN s.id AS seed_id, s.name AS seed_name;
+// Data services sourcing from integrations without an integration_mode tag.
+MATCH (ds:DataService)-[rel:SOURCED_FROM]->(src)
+WHERE (src:IntegrationPartner OR src:EMRIntegration OR src:DeviceIntegration)
+  AND rel.integration_mode IS NULL
+RETURN ds.id AS data_service_id, src.id AS source_id;
 
-// Audit repository collections and the services backed by them.
-MATCH (:Domain {id: 'domain-audit-repository'})-[:CONTAINS_COLLECTION]->(c:Collection)
-OPTIONAL MATCH (svc:Service)-[:BACKED_BY]->(:Domain)-[:CONTAINS_COLLECTION]->(c)
-RETURN c.id AS collection_id, collect(DISTINCT svc.id) AS consuming_services;
-
-// Integration partners mapped to interoperability services.
-MATCH (svc:Service)
-WHERE svc.id IN ['service-device-api', 'service-fhir-gateway', 'service-emr-adapters', 'service-export-pipelines']
-MATCH (svc)-[:INTEGRATES_WITH]->(i:Integration)
-RETURN svc.id AS service_id, collect(DISTINCT i.id) AS partner_ids;
+// Release versions that resulted in new reporting artifacts.
+MATCH (rel:ReleaseVersion)-[:RESULTED_IN]->(rep:Reporting)
+RETURN rel.id AS release_id, rel.release_reference AS release_reference, rep.id AS reporting_id
+ORDER BY release_reference DESC;

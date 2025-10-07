@@ -1,22 +1,23 @@
 ## Product Subgraph Snapshot
 
 ### Node labels
-- `ProductCapability`: Feature area delivering measurable outcomes. Example ID `capability-remote-monitoring`.
-- `UseCase`: Business outcome tied to clinical or operational goals. Example `usecase-rpm-outcomes`.
-- `EndUserWorkflow`: Sequenced interactions executed by clinicians or automations. Example `workflow-hypertension-care-plan`.
-- `SupportWorkflow`: Troubleshooting or incident playbook. Example `workflow-device-triage`.
-- `UIComponent`: User-facing element such as modal, dashboard widget, or tab. Example `component-patient-dashboard-overview`.
+- `ProductCapability`: End-to-end feature area delivering measurable outcomes. Example `capability-remote-monitoring`.
+- `UseCase`: Business outcome tied to clinical or operational goals. Example `usecase-hypertension-management`.
+- `EndUserWorkflow`: Sequenced interactions executed by clinicians or automations. Example `workflow-alert-triage`.
+- `SupportWorkflow`: Troubleshooting or incident playbook used by Product. Example `workflow-integration-reset`.
+- `UIComponent`: User-facing element such as modal, dashboard widget, or tab. Example `component-care-team-dashboard`.
 
 ### Relationships
-- `ProductCapability -[:DELIVERS]-> UseCase`: Capability proves the business outcome.
-- `ProductCapability -[:ENABLES]-> EndUserWorkflow`: Capability powers a workflow step.
-- `ProductCapability -[:SUPPORTS_TROUBLESHOOTING]-> SupportWorkflow`: Capability documented for incident response.
-- `Service|DataService -[:SUPPORTS]-> UseCase`: Runtime dependencies that make the use case real.
-- `Service|ProductCapability -[:HAS_COMPONENT]-> UIComponent`: UI assets surfaced to users.
-- `EndUserWorkflow -[:IMPLEMENTS]-> IntegrationPartner|EMRIntegration|DeviceIntegration|DataService`: External or data services executing the workflow.
-- `SupportWorkflow` receives `SUPPORTS_TROUBLESHOOTING` from capabilities, services, and data services.
+- `ProductCapability|EndUserWorkflow -[:DELIVERS]-> UseCase`: Capabilities and workflows deliver measurable value.
+- `ProductCapability -[:ENABLES]-> EndUserWorkflow`: Capability powers a workflow stage.
+- `ProductCapability|Service|ToolingService -[:HAS_COMPONENT]-> UIComponent`: Surfaces and modules tied to the capability or service.
+- `ProductCapability|Service|DataService -[:SUPPORTS_TROUBLESHOOTING]-> SupportWorkflow`: Runtime assets documented for incident response.
+- `EndUserWorkflow -[:IMPLEMENTS]-> IntegrationPartner|EMRIntegration|DeviceIntegration|DataService`: External or data services executing each step.
+- `Service|DataService|ToolingService|EndUserWorkflow -[:SUPPORTS]-> UseCase|Client`: Operational dependencies that make the use case real or support client processes.
+- `ReleaseVersion -[:TRIGGERS]-> EndUserWorkflow|SupportWorkflow`: Change events that start user-facing flows.
 
 ### Modeling tips
-- Include `ui_area` for workflows or components when location matters.
-- Always attach governance tags on new product artifacts (owner team usually Product Experience or Clinical Product).
-- Validate read/write Cypher against Product nodes before referencing Shared/CRM or Platform context.
+- Populate `owner_team`, `category`, and provenance fields (`source_system`, `jira_reference`, `release_reference`) for every product node so Sunny can explain governance posture.
+- Use sanitized IDs (e.g., `capability-remote-monitoring`) when generating Cypher; PHI descriptors must never appear.
+- Sunny is read-only; escalate structural changes or new labels to Luna so governance metadata stays synced with the schema.
+- Combine product nodes with platform/CRM context via `SUPPORTS`, `IMPLEMENTS`, `USES`, and `INTEGRATES_WITH` edges to maintain traceable lineage.

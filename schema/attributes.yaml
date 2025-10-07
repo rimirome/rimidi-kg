@@ -1,102 +1,105 @@
-# Reusable attribute definitions keyed by namespace.
+# Attribute definitions aligned with the dual-plane Rimidi KG governance model.
 
 attributes:
-  common:
+  identity:
     id:
-      type: uuid
+      type: string
       required: true
-      description: Stable unique identifier for the node.
+      format: slug
+      description: Stable slug used across Sunny (query plane) and Luna (authoring plane).
     name:
       type: string
       required: true
-      description: Human readable label.
+      description: Canonical human-readable name for the asset.
     description:
       type: text
-      required: false
-      description: Freeform notes or context.
-    owner_team:
-      type: string
-      required: false
-      description: Primary team accountable for the node.
-    ui_area:
-      type: string
-      required: false
-      description: Short label for the functional UI area or surface.
-    status:
-      type: string
-      required: false
-      allowed: [planned, proposed, partial, in-progress, live, deprecated]
-      description: Lifecycle state.
-    vendor:
-      type: string
-      required: false
-      description: Vendor or system owner when applicable.
-
-  service:
-    layer:
-      type: string
-      required: false
-      allowed: [business, infrastructure, data]
-      description: High-level layer the service or component operates within.
-    service_type:
-      type: string
-      required: false
-      description: Functional classification (ui, api, worker, pipeline, observability, etc.).
-    provider:
-      type: string
-      required: false
-      description: Cloud or hosting provider associated with the service.
-    code_name:
-      type: string
-      required: false
-      description: Internal code name or jargon for the service.
-
-  data:
-    surface_type:
-      type: string
-      required: false
-      description: Visualization, reporting, or telemetry surface classification.
-
-  access:
-    phi_sensitivity:
-      type: string
-      required: false
-      allowed: [phi, non-phi, mixed]
-      description: Whether the component contains PHI data.
-    access_role:
-      type: string
-      required: false
-      allowed: [internal, external-facing, partner]
-      description: Primary audience or access boundary.
-    access_mode:
-      type: string
-      required: false
-      allowed: [read-only, writable, mixed]
-      description: Whether the component supports read vs write interactions.
-    data_purpose:
-      type: list
-      required: false
-      allowed: [audit-grade, exploratory, insight, ops, reporting, monitoring, transformation, ingestion, observability, training]
-      description: Intended use of the data handled by the component.
-
+      required: true
+      description: Single sentence definition anchored in the ontology.
   governance:
-    valid_from:
-      type: datetime
+    owner_team:
+      type: enum
+      required: true
+      allowed: [Product, Engineering, ClientSuccess, TechOps, Governance, Executives, Cybersecurity, SalesMarketing, HR]
+      description: Team accountable for the node or relationship.
+    usage_frequency:
+      type: enum
       required: false
-      description: Timestamp when the entity became active.
-    valid_to:
-      type: datetime
+      allowed: [High, Medium, Low]
+      description: Estimated usage in queries, reports, or governance reviews.
+    governance_maturity:
+      type: enum
       required: false
-      description: Timestamp when the entity was deactivated.
+      allowed: [Strong, Medium, Weak]
+      description: Confidence in data completeness and definition clarity.
+    steward:
+      type: string
+      required: false
+      description: Named steward or escalation alias when available.
+  lineage:
     source_system:
       type: string
       required: false
-      description: Source of truth for the entity (e.g., Jira, Release Notes).
-    jira_id:
+      default: github
+      description: System of record (Jira, release notes, ADR) for the fact; default `github` for repository-sourced changes.
+    jira_reference:
       type: string
       required: false
-      description: Jira ticket or issue key associated with this entity.
-    release_note:
+      default: RIMIDI2023-1234
+      description: Jira ticket or change request capturing provenance.
+    release_reference:
       type: string
       required: false
-      description: Reference to product release notes or ADR.
+      default: v2.27
+      description: Release, incident, or deployment identifier tied to the record.
+  operational:
+    lifecycle_state:
+      type: enum
+      required: false
+      allowed: [planned, active, deprecated]
+      description: Lifecycle signal for the asset.
+    plane_access:
+      type: enum
+      required: false
+      allowed: [query-only, authoring-only, dual-plane]
+      description: Indicates which planes expose or mutate the asset.
+    criticality:
+      type: enum
+      required: false
+      allowed: [tier-0, tier-1, tier-2, tier-3]
+      description: Operational impact tier used by platform teams.
+  partnership:
+    vendor:
+      type: string
+      required: false
+      description: External vendor or manufacturer name when applicable.
+    integration_mode:
+      type: enum
+      required: false
+      allowed: [api, hl7, fhir, webhook, file, manual]
+      description: Integration mechanism for services, workflows, or relationships.
+  communication:
+    channel_type:
+      type: enum
+      required: false
+      allowed: [sms, email, phone, in-app, portal, webhook]
+      description: Channel classification used for communications.
+  relationship_properties:
+    dependency_type:
+      type: enum
+      required: false
+      allowed: [api, data, schedule, monitoring, secret, ui]
+      description: Mode of dependency between source and target assets.
+    environment:
+      type: enum
+      required: false
+      allowed: [production, staging, development, qa]
+      description: Runtime environment for the relationship context.
+    data_scope:
+      type: enum
+      required: false
+      allowed: [phi, non-phi, mixed]
+      description: Indicates whether secrets or data include PHI.
+    change_ticket:
+      type: string
+      required: false
+      description: Linked change record, release ticket, or approval identifier.

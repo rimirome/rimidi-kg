@@ -1,115 +1,62 @@
-# Relationship taxonomy for the Rimidi knowledge graph.
-# Keys should match Neo4j relationship types.
+# Relationship taxonomy generated from data/rimidi_kg_review_master_v2.csv and governance updates.
+# Includes dual-plane visibility, ownership, and provenance metadata.
 
 relationships:
-  # Product Graph
-  - type: ENABLES
-    description: Product capability provides required functionality to an end-user workflow.
-    source: ProductCapability
-    target: EndUserWorkflow
-  - type: DELIVERS
-    description: Product capability delivers or proves out a specific use case outcome.
-    source: ProductCapability
-    target: UseCase
-  - type: SUPPORTS
-    description: Operational or application service underpins a business use case.
-    source:
-      - Service
-      - DataService
-      - ToolingService
-    target: UseCase
-  - type: SUPPORTS_TROUBLESHOOTING
-    description: Capability or runtime service documented by a support workflow for incident response or recovery.
-    source:
-      - ProductCapability
-      - Service
-      - DataService
-    target: SupportWorkflow
-  - type: IMPLEMENTS
-    description: Workflow leverages an integration or shared data service to execute steps.
-    source: EndUserWorkflow
-    target:
-      - IntegrationPartner
-      - EMRIntegration
-      - DeviceIntegration
-      - DataService
-  - type: HAS_COMPONENT
-    description: Capability or service is composed of a UI component surfaced to users.
-    source:
-      - ProductCapability
-      - Service
-    target: UIComponent
-
-  # Cross-cutting governance
-  - type: OWNS
-    description: Team accountable for an asset across product, platform, or client contexts.
-    source: Team
-    target:
-      - ProductCapability
-      - UseCase
-      - EndUserWorkflow
-      - SupportWorkflow
-      - Service
-      - ToolingService
-      - DataService
-      - Reporting
-      - Observability
-      - InfraService
-      - Client
-      - DeploymentType
-      - IntegrationPartner
-      - EMRIntegration
-      - DeviceIntegration
-      - CommChannel
-      - CodeArtifact
-      - ReleaseVersion
+  # PlatformArchitecture
   - type: ADMINISTERED_BY
-    description: Tooling service managed day-to-day by a specific team.
-    source: ToolingService
-    target: Team
-  - type: RESPONSIBLE_FOR
-    description: Team charged with ongoing operations or quality of a workflow, integration, or service.
-    source: Team
+    description: "Tooling service managed day-to-day by a specific team."
+    category: "PlatformArchitecture"
+    owner_team: "TechOps"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - ToolingService
     target:
-      - Service
-      - DataService
-      - Reporting
-      - Observability
-      - EndUserWorkflow
-      - SupportWorkflow
-      - IntegrationPartner
-      - EMRIntegration
-      - DeviceIntegration
-      - CommChannel
-      - Client
-  - type: REQUESTED_BY
-    description: Actor initiating a change, deployment, or configuration update for a Rimidi asset.
-    source: Actor
-    target:
-      - Service
-      - DataService
-      - DeploymentType
-      - ReleaseVersion
+      - Team
   - type: APPROVED_BY
-    description: Actor approving a change, deployment, or configuration update for a Rimidi asset.
-    source: Actor
+    description: "Actor approving a change, deployment, or configuration update for a Rimidi asset."
+    category: "PlatformArchitecture"
+    owner_team: "TechOps"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - Actor
     target:
       - Service
       - DataService
       - DeploymentType
+      - ImplementationVariant
       - ReleaseVersion
-  - type: GOVERNS
-    description: Team-defined guardrail that constrains how a deployment type, service, or client handles data.
-    source: Team
-    target:
-      - DeploymentType
-      - Service
-      - DataService
-      - Client
-
-  # Platform Architecture
+    properties:
+      change_ticket:
+        ref: attributes.relationship_properties.change_ticket
   - type: DEPENDS_ON
-    description: Service-level dependency across Rimidi services or data pipelines.
+    description: "Service-level dependency across Rimidi services or data pipelines."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
     source:
       - Service
       - DataService
@@ -118,104 +65,526 @@ relationships:
       - DataService
     properties:
       dependency_type:
-        type: string
-        allowed: [api, schedule, logging, data, delivery, ui]
-  - type: RUNS_ON
-    description: Service, data pipeline, or reporting surface hosted on infrastructure.
+        ref: attributes.relationship_properties.dependency_type
+  - type: FEEDS
+    description: "Data service publishes curated datasets or metrics into reporting or observability surfaces."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - DataService
+    target:
+      - Reporting
+      - Observability
+  - type: GOVERNS
+    description: "Team-defined guardrail that constrains how a deployment type, service, or client handles data."
+    category: "PlatformArchitecture"
+    owner_team: "TechOps"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - Team
+    target:
+      - DeploymentType
+      - ImplementationVariant
+      - Service
+      - DataService
+      - Client
+  - type: MONITORED_BY
+    description: "Service, data pipeline, or report surface monitored by an observability tool."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
     source:
       - Service
+      - DataService
+      - Reporting
+    target:
+      - Observability
+    properties:
+      dependency_type:
+        ref: attributes.relationship_properties.dependency_type
+  - type: OWNS
+    description: "Team accountable for an asset across product, platform, or client contexts."
+    category: "PlatformArchitecture"
+    owner_team: "TechOps"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - Team
+    target:
+      - ProductCapability
+      - UseCase
+      - EndUserWorkflow
+      - SupportWorkflow
+      - UIComponent
+      - Service
+      - ToolingService
       - DataService
       - Reporting
       - Observability
-    target: InfraService
+      - InfraService
+      - Client
+      - DeploymentType
+      - ImplementationVariant
+      - IntegrationPartner
+      - EMRIntegration
+      - DeviceIntegration
+      - CommChannel
+      - CodeArtifact
+      - ReleaseVersion
+  - type: PROVIDES_CHANNEL
+    description: "Service exposes a communication pathway to end users or partners."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - Service
+      - ToolingService
+    target:
+      - CommChannel
     properties:
-      environment:
-        type: string
-        required: false
-        allowed: [production, staging, development]
-  - type: SCHEDULED_BY
-    description: Service or data pipeline triggered by an infrastructure primitive.
-    source:
-      - Service
-      - DataService
-    target: InfraService
-  - type: USES_SECRET_FROM
-    description: Service or pipeline retrieves credentials or configuration from an infrastructure primitive.
-    source:
-      - Service
-      - DataService
-    target: InfraService
-  - type: MONITORED_BY
-    description: Service, data pipeline, or report surface monitored by an observability tool.
-    source:
-      - Service
-      - DataService
-      - Reporting
-    target: Observability
+      channel_type:
+        ref: attributes.communication.channel_type
   - type: REPORTS_ON
-    description: Reporting package or telemetry surface summarizes metrics for a capability, service, or pipeline.
-    source: Reporting
+    description: "Analytics summarizing metrics for capabilities, services, or pipelines."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - Reporting
+      - Observability
     target:
       - ProductCapability
       - UseCase
       - Service
       - DataService
-  - type: FEEDS
-    description: Data service publishes curated datasets or metrics into reporting or observability surfaces.
-    source: DataService
+  - type: REQUESTED_BY
+    description: "Actor initiating a change, deployment, or configuration update for a Rimidi asset."
+    category: "PlatformArchitecture"
+    owner_team: "TechOps"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - Actor
     target:
+      - Service
+      - DataService
+      - DeploymentType
+      - ImplementationVariant
+      - ReleaseVersion
+    properties:
+      change_ticket:
+        ref: attributes.relationship_properties.change_ticket
+  - type: RESPONSIBLE_FOR
+    description: "Team charged with ongoing operations or quality of a workflow, integration, or service."
+    category: "PlatformArchitecture"
+    owner_team: "TechOps"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - Team
+    target:
+      - Service
+      - DataService
       - Reporting
       - Observability
+      - EndUserWorkflow
+      - SupportWorkflow
+      - IntegrationPartner
+      - EMRIntegration
+      - DeviceIntegration
+      - CommChannel
+      - Client
+  - type: RESULTED_IN
+    description: "Release version produces new reporting, observability, or service state."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - ReleaseVersion
+    target:
+      - Service
+      - DataService
+      - Reporting
+      - Observability
+  - type: RUNS_ON
+    description: "Workload hosted on infrastructure."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - Service
+      - DataService
+      - Reporting
+      - Observability
+    target:
+      - InfraService
+    properties:
+      environment:
+        ref: attributes.relationship_properties.environment
+  - type: SCHEDULED_BY
+    description: "Service or data pipeline triggered by an infrastructure primitive."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - Service
+      - DataService
+    target:
+      - InfraService
+    properties:
+      dependency_type:
+        ref: attributes.relationship_properties.dependency_type
   - type: SOURCED_FROM
-    description: Data service ingests data from an upstream service, integration, or reporting surface.
-    source: DataService
+    description: "Data service ingests data from an upstream service, integration, or reporting asset."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    aliases:
+      - CONSUMES_FROM
+    source:
+      - DataService
     target:
       - Service
       - IntegrationPartner
       - EMRIntegration
       - DeviceIntegration
       - Reporting
+    properties:
+      integration_mode:
+        ref: attributes.partnership.integration_mode
   - type: STORED_IN
-    description: Reporting or observability asset persists data within an infrastructure primitive.
+    description: "Reporting or observability asset persists data within an infrastructure primitive."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    aliases:
+      - PERSISTED_IN
     source:
       - Reporting
       - Observability
-    target: InfraService
-  - type: USES_CODE
-    description: Runtime service or pipeline implemented by a specific code artifact.
+    target:
+      - InfraService
+    properties:
+      environment:
+        ref: attributes.relationship_properties.environment
+  - type: SUPPORTS
+    description: "Runtime service or workflow supports use cases or client processes."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
     source:
       - Service
       - DataService
       - ToolingService
-    target: CodeArtifact
+      - EndUserWorkflow
+    target:
+      - UseCase
+      - Client
+    properties:
+      dependency_type:
+        ref: attributes.relationship_properties.dependency_type
   - type: TRIGGERS
-    description: Release version or incident triggers downstream services or workflows.
-    source: ReleaseVersion
+    description: "Release version or incident triggers downstream services or workflows."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - ReleaseVersion
     target:
       - Service
       - DataService
       - EndUserWorkflow
       - SupportWorkflow
-  - type: RESULTED_IN
-    description: Release version produces new reporting, observability, or service state.
-    source: ReleaseVersion
-    target:
+    properties:
+      change_ticket:
+        ref: attributes.relationship_properties.change_ticket
+  - type: USES_CODE
+    description: "Runtime service or pipeline implemented by a specific code artifact."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
       - Service
       - DataService
-      - Reporting
-      - Observability
-
-  # Shared / CRM
-  - type: PROVIDES_CHANNEL
-    description: Service exposes a communication pathway to end users or partners.
-    source: Service
-    target: CommChannel
-  - type: MANUFACTURED_BY
-    description: Device integration associated with a device vendor for traceability.
-    source: DeviceIntegration
-    target: DeviceVendor
+      - ToolingService
+    target:
+      - CodeArtifact
+  - type: USES_SECRET_FROM
+    description: "Service or pipeline retrieves credentials or configuration from infra."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Low"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - Service
+      - DataService
+      - ToolingService
+    target:
+      - InfraService
+    properties:
+      data_scope:
+        ref: attributes.relationship_properties.data_scope
+  # Product
+  - type: DELIVERS
+    description: "Capability or workflow delivers measurable value for a specific use case."
+    category: "Product"
+    owner_team: "Product"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - ProductCapability
+      - EndUserWorkflow
+    target:
+      - UseCase
+  - type: ENABLES
+    description: "Capability or workflow enables an operational experience."
+    category: "Product"
+    owner_team: "Product"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - ProductCapability
+    target:
+      - EndUserWorkflow
+  - type: HAS_COMPONENT
+    description: "Capability or service composed of a UI component surfaced to users."
+    category: "Product"
+    owner_team: "Product"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - ProductCapability
+      - Service
+      - ToolingService
+    target:
+      - UIComponent
+  - type: IMPLEMENTS
+    description: "Workflow leverages an integration or data service to execute steps."
+    category: "Product"
+    owner_team: "Product"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - EndUserWorkflow
+    target:
+      - IntegrationPartner
+      - EMRIntegration
+      - DeviceIntegration
+      - DataService
+    properties:
+      integration_mode:
+        ref: attributes.partnership.integration_mode
+  - type: SUPPORTS_TROUBLESHOOTING
+    description: "Capability or service documented by a support workflow for incident response."
+    category: "Product"
+    owner_team: "Product"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - ProductCapability
+      - Service
+      - DataService
+    target:
+      - SupportWorkflow
+  # SharedCRM
+  - type: CONFIGURED_FOR
+    description: "Implementation variant configured for a client organization."
+    category: "SharedCRM"
+    owner_team: "TechOps"
+    status: "planned"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - ImplementationVariant
+    target:
+      - Client
   - type: INTEGRATES_WITH
-    description: Service connects to an external partner integration for data exchange or automation.
+    description: "Service connects to an external partner integration for data exchange or automation."
+    category: "SharedCRM"
+    owner_team: "ClientSuccess"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
     source:
       - Service
       - DataService
@@ -223,3 +592,40 @@ relationships:
       - IntegrationPartner
       - EMRIntegration
       - DeviceIntegration
+    properties:
+      integration_mode:
+        ref: attributes.partnership.integration_mode
+  - type: MANUFACTURED_BY
+    description: "Integration linked to its device manufacturer for traceability."
+    category: "SharedCRM"
+    owner_team: "ClientSuccess"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - DeviceIntegration
+    target:
+      - DeviceVendor
+  - type: USES
+    description: "Client uses or depends on a product capability."
+    category: "SharedCRM"
+    owner_team: "ClientSuccess"
+    status: "planned"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    source:
+      - Client
+    target:
+      - ProductCapability

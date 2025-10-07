@@ -1,339 +1,739 @@
-# Canonical node type definitions for the Rimidi knowledge graph.
-# Each node type references reusable attributes defined in attributes.yaml.
+# Canonical node type definitions generated from data/rimidi_kg_review_master_v2.csv.
+# Governance metadata aligned with dual-plane requirements.
 
 node_types:
-  # Product Graph
-  - name: ProductCapability
-    description: End-to-end product capability or feature area that delivers clinical or operational value.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: UseCase
-    description: Business outcome delivered to providers, staff, or patients and measured for success.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: EndUserWorkflow
-    description: Sequenced set of product or service steps that teams and clinicians execute to achieve a use case.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.ui_area
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: SupportWorkflow
-    description: Troubleshooting or operational playbook used by Customer Success, Product, or TechOps.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: UIComponent
-    description: Visible or interactive UI element such as a dashboard widget, header, or modal dialog.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.ui_area
-      - ref: attributes.common.status
-      - ref: attributes.access.access_role
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-
-  # Platform Architecture Graph
-  - name: Service
-    description: Application or shared service operated by Rimidi (UI, API, worker, automation, etc.).
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.service.layer
-      - ref: attributes.service.service_type
-      - ref: attributes.service.provider
-      - ref: attributes.service.code_name
-      - ref: attributes.access.phi_sensitivity
-      - ref: attributes.access.access_role
-      - ref: attributes.access.access_mode
-      - ref: attributes.access.data_purpose
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: ToolingService
-    description: Internal Rimidi utility or administrative tool exposed to operations or back-office teams.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.ui_area
-      - ref: attributes.common.status
-      - ref: attributes.service.layer
-      - ref: attributes.service.service_type
-      - ref: attributes.service.provider
-      - ref: attributes.service.code_name
-      - ref: attributes.access.access_role
-      - ref: attributes.access.access_mode
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: DataService
-    description: Data platform job or pipeline responsible for extracting, transforming, or loading Rimidi data.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.service.service_type
-      - ref: attributes.service.code_name
-      - ref: attributes.access.phi_sensitivity
-      - ref: attributes.access.access_mode
-      - ref: attributes.access.data_purpose
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: Reporting
-    description: Business intelligence report or curated dataset published for analytics consumption.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.ui_area
-      - ref: attributes.common.status
-      - ref: attributes.data.surface_type
-      - ref: attributes.access.access_role
-      - ref: attributes.access.data_purpose
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: Observability
-    description: Telemetry, dashboarding, or logging surface used to monitor Rimidi services.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.data.surface_type
-      - ref: attributes.access.access_role
-      - ref: attributes.access.data_purpose
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: InfraService
-    description: Cloud or infrastructure primitive that provides hosting, storage, scheduling, or messaging.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.service.layer
-      - ref: attributes.service.provider
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: ReleaseVersion
-    description: Deployment, incident, configuration change, or release artifact captured with temporal metadata.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: CodeArtifact
-    description: Source code repository, package, or path that implements a Rimidi capability or service.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-
-  # Shared / CRM Graph
-  - name: Client
-    description: Healthcare organization or customer licensed to use Rimidi products and services.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.access.access_role
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: DeploymentType
-    description: Canonical deployment configuration or tenant archetype shared across multiple clients.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: IntegrationPartner
-    description: Third-party vendor or platform integrated with Rimidi offerings beyond EMRs and devices.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.vendor
-      - ref: attributes.common.status
-      - ref: attributes.access.access_role
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: EMRIntegration
-    description: Connectivity to an electronic medical record vendor powering data exchange with Rimidi.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.vendor
-      - ref: attributes.common.status
-      - ref: attributes.access.access_role
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: DeviceIntegration
-    description: Device connectivity integration that ingests clinical measurements or patient-generated data.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.vendor
-      - ref: attributes.common.status
-      - ref: attributes.access.access_role
-      - ref: attributes.access.data_purpose
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: DeviceVendor
-    description: Manufacturer that produces healthcare devices supported by Rimidi integrations.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-  - name: CommChannel
-    description: Communication pathway used to reach clinicians, patients, or partners (SMS, email, phone, etc.).
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.access.access_mode
-      - ref: attributes.access.access_role
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
-
-  # Cross-cutting Graph
-  - name: Team
-    description: Organizational unit responsible for Rimidi resources and accountable outcomes.
-    attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
+  # PlatformArchitecture
   - name: Actor
-    description: Individual requester or approver associated with product, platform, or client changes.
+    description: "Individual requester or approver associated with changes."
+    category: "PlatformArchitecture"
+    owner_team: "TechOps"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "actor-change-approver"
+      summary: "Named requester or approver participating in change control."
     attributes:
-      - ref: attributes.common.id
-      - ref: attributes.common.name
-      - ref: attributes.common.description
-      - ref: attributes.common.owner_team
-      - ref: attributes.common.status
-      - ref: attributes.governance.valid_from
-      - ref: attributes.governance.valid_to
-      - ref: attributes.governance.source_system
-      - ref: attributes.governance.jira_id
-      - ref: attributes.governance.release_note
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+  - name: CodeArtifact
+    description: "Source code reference implementing a capability or workflow."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "code-rimidi-kg-repo"
+      summary: "Source repository or package implementing Rimidi capabilities."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+  - name: DataService
+    description: "Data service for Extraction, Transformation, or Load for Rimidi platform"
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "planned"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "datasvc-metrics-aggregation"
+      summary: "Data pipeline or job enriching and distributing platform data."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+        - attributes.operational.criticality
+        - attributes.partnership.integration_mode
+  - name: InfraService
+    description: "Cloud infrastructure primitive providing hosting, storage, or monitoring."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "infra-aws-ecs-cluster"
+      summary: "Infrastructure primitive hosting or scheduling workloads."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+        - attributes.operational.criticality
+  - name: Observability
+    description: "Ability to monitor using reporting, dashboarding, or logging."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "planned"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "observability-loki-pipeline"
+      summary: "Telemetry or logging surface monitoring platform health."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+        - attributes.operational.criticality
+  - name: ReleaseVersion
+    description: "Deployment, incident, or configuration change with temporal metadata."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "release-2025-q1-platform"
+      summary: "Timestamped deployment, incident, or configuration change."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+  - name: Reporting
+    description: "Reporting of data"
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "planned"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "report-operational-dashboard"
+      summary: "Curated analytics or reporting package delivered to stakeholders."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+        - attributes.communication.channel_type
+  - name: Service
+    description: "Application or shared service operated by Rimidi (UI, API, worker, etc.)."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "service-scheduling-api"
+      summary: "Runtime API or worker that powers the Rimidi platform."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+        - attributes.operational.criticality
+  - name: Team
+    description: "Organizational unit responsible for Rimidi resources."
+    category: "PlatformArchitecture"
+    owner_team: "TechOps"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "team-platform-engineering"
+      summary: "Functional Rimidi team accountable for a product, platform, or client asset."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+  - name: ToolingService
+    description: "Internal Rimidi utility or admin tool for back-office teams."
+    category: "PlatformArchitecture"
+    owner_team: "Engineering"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "tooling-deployment-console"
+      summary: "Internal console or admin tool used by operations teams."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+        - attributes.operational.criticality
+  # Product
+  - name: EndUserWorkflow
+    description: "Sequenced steps that deliver a clinical or operational outcome."
+    category: "Product"
+    owner_team: "Product"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "workflow-alert-triage"
+      summary: "Sequenced user or automation steps delivering the use case."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+  - name: ProductCapability
+    description: "End-to-end product capability or feature area powering clinical or operational value."
+    category: "Product"
+    owner_team: "Product"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "capability-remote-monitoring"
+      summary: "End-to-end feature area delivering measurable value."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+  - name: SupportWorkflow
+    description: "Troubleshooting or support playbook used by Customer Success or Product."
+    category: "Product"
+    owner_team: "Product"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "workflow-integration-reset"
+      summary: "Operational playbook used for troubleshooting or support."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+  - name: UIComponent
+    description: "Visible or interactive element (modal, header, dashboard widget)."
+    category: "Product"
+    owner_team: "Product"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "component-care-team-dashboard"
+      summary: "User-facing component such as a module, modal, or widget."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+  - name: UseCase
+    description: "Business outcome delivered to providers, staff, or patients."
+    category: "Product"
+    owner_team: "Product"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "usecase-hypertension-management"
+      summary: "Business outcome measured for clinical or operational success."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+  # SharedCRM
+  - name: Client
+    description: "Healthcare organization or customer entity licensed to use Rimidi."
+    category: "SharedCRM"
+    owner_team: "ClientSuccess"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "client-coastal-health"
+      summary: "Healthcare organization licensed to use Rimidi."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+        - attributes.partnership.vendor
+  - name: CommChannel
+    description: "Communication pathway (SMS, Email, Phone, etc.)."
+    category: "SharedCRM"
+    owner_team: "ClientSuccess"
+    status: "planned"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "channel-secure-messaging"
+      summary: "Communication channel used to contact end users or partners."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+        - attributes.communication.channel_type
+  - name: DeploymentType
+    description: "Client-specific deployment configuration."
+    category: "SharedCRM"
+    owner_team: "ClientSuccess"
+    status: "active"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    aliases:
+      - Implementation
+    example:
+      id: "deployment-multitenant-prod"
+      summary: "Deployment archetype applied across tenants."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+  - name: DeviceIntegration
+    description: "Device connected to Rimidi services."
+    category: "SharedCRM"
+    owner_team: "ClientSuccess"
+    status: "planned"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "integration-dexcom-g7"
+      summary: "Device integration ingesting readings or patient-generated data."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+        - attributes.partnership.vendor
+        - attributes.partnership.integration_mode
+        - attributes.communication.channel_type
+  - name: DeviceVendor
+    description: "Device manufacturer distinct from integration endpoints."
+    category: "SharedCRM"
+    owner_team: "ClientSuccess"
+    status: "planned"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "vendor-dexcom"
+      summary: "Manufacturer of devices supported within the platform."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+        - attributes.partnership.vendor
+  - name: EMRIntegration
+    description: "EMR vendor connected to Rimidi services."
+    category: "SharedCRM"
+    owner_team: "ClientSuccess"
+    status: "planned"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "integration-cerner"
+      summary: "EMR vendor integration supporting clinical data exchange."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+        - attributes.partnership.vendor
+        - attributes.partnership.integration_mode
+  - name: ImplementationVariant
+    description: "Specific deployment configuration tailored for a client tenant."
+    category: "SharedCRM"
+    owner_team: "TechOps"
+    status: "planned"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "Medium"
+    governance_maturity: "Medium"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "implementation-variant-standard"
+      summary: "Reusable implementation variant combining deployment and configuration settings."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+  - name: IntegrationPartner
+    description: "External vendor connected to Rimidi services."
+    category: "SharedCRM"
+    owner_team: "ClientSuccess"
+    status: "planned"
+    source_system: "github"
+    jira_reference: "RIMIDI2023-1234"
+    release_reference: "v2.27"
+    usage_frequency: "High"
+    governance_maturity: "Strong"
+    planes:
+      query: read-only
+      authoring: read-write
+    example:
+      id: "integration-xealth"
+      summary: "External platform integrated with Rimidi services."
+    attributes:
+      required:
+        - attributes.identity.id
+        - attributes.identity.name
+        - attributes.identity.description
+        - attributes.governance.owner_team
+      optional:
+        - attributes.governance.usage_frequency
+        - attributes.governance.governance_maturity
+        - attributes.governance.steward
+        - attributes.lineage.source_system
+        - attributes.lineage.jira_reference
+        - attributes.lineage.release_reference
+        - attributes.operational.lifecycle_state
+        - attributes.operational.plane_access
+        - attributes.partnership.vendor
+        - attributes.partnership.integration_mode
