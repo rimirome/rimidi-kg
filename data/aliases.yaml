@@ -16,34 +16,48 @@ label_aliases:
     aliases: ['business outcome', 'goal', 'user objective']
   - label: Workflow
     aliases: ['process', 'automation flow', 'clinical pathway', 'care plan']
+  - label: SupportWorkflow
+    aliases: ['sla', 'service level agreement', 'product support', 'ps issue', 'tech support', 'cs issue', 'client support']
   - label: Service
-    aliases: ['backend', 'microservice', 'api service', 'app service']
+    aliases: ['backend', 'microservice', 'api service', 'app service', 'api endpoint']
   - label: InfraService
     aliases: ['infrastructure', 'aws resource', 'hosting service', 'storage bucket']
   - label: IntegrationPartner
     aliases: ['partner', 'vendor', 'integration', 'external system']
   - label: EMRIntegration
-    aliases: ['ehr', 'emr', 'epic', 'cerner', 'nextgen', 'athena']
+    aliases: ['ehr', 'emr', 'epic', 'cerner', 'nextgen', 'athena', 'oracle', 'all-patients launch', 'patient chart launch', 'fhir refresh']
   - label: DeviceIntegration
-    aliases: ['device', 'iot', 'wearable', 'bluetooth device', 'medical device']
+    aliases: ['device', 'home device', 'wearable', 'cellular device', 'bluetooth device', 'medical device', 'patient device', 'cgm', 'bp cuff', 'glucometer', 'pulse ox', 'inhaler']
   - label: DataService
-    aliases: ['pipeline', 'etl', 'data feed', 'data flow', 'data loader']
+    aliases: ['pipeline', 'etl', 'data feed', 'data flow', 'data loader', 'feeder', 'collection', 'aquifer']
   - label: Reporting
-    aliases: ['report', 'dashboard', 'analytics view', 'canopy', 'aquifer']
+    aliases: ['report', 'mbr', 'monthly billing report', 'dashboard', 'pbi', 'power bi', 'powerbi', 'analytics view', 'canopy']
   - label: Observability
     aliases: ['monitoring', 'telemetry', 'bluejay', 'kaleidoscope', 'log dashboard']
   - label: DeploymentType
-    aliases: ['environment', 'tenant config', 'deployment archetype']
+    aliases: ['environment', 'instance config', 'deployment type', 'integrated instance', 'standalone intstance']
   - label: Client
-    aliases: ['customer', 'organization', 'account', 'health system', 'clinic']
+    aliases: ['customer', 'fqhc', 'gatewaymd', 'henry schein', 'hs', 'organization', 'account', 'health system', 'clinic']
   - label: Contract
     aliases: ['agreement', 'deal', 'subscription', 'renewal']
   - label: Team
-    aliases: ['group', 'department', 'engineering team', 'product team']
+    aliases: ['group', 'department', 'cs', 'techops', 'qa team', 'qe team', 'engineering team', 'product team', 'dev team']
   - label: Actor
     aliases: ['user', 'employee', 'staff member', 'person']
   - label: Policy
     aliases: ['rule', 'governance', 'compliance policy', 'standard operating procedure']
+  - label: Observability
+    aliases:
+      - 'monitoring'
+      - 'telemetry'
+      - 'logging pipeline'
+      - 'loki'
+      - 'grafana'
+      - 'promtail'
+      - 'bluejay'
+      - 'kaleidoscope'
+      - 'dashboard'
+
 
 relationship_aliases:
   - type: ENABLES
@@ -66,3 +80,13 @@ relationship_aliases:
     aliases: ['validated by', 'authorized by', 'signed off by']
   - type: GOVERNS
     aliases: ['controls', 'regulates', 'sets rules for']
+
+entity_aliases:
+  - id: infra-ecs-rimidi
+    aliases: ['ecs rimidi', 'tenant container', 'app container']
+  - id: infra-promtail
+    aliases: ['promtail', 'log shipper', 'container log collector', 'loki agent']
+  - id: infra-loki
+    aliases: ['loki', 'loki store', 'log database', 'log backend']
+  - id: infra-grafana
+    aliases: ['grafana', 'grafana dashboard', 'observability dashboard']

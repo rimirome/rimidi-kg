@@ -28,7 +28,7 @@ The Rimidi knowledge graph is reinitialized from `data/rimidi_kg_review_master_v
 | `DataService` | Data service for Extraction, Transformation, or Load for Rimidi platform | `datasvc-metrics-aggregation` | Engineering | planned | Medium | Medium |
 | `InfraService` | Cloud infrastructure primitive providing hosting, storage, or monitoring. | `infra-aws-ecs-cluster` | Engineering | active | High | Strong |
 | `Observability` | Ability to monitor using reporting, dashboarding, or logging. | `observability-loki-pipeline` | Engineering | planned | Medium | Medium |
-| `ReleaseVersion` | Deployment, incident, or configuration change with temporal metadata. | `release-2025-q1-platform` | Engineering | active | Medium | Strong |
+| `ReleaseVersion` | Deployment, incident, or configuration change with temporal metadata. | `v2-25` | Engineering | active | Medium | Strong |
 | `Reporting` | Reporting of data | `report-operational-dashboard` | Engineering | planned | Medium | Medium |
 | `Service` | Application or shared service operated by Rimidi (UI, API, worker, etc.). | `service-scheduling-api` | Engineering | active | High | Strong |
 | `Team` | Organizational unit responsible for Rimidi resources. | `team-platform-engineering` | TechOps | active | High | Strong |
