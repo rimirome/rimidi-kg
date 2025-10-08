@@ -3,7 +3,7 @@
 The Rimidi knowledge graph is reinitialized from `data/rimidi_kg_review_master_v2.csv` and serves as the authoritative contract for the Sunny (query execution) and Luna (reasoning/documentation) agents. This document captures the node labels and relationship types for the dual-plane architecture with updated governance metadata.
 
 ## Dual-Plane Governance Principles
-- **Lexi (Normalization Layer)** — resolves aliases defined in `data/aliases.yaml` before any prompt reaches the graph agents.
+- **Skye (Normalization Layer)** — resolves aliases defined in `data/aliases.yaml` before any prompt reaches the graph agents.
 - **Sunny (Query Plane)** — read-only Cypher agent backed by the `neo4j_reader` role. Sunny translates normalized language to Cypher and always respects this schema.
 - **Luna (Reasoning Plane)** — documentation and interpretation agent orchestrated through n8n. Luna references KG context, summarizes results, and suggests follow-up actions without writing to Neo4j.
 - Structural changes still begin in Git and are validated before production deployment; agents surface guidance but do not auto-apply writes.
@@ -98,6 +98,6 @@ Alias notes: `SOURCED_FROM` replaces `CONSUMES_FROM`; `STORED_IN` replaces `PERS
 
 ## Governance Reminders
 - Every node and relationship captures `owner_team`, `category`, and provenance metadata (`source_system`, `jira_reference`, `release_reference`) so audits remain deterministic.
-- Plane access is encoded in schema files: Lexi normalizes inputs, Sunny reads against the KG, and humans remain responsible for write operations after reviewing `tools/validator.py` output.
+- Plane access is encoded in schema files: Skye normalizes inputs, Sunny reads against the KG, and humans remain responsible for write operations after reviewing `tools/validator.py` output.
 - PHI-adjacent identifiers are redacted; use sanitized examples such as the sample IDs above when drafting prompts or seed data.
 - Retired node types (Domain, Collection, Feeder, Seed, ReportTemplate, KnowledgeArticle, Policy, Contract, AccountContact) remain deprecated and must not reappear without a new ontology review.

@@ -28,7 +28,7 @@ Use this checklist before loading new data, promoting schema changes, or turning
 - [ ] If PHI is involved, confirm PHI guardrails are respected (segregated nodes, prompts exclude PHI).
 
 ## SME Inputs Needed for Write Operations
-Before Lexi normalizes the request and Sunny generates write Cypher, provide:
+Before Skye normalizes the request and Sunny generates write Cypher, provide:
 - Target node/edge details (label, stable `id`, human-readable name/description).
 - Ownership metadata (`owner_team`, approver/actor if relevant).
 - Provenance fields (`source_system`, `jira_id`, `release_note`, `added_at`).
@@ -42,7 +42,7 @@ Track these items and check them off as they are implemented:
 - [ ] Temporal events modeled (`Event` node/edges) with `valid_from` / `valid_to` populated in data.
 - [ ] Ownership edges enforced (`OWNS` / `RESPONSIBLE_FOR`), validator fails when missing.
 - [ ] Canonical relationship allowlist lint in place (rejects unregistered edge types).
-- [ ] NL→Cypher regression tests running in CI for Lexi/Sunny/Luna prompts.
+- [ ] NL→Cypher regression tests running in CI for Skye/Sunny/Luna prompts.
 - [ ] PHI checks in validator (blocks PHI leakage into AI contexts).
 - [ ] Daily/weekly KG health workflow posts metrics to Slack.
 - [ ] Tenant/environment separation modeled explicitly (`Tenant`, `Environment`).

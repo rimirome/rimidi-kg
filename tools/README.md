@@ -12,5 +12,5 @@ Helper scripts and notebooks for validating and exporting Rimidi KG assets.
 ## Key Assumptions
 - Validators must run cleanly before PRs merge; capture output when reviewing changes.
 - Scripts are intended for local or CI use and should avoid hard-coded credentials.
-- `load_context.py` emits Sunny's prompt payload and expects optional alias summaries from Lexi.
+- `load_context.py` emits Sunny's prompt payload and expects optional alias summaries from Skye.
 - Extend notebooks judiciously - keep derived datasets under version control if they inform governance decisions.

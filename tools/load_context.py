@@ -68,7 +68,7 @@ def main() -> None:
     parser.add_argument(
         "--alias-summary",
         dest="alias_summary_path",
-        help="Optional path to a file containing Lexi alias resolution notes.",
+        help="Optional path to a file containing Skye alias resolution notes.",
     )
     args = parser.parse_args()
 

@@ -1,6 +1,6 @@
 # Rimidi Knowledge Graph
 
-The Rimidi Knowledge Graph (KG) is the single source of truth for how product capabilities, services, data domains, and infrastructure primitives connect. It helps product, engineering, data, and compliance teams reason about change impact, answer traceability questions, and power AI-driven insights (including n8n automations orchestrated by Lexi -> Sunny -> Luna).
+The Rimidi Knowledge Graph (KG) is the single source of truth for how product capabilities, services, data domains, and infrastructure primitives connect. It helps product, engineering, data, and compliance teams reason about change impact, answer traceability questions, and power AI-driven insights (including n8n automations orchestrated by Skye -> Sunny -> Luna).
 
 ## Getting Started
 1. Review the schema definitions under `schema/` to understand the node types we model (`ProductCapability`, `UseCase`, `Service`, `Integration`, `InfraService`, `Domain`, `Collection`, `Feeder`, `Seed`, `AnalyticsSurface`).
@@ -25,7 +25,7 @@ For contribution guidelines and workflow examples, check `docs/CONTRIBUTING.md` 
 - **Domains & Collections (`Domain`, `Collection`)**: Hearth, Apothecary, Aquifer, Canal, Jetty, Stillwater, Audit Repository and their governed datasets.
 - **Infrastructure (`InfraService`)**: ECS workloads, Lambda/EventBridge schedulers, RDS, Redis, S3, CloudFront, ALB, CloudWatch, Secrets Manager, Grafana.
 - **Analytics & Observability (`AnalyticsSurface`)**: Bluejay, Kaleidoscope, Canopy, and their telemetry relationships.
-- **AI Contract (`ai/`)**: Prompt context, guardrails, examples, and FAQ guiding Lexi (alias normalization), Sunny (Cypher generation), and Luna (reasoning/documentation).
+- **AI Contract (`ai/`)**: Prompt context, guardrails, examples, and FAQ guiding Skye (alias normalization), Sunny (Cypher generation), and Luna (reasoning/documentation).
 
 ## Contribution Workflow
 
@@ -33,17 +33,17 @@ For the canonical vocabulary, see `docs/ontology.md`.
 
 - **Schema edits** (`schema/`) require a pull request and review from Product and Engineering to safeguard backward compatibility.
 - **Data updates** (`data/`) should reference a release note, ADR, or Jira ticket; run `python tools/validator.py --data` before requesting review.
-- **AI context changes** (`ai/`) must include updated natural-language-to-Cypher examples so Lexi/Sunny/Luna stay aligned.
+- **AI context changes** (`ai/`) must include updated natural-language-to-Cypher examples so Skye/Sunny/Luna stay aligned.
 
 ### Readiness Checklist
 
 Before promoting schema or data changes, review `docs/kg_readiness_checklist.md`. It walks through ontology, schema, documentation, data, AI, and operational checks, plus recommended enhancements so nothing is missed.
 
-## Using Lexi, Sunny, and Luna (Chat-Only Workflows)
+## Using Skye, Sunny, and Luna (Chat-Only Workflows)
 
 When you interact with the KG through the n8n agents:
-- Describe the concept in plain language; Lexi will expand it using `data/aliases.yaml` and note any low-confidence matches.
-- Review Lexi’s alias summary—confirm ambiguous matches before Sunny proceeds with Cypher.
+- Describe the concept in plain language; Skye will expand it using `data/aliases.yaml` and note any low-confidence matches.
+- Review Skye’s alias summary—confirm ambiguous matches before Sunny proceeds with Cypher.
 - Provide required metadata for new facts (`id`, `name`, `owner_team`, `source_system`, `jira_id`, `release_note`).
 - Call out environment/tenant context (production vs staging, tenant identifier) so the generated Cypher is scoped correctly.
 - Expect Sunny to show a dry-run summary plus Cypher for any write (especially destructive updates) and ask for explicit confirmation before executing it.

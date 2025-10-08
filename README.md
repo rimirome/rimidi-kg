@@ -31,18 +31,18 @@ Working agreements:
 <<<<<<< Updated upstream
 This repository packages the Rimidi knowledge graph schema, seed data, AI assistant context, and automation assets. Start with `docs/README.md` for the why and how, then explore domain-specific folders as needed.
 =======
-The Rimidi Knowledge Graph (KG) is the canonical map of Rimidi product capabilities, services, data domains, and governance metadata. This repository houses every artefact required to understand, evolve, and automate against the KG. All automations now run through a three-agent orchestration: Lexi normalizes teammate input, Sunny produces parameterized Cypher, and Luna explains results with links back to documentation.
+The Rimidi Knowledge Graph (KG) is the canonical map of Rimidi product capabilities, services, data domains, and governance metadata. This repository houses every artefact required to understand, evolve, and automate against the KG. All automations now run through a three-agent orchestration: Skye normalizes teammate input, Sunny produces parameterized Cypher, and Luna explains results with links back to documentation.
 >>>>>>> Stashed changes
 
 ## Agent Architecture
 | Stage | Agent | Responsibility | Runner | Key Inputs |
 | --- | --- | --- | --- | --- |
-| Pre-process | Lexi | Resolve aliases from `data/aliases.yaml`, flag ambiguities, and emit normalized intent for downstream agents. | n8n workflow | `ai/prompts/base_prompt_lexi.md`, `data/aliases.yaml` |
+| Pre-process | Skye | Resolve aliases from `data/aliases.yaml`, flag ambiguities, and emit normalized intent for downstream agents. | n8n workflow | `ai/prompts/base_prompt_lexi.md`, `data/aliases.yaml` |
 | Translate | Sunny | Generate safe, parameterized Cypher tied to KG governance rules and explicit validator reminders. | n8n workflow | `ai/prompts/base_prompt_sunny.md`, `ai/context/*.md` |
 | Reason | Luna | Interpret Cypher output, cite docs, and recommend follow-ups without executing writes. | n8n workflow | `ai/prompts/base_prompt_luna.md`, `docs/*`, `ai/context/*` |
 
 Working agreements:
-- Lexi annotates every request with the alias entries applied so Sunny and Luna can audit transformations.
+- Skye annotates every request with the alias entries applied so Sunny and Luna can audit transformations.
 - Sunny is read-only; destructive Cypher demands explicit human approval and validator evidence before execution.
 - Luna provides reasoning and documentation linkage only; human operators still perform schema/data commits.
 - n8n remains the orchestration surface. Runtime logic stays outside this repo; we store only prompts, context, and guidance.
@@ -52,14 +52,14 @@ Working agreements:
 - `schema/node_types.yaml`, `schema/relationships.yaml`, `schema/attributes.yaml` - generated schema definitions with ownership and maturity metadata.
 - `docs/ontology.md` - narrative documentation of the schema, aligned with the three-agent division of responsibilities.
 - `ai/context/` - modular knowledge cards referenced by Sunny and Luna.
-- `data/aliases.yaml` - alias catalogue loaded by Lexi before every turn.
+- `data/aliases.yaml` - alias catalogue loaded by Skye before every turn.
 
 ## Getting Started
 1. Install requirements with `pip install -r requirements.txt` (or use the provided Docker setup).
 2. Review `docs/ontology.md` for vocabulary, governance rules, and agent boundaries.
 3. Run `python3 tools/validator.py --schema` (add `--data` after editing seed files) to confirm the repo state.
 4. Load `data/seed.cypher` into a Neo4j dev environment or inspect YAML payloads in `data/` for context.
-5. Update prompts or context only after consulting `ai/prompt_context.md` and ensuring Lexi/Sunny/Luna stay aligned.
+5. Update prompts or context only after consulting `ai/prompt_context.md` and ensuring Skye/Sunny/Luna stay aligned.
 >>>>>>> Stashed changes
 
 ## Repository Layout
@@ -111,7 +111,7 @@ For deeper automation, reference the n8n workflows that wrap Luna’s authoring 
 > Tip: run `python tools/validator.py` before opening a pull request to ensure schema and data remain consistent.
 # rimidi-kg
 =======
-|-- ai/                 # Prompts, context packs, and automation tooling docs for Lexi, Sunny, and Luna
+|-- ai/                 # Prompts, context packs, and automation tooling docs for Skye, Sunny, and Luna
 |-- data/               # Canonical CSVs, seed payloads, and alias definitions
 |-- docs/               # Ontology, playbooks, contributor guidance, readiness checklists
 |-- n8n/                # Workflow assets, node templates, and runbook notes for orchestrating the agents
@@ -127,12 +127,12 @@ For deeper automation, reference the n8n workflows that wrap Luna’s authoring 
 3. Refresh `docs/ontology.md`, affected playbooks, and any prompt/context files impacted by the change.
 4. Adjust curated queries in `queries/` if the schema evolution affects expected query patterns.
 5. Run `python3 tools/validator.py --schema --data` and capture the output for reviewers.
-6. Use n8n to drive Lexi -> Sunny -> Luna validation conversations; commits remain human-owned through standard PR review.
+6. Use n8n to drive Skye -> Sunny -> Luna validation conversations; commits remain human-owned through standard PR review.
 
 ## Governance Reminders
 - Include `owner_team`, `usage_frequency`, `governance_maturity`, and provenance metadata on every node/relationship committed to the repo.
 - PHI or tenant identifiers never enter the repository. Use the sanitized examples in `docs/ontology.md` or `data/seed.cypher` when authoring content.
-- Alias updates in `data/aliases.yaml` must note the confidence level and intended scope so Lexi can defend transformations downstream.
+- Alias updates in `data/aliases.yaml` must note the confidence level and intended scope so Skye can defend transformations downstream.
 - Document structural changes in `schema/changelog.md` and cross-link relevant ADRs or tickets.
 
 ## Validation & Tooling

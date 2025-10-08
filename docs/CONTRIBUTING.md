@@ -3,7 +3,7 @@
 ## Schema Changes
 1. Propose updates in `schema/` (node types, relationships, attributes) and capture rationale in `schema/changelog.md` with a version bump.
 2. Run `tools/validator.py --schema` to confirm the structure remains consistent.
-3. When introducing new relationship verbs, update `ai/prompt_context.md` and `ai/examples.md` so Lexi/Sunny know how to reference them.
+3. When introducing new relationship verbs, update `ai/prompt_context.md` and `ai/examples.md` so Skye/Sunny know how to reference them.
 4. Update `docs/ontology.md` with definitions for new labels or relationship types, and record responsible teams/owners.
 
 ## Data Updates
@@ -15,9 +15,9 @@
 6. Include provenance metadata (`source_system`, `jira_id`, `release_note`) where applicable so temporal and policy reasoning remains auditable.
 
 ## AI Context & Automation
-1. Keep `ai/prompt_context.md` aligned with the latest schema terminology and guardrails across Lexi, Sunny, and Luna.
-2. Add representative examples to `ai/examples.md` when introducing new intents or node types so Lexi/Sunny stay calibrated.
-3. Update `ai/faq.md` with guidelines for Lexi’s alias coverage, Sunny’s Cypher guardrails, and Luna’s documentation follow-ups (human reviewers still own PR creation).
+1. Keep `ai/prompt_context.md` aligned with the latest schema terminology and guardrails across Skye, Sunny, and Luna.
+2. Add representative examples to `ai/examples.md` when introducing new intents or node types so Skye/Sunny stay calibrated.
+3. Update `ai/faq.md` with guidelines for Skye’s alias coverage, Sunny’s Cypher guardrails, and Luna’s documentation follow-ups (human reviewers still own PR creation).
 4. When automations require additional Cypher snippets, store them in `queries/` for review.
 
 ## Working with Seeds & Governance
